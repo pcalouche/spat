@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logPattern">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] %p Line %L %c - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{${logPattern}}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.calouche.spat" level="DEBUG">
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>

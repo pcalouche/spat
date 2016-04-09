@@ -1,0 +1,72 @@
+/*
+  The ordering of this stylesheet is as follows:
+  1. Overrides for AngularJS and Bootstrap UI
+  2. Common styles for entire application
+  3. Feature specific styles
+
+  The hope is that by following this thought process only one style sheet will be needed
+  for the entire application, and that it won't get unruly to follow.
+*/
+
+// LESS Variables
+@defaultFontColor: #777777;
+// Start of Overrides for AngularJS and Bootstrap UI
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+// End of Overrides for AngularJS and Bootstrap UI
+
+// Start of Common styles for entire application
+body {
+  .nav, .pagination, .carousel, .alert-link, .panel-title a {
+    cursor: pointer;
+  }
+  color: @defaultFontColor;
+}
+
+.ui-view-container {
+  position: relative;
+}
+
+[ui-view], [ui-view].ng-enter, [ui-view].ng-leave {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  transition: all .5s ease-in-out;
+}
+
+[ui-view].ng-enter {
+  opacity: 0;
+}
+
+[ui-view].ng-enter-active {
+  opacity: 1;
+}
+
+[ui-view].ng-leave {
+  opacity: 1;
+}
+
+[ui-view].ng-leave-active {
+  opacity: 0;
+}
+
+td.control-row {
+  width: 25px;
+  .fa {
+    cursor: pointer;
+  }
+}
+
+// End of Common styles for entire application
+
+// Start of Feature specific styles
+
+// Start Team Manager Styles
+// End Team Manager Styles
+
+// Start of User Manager Styles
+// End of User Manager Styles
+
+// End of Feature specific styles
