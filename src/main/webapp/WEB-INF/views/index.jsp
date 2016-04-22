@@ -45,7 +45,7 @@
     </div>
 
     <%--Load RequireJS first, so we can add some config data to the app.module--%>
-    <script src="${pageContext.request.contextPath}/resources/app/lib/require/2.1.22/require.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/app/lib/require/2.2.0/require.min.js"></script>
     <%--Have a require.config here to capture some variables that need to be set in the JSP here that the app module will need--%>
     <script>
         require.config({
