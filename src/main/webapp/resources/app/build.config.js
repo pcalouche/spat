@@ -7,5 +7,5 @@
     out: "./main-optimized.min.js",
     generateSourceMaps: true,
     preserveLicenseComments: false,
-    optimize: "uglify2"
+    optimize: "uglify"
 })
