@@ -4,7 +4,7 @@
     <groupId>com.calouche</groupId>
     <artifactId>spat</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0.0</version>
+    <version>1.0.0.1</version>
     <name>Single Page App Template</name>
 
     <properties>
