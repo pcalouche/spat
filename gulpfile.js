@@ -8,7 +8,7 @@ gulp.task("default", function() {
 
 gulp.task("optimizeRequireJs", function(cb) {
     var appPath = path.join(__dirname, "/src/main/webapp/resources/app");
-    var rjsPath = path.join(appPath, "/lib/require/2.1.22/r.js");
+    var rjsPath = path.join(appPath, "/lib/require/2.2.0/r.js");
     var rjsBuildConfigPath = path.join(appPath, "/build.config.js");
     var optimizeRequireJsTask = "node \"" + rjsPath + "\" -o \"" + rjsBuildConfigPath + "\"";
 

@@ -1,10 +1,10 @@
 define([
     "angular",
-    "module",
+    "module", // This a handle to the RequireJS's special module dependency in order to get config info
     "./core.module",
-    "components/main-navigation/main-navigation.module",
+    "components/main-app/main-app.module",
     "components/features/features.module"
-], function(angular, module) {
+], function(angular, module, coreModule, mainAppModule, featuresModule) {
     "use strict";
 
     routeConfig.$inject = ["$httpProvider", "$locationProvider", "$stateProvider", "$urlRouterProvider"];
@@ -16,22 +16,19 @@ define([
 
         $stateProvider.state("team-manager", {
             url: "/team-manager",
-            templateUrl: "resources/app/components/features/team-manager/team-manager.html",
-            controller: "TeamManagerController",
-            controllerAs: "vm"
+            template: "<team-manager></team-manager>"
         }).state("user-manager", {
             url: "/user-manager",
-            templateUrl: "resources/app/components/features/user-manager/user-manager.html",
-            controller: "UserManagerController",
-            controllerAs: "vm"
+            template: "<user-manager></user-manager>"
         });
     }
 
-    //The Main App Module
+    // The Main App Module
     return angular.module("app", [
         // Required App Modules
-        "app.core",
-        "app.main-navigation",
-        "app.features"
-    ]).config(routeConfig).constant("spatGlobals", module.config().spatGlobals);
+        coreModule.name,
+        mainAppModule.name,
+        featuresModule.name
+    ]).constant("spatGlobals", module.config().spatGlobals)
+        .config(routeConfig);
 });

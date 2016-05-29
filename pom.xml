@@ -4,7 +4,7 @@
     <groupId>com.calouche</groupId>
     <artifactId>spat</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0.1</version>
+    <version>1.1.0.0</version>
     <name>Single Page App Template</name>
 
     <properties>
@@ -20,7 +20,7 @@
         <jstl.version>1.2</jstl.version><!-- Jul 2006 -->
         <!-- Plugin Versions -->
         <maven.compiler.version>3.3</maven.compiler.version><!-- Mar 2015 -->
-        <maven.surefire.version>2.19.1</maven.surefire.version><!-- Dec 2015 -->
+        <maven.war.version>2.6</maven.war.version><!-- Jan 2015 -->
     </properties>
     <dependencies>
         <!-- Apache Log4j Core -->
@@ -105,18 +105,13 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-            <!-- Maven Surefire Plugin -->
+            <!-- Apache Maven WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven.war.version}</version>
                 <configuration>
-                    <includes>
-                        <include>**/Test*.java</include>
-                        <include>**/*Test.java</include>
-                        <include>**/*TestCase.java</include>
-                        <include>**/*TestRunner.java</include>
-                    </includes>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
         </plugins>

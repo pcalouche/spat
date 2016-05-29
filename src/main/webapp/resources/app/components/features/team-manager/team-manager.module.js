@@ -1,11 +1,11 @@
 define([
     "angular",
-    "./team-manager.controller",
+    "./team-manager.component",
     "./team-manager-modal.controller"
-], function(angular, TeamManagerController, TeamManagerModalController) {
+], function(angular, teamManagerComponent, TeamManagerModalController) {
     "use strict";
 
     return angular.module("app.team-manager", [])
-        .controller("TeamManagerController", TeamManagerController)
+        .component("teamManager", teamManagerComponent)
         .controller("TeamManagerModalController", TeamManagerModalController);
 });

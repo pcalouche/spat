@@ -166,7 +166,6 @@ crashlytics-build.properties
 # sftp configuration file
 sftp-config.json
 
-
 ### Eclipse ###
 *.pydevproject
 .metadata
@@ -220,4 +219,8 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+#vscode
+.vscode
 
+#Node.js
+node_modules

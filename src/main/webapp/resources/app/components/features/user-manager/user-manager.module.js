@@ -1,11 +1,11 @@
 define([
     "angular",
-    "./user-manager.controller",
+    "./user-manager.component",
     "./user-manager-modal.controller"
-], function(angular, UserManagerController, UserManagerModalController) {
+], function(angular, userManagerComponent, UserManagerModalController) {
     "use strict";
 
     return angular.module("app.user-manager", [])
-        .controller("UserManagerController", UserManagerController)
+        .component("userManager", userManagerComponent)
         .controller("UserManagerModalController", UserManagerModalController);
 });

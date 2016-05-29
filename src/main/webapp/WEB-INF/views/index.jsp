@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
-<html lang="en" ng-controller="MainNavigationController as vm">
+<html lang="en">
 <head>
     <title>Single Page App Template</title>
     <meta charset="UTF-8">
@@ -15,38 +15,12 @@
 </head>
 
 <body ng-cloak>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" ng-click="vm.navbarCollapsed = !vm.navbarCollapsed">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand">SPAT</a>
-            </div>
-
-            <div class="navbar-collapse" uib-collapse="vm.navbarCollapsed">
-                <ul class="nav navbar-nav">
-                    <li ui-sref-active="active">
-                        <a ui-sref="team-manager">My Teams</a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="user-manager">User Manager</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="ui-view-container">
-        <div style="" ui-view></div>
-    </div>
+    <%--Main App component--%>
+    <main-app></main-app>
 
     <%--Load RequireJS first, so we can add some config data to the app.module--%>
     <script src="${pageContext.request.contextPath}/resources/app/lib/require/2.2.0/require.min.js"></script>
-    <%--Have a require.config here to capture some variables that need to be set in the JSP here that the app module will need--%>
+    <%--Have a require.config here to capture some variables that need to be set in the JSP that the app module will need--%>
     <script>
         require.config({
             config: {
@@ -69,6 +43,5 @@
             <script src="${pageContext.request.contextPath}/resources/app/main.js?${version}"></script>
         </c:otherwise>
     </c:choose>
-
 </body>
 </html>

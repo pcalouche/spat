@@ -3,6 +3,12 @@ define([
 ], function(angular) {
     "use strict";
 
+    var userManagerComponent = {
+        templateUrl: "resources/app/components/features/user-manager/user-manager.component.html",
+        controller: UserManagerController,
+        controllerAs: "vm"
+    };
+
     UserManagerController.$inject = ["modalService", "UserResource"];
 
     function UserManagerController(modalService, UserResource) {
@@ -70,5 +76,5 @@ define([
         activate();
     }
 
-    return UserManagerController;
+    return userManagerComponent;
 });
