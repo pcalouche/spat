@@ -3,6 +3,12 @@ define([
 ], function(angular) {
     "use strict";
 
+    var teamManagerComponent = {
+        templateUrl: "resources/app/components/features/team-manager/team-manager.component.html",
+        controller: TeamManagerController,
+        controllerAs: "vm"
+    };
+
     TeamManagerController.$inject = ["modalService", "TeamResource"];
 
     function TeamManagerController(modalService, TeamResource) {
@@ -71,5 +77,5 @@ define([
 
     }
 
-    return TeamManagerController;
+    return teamManagerComponent;
 });
