@@ -32,17 +32,6 @@ public class SpatWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loggerInterceptor);
-        registry.addInterceptor(authorizationInterceptor);
-    }
-
     @Bean
     public InternalResourceViewResolver internalResourceViewResolver() {
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
@@ -60,5 +49,16 @@ public class SpatWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         driverManagerDataSource.setUsername(environment.getProperty("database.username"));
         driverManagerDataSource.setPassword(environment.getProperty("database.password"));
         return driverManagerDataSource;
+    }
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loggerInterceptor);
+        registry.addInterceptor(authorizationInterceptor);
     }
 }

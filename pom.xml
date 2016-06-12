@@ -4,20 +4,21 @@
     <groupId>com.calouche</groupId>
     <artifactId>spat</artifactId>
     <packaging>war</packaging>
-    <version>1.1.0.0</version>
+    <version>1.1.0.1</version>
     <name>Single Page App Template</name>
 
     <properties>
         <!-- Misc Properties -->
         <java.version>1.8</java.version>
         <!-- Dependency Versions -->
-        <log4j.version>2.5</log4j.version><!-- Dec 2015 -->
-        <spring.version>4.2.4.RELEASE</spring.version><!-- Dec 2015 -->
-        <postgresql.version>9.4.1207</postgresql.version><!-- Dec 2015 -->
-        <jackson.version>2.6.4</jackson.version><!-- Dec 2015 -->
+        <log4j.version>2.6</log4j.version><!-- May 2016 -->
+        <spring.version>4.2.6.RELEASE</spring.version><!-- May 2016 -->
+        <jackson.version>2.7.4</jackson.version><!-- Apr 2016 -->
+        <aspectj.version>1.8.9</aspectj.version><!-- Mar 2016 -->
         <servlet.api.version>3.1.0</servlet.api.version><!-- Apr 2013 -->
-        <servlet.jsp.version>2.3.1</servlet.jsp.version><!-- Apr 2013-->
+        <servlet.jsp.version>2.3.1</servlet.jsp.version><!-- Apr 2013 -->
         <jstl.version>1.2</jstl.version><!-- Jul 2006 -->
+        <postgresql.version>9.4.1208</postgresql.version><!-- Feb 2016 -->
         <!-- Plugin Versions -->
         <maven.compiler.version>3.3</maven.compiler.version><!-- Mar 2015 -->
         <maven.war.version>2.6</maven.war.version><!-- Jan 2015 -->
@@ -53,23 +54,17 @@
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <!-- AspectJ Weaver -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>1.8.7</version>
-        </dependency>
-        <!-- PostgreSQL JDBC Driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-        </dependency>
         <!-- Jackson Databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <!-- AspectJ Weaver -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
         <!-- Java Servlet API -->
         <dependency>
@@ -90,6 +85,12 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>${jstl.version}</version>
+        </dependency>
+        <!-- PostgreSQL JDBC Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
         </dependency>
     </dependencies>
     <build>
