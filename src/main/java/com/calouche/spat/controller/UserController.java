@@ -14,9 +14,13 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(TeamController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<User> getUsers() {

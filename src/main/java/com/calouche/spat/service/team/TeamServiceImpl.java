@@ -9,8 +9,12 @@ import java.util.List;
 
 @Service
 public class TeamServiceImpl implements TeamService {
+    private final TeamDao teamDao;
+
     @Autowired
-    private TeamDao teamDao;
+    public TeamServiceImpl(TeamDao teamDao) {
+        this.teamDao = teamDao;
+    }
 
     @Override
     public List<Team> getTeams() {

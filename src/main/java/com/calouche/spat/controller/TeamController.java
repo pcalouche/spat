@@ -16,8 +16,12 @@ import java.util.List;
 @RequestMapping(value = "/team")
 public class TeamController {
     private static final Logger logger = LoggerFactory.getLogger(TeamController.class);
+    private final TeamService teamService;
+
     @Autowired
-    private TeamService teamService;
+    public TeamController(TeamService teamService) {
+        this.teamService = teamService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Team> getTeams() throws AuthenticationException {

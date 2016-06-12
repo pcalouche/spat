@@ -4,6 +4,7 @@ import com.calouche.spat.interceptors.AuthorizationInterceptor;
 import com.calouche.spat.interceptors.LoggerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -15,17 +16,21 @@ import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
 @EnableAspectJAutoProxy
-@ComponentScan("com.calouche")
+@ComponentScan("com.calouche.spat")
 @PropertySource("classpath:database.properties")
 @Configuration
 public class SpatWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
-
     @Autowired
-    private Environment env;
+    private Environment environment;
     @Autowired
     private AuthorizationInterceptor authorizationInterceptor;
     @Autowired
     private LoggerInterceptor loggerInterceptor;
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -50,11 +55,10 @@ public class SpatWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     @Bean
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-        driverManagerDataSource.setDriverClassName(env.getProperty("database.driverClassName"));
-        driverManagerDataSource.setUrl(env.getProperty("database.url"));
-        driverManagerDataSource.setUsername(env.getProperty("database.username"));
-        driverManagerDataSource.setPassword(env.getProperty("database.password"));
+        driverManagerDataSource.setDriverClassName(environment.getProperty("database.driverClassName"));
+        driverManagerDataSource.setUrl(environment.getProperty("database.url"));
+        driverManagerDataSource.setUsername(environment.getProperty("database.username"));
+        driverManagerDataSource.setPassword(environment.getProperty("database.password"));
         return driverManagerDataSource;
     }
-
 }

@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationInterceptor.class);
+    private final AuthorizationDao authorizationDao;
 
     @Autowired
-    private AuthorizationDao authorizationDao;
-
+    public AuthorizationInterceptor(AuthorizationDao authorizationDao) {
+        this.authorizationDao = authorizationDao;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
