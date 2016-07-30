@@ -4,12 +4,12 @@ require.config({
     baseUrl: "resources/app",
     paths: {
         // AngularJS and Angular Core modules
-        angular: "lib/angular/1.5.5/angular",
-        ngAnimate: "lib/angular/1.5.5/angular-animate",
-        ngResource: "lib/angular/1.5.5/angular-resource",
+        angular: "lib/angular/1.5.8/angular",
+        ngAnimate: "lib/angular/1.5.8/angular-animate",
+        ngResource: "lib/angular/1.5.8/angular-resource",
         // AngularUI Module
-        uiBootstrap: "lib/angular-ui/ui-bootstrap/1.3.2/ui-bootstrap-tpls-1.3.2",
-        uiRouter: "lib/angular-ui/ui-router/0.2.18/angular-ui-router",
+        uiBootstrap: "lib/angular-ui/ui-bootstrap/2.0.0/ui-bootstrap-tpls-2.0.0",
+        uiRouter: "lib/angular-ui/ui-router/0.3.1/angular-ui-router",
         // Other Angular Modules
         smartTable: "lib/angular-other/smart-table/2.1.8/smart-table"
         // Convenience paths

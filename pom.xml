@@ -11,14 +11,17 @@
         <!-- Misc Properties -->
         <java.version>1.8</java.version>
         <!-- Dependency Versions -->
-        <log4j.version>2.6</log4j.version><!-- May 2016 -->
-        <spring.version>4.2.6.RELEASE</spring.version><!-- May 2016 -->
-        <jackson.version>2.7.4</jackson.version><!-- Apr 2016 -->
+        <log4j.version>2.6.2</log4j.version><!-- Jul 2016 -->
+        <spring.version>4.3.0.RELEASE</spring.version><!-- June 2016 -->
+        <jackson.version>2.7.5</jackson.version><!-- June 2016 -->
         <aspectj.version>1.8.9</aspectj.version><!-- Mar 2016 -->
         <servlet.api.version>3.1.0</servlet.api.version><!-- Apr 2013 -->
         <servlet.jsp.version>2.3.1</servlet.jsp.version><!-- Apr 2013 -->
         <jstl.version>1.2</jstl.version><!-- Jul 2006 -->
         <postgresql.version>9.4.1208</postgresql.version><!-- Feb 2016 -->
+        <!-- Test Dependency Versions -->
+        <testng.version>6.9.10</testng.version><!--Dec 2015-->
+        <mockito.version>1.10.19</mockito.version><!-- Dec 2014 -->
         <!-- Plugin Versions -->
         <maven.compiler.version>3.3</maven.compiler.version><!-- Mar 2015 -->
         <maven.war.version>2.6</maven.war.version><!-- Jan 2015 -->
@@ -91,6 +94,28 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
+        </dependency>
+        <!-- Test Dependencies -->
+        <!-- Spring TestContext Framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- TestNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
