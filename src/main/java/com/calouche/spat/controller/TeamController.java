@@ -13,7 +13,7 @@ import javax.naming.AuthenticationException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/team")
+@RequestMapping(value = TeamControllerUris.ROOT)
 public class TeamController {
     private static final Logger logger = LoggerFactory.getLogger(TeamController.class);
     private final TeamService teamService;

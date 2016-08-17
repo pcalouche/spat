@@ -9,8 +9,9 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com.calouche.spat" level="DEBUG">
+        <Logger name="com.calouche.spat" level="DEBUG"/>
+        <Root level="INFO">
             <AppenderRef ref="Console"/>
-        </Logger>
+        </Root>
     </Loggers>
 </Configuration>

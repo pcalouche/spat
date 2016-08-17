@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    @RequestMapping(value = "/*", method = RequestMethod.GET)
+    @RequestMapping(value = HomeControllerUris.ROOT, method = RequestMethod.GET)
     public String home(ModelMap model) {
         logger.info("Accessing Home Page");
         // Simulating get some server side data for AngularJS frontend

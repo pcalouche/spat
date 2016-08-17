@@ -25,12 +25,11 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
 
     @Override
     public List<User> getUsers() {
-        return getJdbcTemplate().query(UserQueries.GET_USERS, new BeanPropertyRowMapper(User.class));
+        return getJdbcTemplate().query(UserQueries.GET_USERS, new BeanPropertyRowMapper<>(User.class));
     }
 
     @Override
     public User saveUser(User user) {
-
         String sql;
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("firstName", user.getFirstName())
                 .addValue("lastName", user.getLastName());
@@ -47,14 +46,14 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
 
         getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource, keyHolder, new String[]{"id"});
         mapSqlParameterSource = new MapSqlParameterSource("id", keyHolder.getKey().longValue());
-        return (User) getNamedParameterJdbcTemplate().queryForObject(UserQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper(User.class));
+        return getNamedParameterJdbcTemplate().queryForObject(UserQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(User.class));
     }
 
     @Override
     public Boolean deleteUser(Long id) {
         logger.debug("id to delete is " + id);
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("id", id);
-        getNamedParameterJdbcTemplate().update(UserQueries.DELETE_USER, mapSqlParameterSource);
-        return true;
+        int numRowsAffected = getNamedParameterJdbcTemplate().update(UserQueries.DELETE_USER, mapSqlParameterSource);
+        return numRowsAffected > 0;
     }
 }

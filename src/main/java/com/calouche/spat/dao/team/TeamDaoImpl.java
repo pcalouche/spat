@@ -25,7 +25,7 @@ public class TeamDaoImpl extends NamedParameterJdbcDaoSupport implements TeamDao
 
     @Override
     public List<Team> getTeams() {
-        return getJdbcTemplate().query(TeamQueries.GET_TEAMS, new BeanPropertyRowMapper(Team.class));
+        return getJdbcTemplate().query(TeamQueries.GET_TEAMS, new BeanPropertyRowMapper<>(Team.class));
     }
 
     @Override
@@ -47,14 +47,13 @@ public class TeamDaoImpl extends NamedParameterJdbcDaoSupport implements TeamDao
 
         getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource, keyHolder, new String[]{"id"});
         mapSqlParameterSource = new MapSqlParameterSource("id", keyHolder.getKey().longValue());
-        return (Team) getNamedParameterJdbcTemplate().queryForObject(TeamQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper(Team.class));
+        return getNamedParameterJdbcTemplate().queryForObject(TeamQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Team.class));
     }
 
     @Override
     public Boolean deleteTeam(Long id) {
-        logger.debug("id to delete is " + id);
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("id", id);
-        getNamedParameterJdbcTemplate().update(TeamQueries.DELETE_TEAM, mapSqlParameterSource);
-        return true;
+        int numRowsAffected = getNamedParameterJdbcTemplate().update(TeamQueries.DELETE_TEAM, mapSqlParameterSource);
+        return numRowsAffected > 0;
     }
 }
