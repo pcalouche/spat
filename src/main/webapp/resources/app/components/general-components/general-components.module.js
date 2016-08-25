@@ -1,9 +1,9 @@
 define([
     "angular",
-    "./basic-modal/basic-modal.controller"
-], function(angular, BasicModalController) {
+    "./basic-modal/basic-modal.component"
+], function(angular, basicModalComponent) {
     "use strict";
 
     return angular.module("app.general-components", [])
-        .controller("BasicModalController", BasicModalController);
+        .component("basicModal", basicModalComponent);
 });

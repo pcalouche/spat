@@ -17,12 +17,13 @@ define([
 
         vm.addUser = function() {
             modalService.showModal({
-                templateUrl: "resources/app/components/features/user-manager/user-manager-modal.html",
-                controller: "UserManagerModalController",
+                component: "userManagerModal",
                 resolve: {
-                    modalData: {
-                        action: "Add",
-                        user: new UserResource()
+                    modalData: function() {
+                        return {
+                            action: "Add",
+                            user: new UserResource()
+                        };
                     }
                 }
             }).then(function(newUser) {
@@ -34,12 +35,13 @@ define([
 
         vm.editUser = function(user) {
             modalService.showModal({
-                templateUrl: "resources/app/components/features/user-manager/user-manager-modal.html",
-                controller: "UserManagerModalController",
+                component: "userManagerModal",
                 resolve: {
-                    modalData: {
-                        action: "Edit",
-                        user: angular.copy(user)
+                    modalData: function() {
+                        return {
+                            action: "Edit",
+                            user: angular.copy(user)
+                        };
                     }
                 }
             }).then(function(updatedUser) {
@@ -52,10 +54,12 @@ define([
         vm.deleteUser = function(user) {
             modalService.showModal({
                 resolve: {
-                    modalData: {
-                        title: "Delete User",
-                        message: "Are you sure you want to delete " + user.name + "?",
-                        includeCancelButton: true
+                    modalData: function() {
+                        return {
+                            title: "Delete User",
+                            message: "Are you sure you want to delete " + user.name + "?",
+                            includeCancelButton: true
+                        };
                     }
                 }
             }).then(function() {

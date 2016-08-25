@@ -1,5 +1,5 @@
 define([
-    "angular",
+    "angular"
 ], function(angular) {
     "use strict";
 
@@ -17,12 +17,13 @@ define([
 
         vm.addUser = function() {
             modalService.showModal({
-                templateUrl: "resources/app/components/features/team-manager/team-manager-modal.html",
-                controller: "TeamManagerModalController",
+                component: "teamManagerModal",
                 resolve: {
-                    modalData: {
-                        action: "Add",
-                        team: new TeamResource()
+                    modalData: function() {
+                        return {
+                            action: "Add",
+                            team: new TeamResource()
+                        };
                     }
                 }
             }).then(function(newTeam) {
@@ -34,28 +35,33 @@ define([
 
         vm.editUser = function(team) {
             modalService.showModal({
-                templateUrl: "resources/app/components/features/team-manager/team-manager-modal.html",
-                controller: "TeamManagerModalController",
+                component: "teamManagerModal",
                 resolve: {
-                    modalData: {
-                        action: "Edit",
-                        team: angular.copy(team)
+                    modalData: function() {
+                        return {
+                            action: "Edit",
+                            team: angular.copy(team)
+                        };
                     }
                 }
             }).then(function(updatedTeam) {
                 TeamResource.save(updatedTeam, function(response) {
                     vm.teams[vm.teams.indexOf(team)] = response;
                 });
+            }, function(r) {
+                console.info(r);
             });
         };
 
         vm.deleteUser = function(team) {
             modalService.showModal({
                 resolve: {
-                    modalData: {
-                        title: "Delete Team",
-                        message: "Are you sure you want to delete " + team.name + "?",
-                        includeCancelButton: true
+                    modalData: function() {
+                        return {
+                            title: "Delete Team",
+                            message: "Are you sure you want to delete " + team.name + "?",
+                            includeCancelButton: true
+                        };
                     }
                 }
             }).then(function() {

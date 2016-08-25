@@ -8,7 +8,7 @@ require.config({
         ngAnimate: "lib/angular/1.5.8/angular-animate",
         ngResource: "lib/angular/1.5.8/angular-resource",
         // AngularUI Module
-        uiBootstrap: "lib/angular-ui/ui-bootstrap/2.0.0/ui-bootstrap-tpls-2.0.0",
+        uiBootstrap: "lib/angular-ui/ui-bootstrap/2.1.2/ui-bootstrap-tpls-2.1.2",
         uiRouter: "lib/angular-ui/ui-router/0.3.1/angular-ui-router",
         // Other Angular Modules
         smartTable: "lib/angular-other/smart-table/2.1.8/smart-table"

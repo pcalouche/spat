@@ -18,7 +18,7 @@
         <servlet.api.version>3.1.0</servlet.api.version><!-- Apr 2013 -->
         <servlet.jsp.version>2.3.1</servlet.jsp.version><!-- Apr 2013 -->
         <jstl.version>1.2</jstl.version><!-- Jul 2006 -->
-        <postgresql.version>9.4.1208</postgresql.version><!-- Feb 2016 -->
+        <postgresql.version>9.4.1209</postgresql.version><!-- Jul 2016 -->
         <!-- Test Dependency Versions -->
         <testng.version>6.9.10</testng.version><!--Dec 2015-->
         <mockito.version>1.10.19</mockito.version><!-- Dec 2014 -->

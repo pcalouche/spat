@@ -9,8 +9,7 @@ define([
 
         var modalDefaultConfig = {
             animation: true,
-            templateUrl: "resources/app/components/general-components/basic-modal/basic-modal.html",
-            controller: "BasicModalController",
+            component: "basicModal",
             controllerAs: "vm",
             size: "md"
         };
