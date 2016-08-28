@@ -9,9 +9,9 @@ define([
         controllerAs: "vm"
     };
 
-    TeamManagerController.$inject = ["modalService", "TeamResource"];
+    TeamManagerController.$inject = ["mainAppService", "modalService", "TeamResource"];
 
-    function TeamManagerController(modalService, TeamResource) {
+    function TeamManagerController(mainAppService, modalService, TeamResource) {
         var vm = this;
         vm.teams = null;
 
@@ -30,6 +30,8 @@ define([
                 TeamResource.save(newTeam, function(response) {
                     vm.teams.push(response);
                 });
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to add team.", response);
             });
         };
 
@@ -48,8 +50,8 @@ define([
                 TeamResource.save(updatedTeam, function(response) {
                     vm.teams[vm.teams.indexOf(team)] = response;
                 });
-            }, function(r) {
-                console.info(r);
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to edit team.", response);
             });
         };
 
@@ -68,14 +70,16 @@ define([
                 TeamResource.delete({id: team.id}, function() {
                     vm.teams.splice(vm.teams.indexOf(team), 1);
                 });
-            })
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to delete team.", response);
+            });
         };
 
         function activate() {
             TeamResource.query(function(response) {
                 vm.teams = response;
             }, function(response) {
-                alert("Unable to retrieve teams.  Response code:" + response.status);
+                mainAppService.showErrorModal("Unable to retrieve teams.", response);
             });
         }
 

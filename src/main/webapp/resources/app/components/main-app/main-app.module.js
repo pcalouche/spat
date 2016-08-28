@@ -1,9 +1,11 @@
 define([
     "angular",
-    "./main-app.component"
-], function(angular, mainAppComponent) {
+    "./main-app.component",
+    "./main-app.service"
+], function(angular, mainAppComponent, mainAppService) {
     "use strict";
 
     return angular.module("app.main-app", [])
-        .component("mainApp", mainAppComponent);
+        .component("mainApp", mainAppComponent)
+        .service("mainAppService", mainAppService);
 });

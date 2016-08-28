@@ -9,9 +9,9 @@ define([
         controllerAs: "vm"
     };
 
-    UserManagerController.$inject = ["modalService", "UserResource"];
+    UserManagerController.$inject = ["mainAppService", "modalService", "UserResource"];
 
-    function UserManagerController(modalService, UserResource) {
+    function UserManagerController(mainAppService, modalService, UserResource) {
         var vm = this;
         vm.users = [];
 
@@ -30,6 +30,8 @@ define([
                 UserResource.save(newUser, function(response) {
                     vm.users.push(response);
                 });
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to add user.", response);
             });
         };
 
@@ -48,6 +50,8 @@ define([
                 UserResource.save(updatedUser, function(response) {
                     vm.users[vm.users.indexOf(user)] = response;
                 });
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to edit user.", response);
             });
         };
 
@@ -66,6 +70,8 @@ define([
                 UserResource.delete({id: user.id}, function() {
                     vm.users.splice(vm.users.indexOf(user), 1);
                 });
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to delete user.", response);
             })
         };
 
@@ -73,7 +79,7 @@ define([
             UserResource.query(function(response) {
                 vm.users = response;
             }, function(response) {
-                alert("Unable to retrieve users.  Response code:" + response.status);
+                mainAppService.showErrorModal("Unable to retrieve users.", response);
             });
         }
 
