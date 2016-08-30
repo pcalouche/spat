@@ -29,9 +29,9 @@ define([
             }).then(function(newTeam) {
                 TeamResource.save(newTeam, function(response) {
                     vm.teams.push(response);
+                }, function(response) {
+                    mainAppService.showErrorModal("Unable to add team.", response);
                 });
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to add team.", response);
             });
         };
 
@@ -49,9 +49,9 @@ define([
             }).then(function(updatedTeam) {
                 TeamResource.save(updatedTeam, function(response) {
                     vm.teams[vm.teams.indexOf(team)] = response;
+                }, function(response) {
+                    mainAppService.showErrorModal("Unable to edit team.", response);
                 });
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to edit team.", response);
             });
         };
 
@@ -69,9 +69,9 @@ define([
             }).then(function() {
                 TeamResource.delete({id: team.id}, function() {
                     vm.teams.splice(vm.teams.indexOf(team), 1);
+                }, function(response) {
+                    mainAppService.showErrorModal("Unable to delete team.", response);
                 });
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to delete team.", response);
             });
         };
 

@@ -29,9 +29,9 @@ define([
             }).then(function(newUser) {
                 UserResource.save(newUser, function(response) {
                     vm.users.push(response);
+                }, function(response) {
+                    mainAppService.showErrorModal("Unable to add user.", response);
                 });
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to add user.", response);
             });
         };
 
@@ -49,9 +49,9 @@ define([
             }).then(function(updatedUser) {
                 UserResource.save(updatedUser, function(response) {
                     vm.users[vm.users.indexOf(user)] = response;
+                }, function(response) {
+                    mainAppService.showErrorModal("Unable to edit user.", response);
                 });
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to edit user.", response);
             });
         };
 
@@ -69,9 +69,9 @@ define([
             }).then(function() {
                 UserResource.delete({id: user.id}, function() {
                     vm.users.splice(vm.users.indexOf(user), 1);
+                }, function(response) {
+                    mainAppService.showErrorModal("Unable to delete user.", response);
                 });
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to delete user.", response);
             })
         };
 
