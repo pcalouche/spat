@@ -16,8 +16,7 @@
         <jackson.version>2.7.5</jackson.version><!-- June 2016 -->
         <aspectj.version>1.8.9</aspectj.version><!-- Mar 2016 -->
         <servlet.api.version>3.1.0</servlet.api.version><!-- Apr 2013 -->
-        <servlet.jsp.version>2.3.1</servlet.jsp.version><!-- Apr 2013 -->
-        <jstl.version>1.2</jstl.version><!-- Jul 2006 -->
+        <thymeleaf.version>3.0.1.RELEASE</thymeleaf.version>
         <postgresql.version>9.4.1209</postgresql.version><!-- Jul 2016 -->
         <!-- Test Dependency Versions -->
         <testng.version>6.9.10</testng.version><!--Dec 2015-->
@@ -76,18 +75,16 @@
             <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Java Server Pages API -->
+        <!-- Thymeleaf Spring4 -->
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
-            <version>${servlet.jsp.version}</version>
-            <scope>provided</scope>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+            <version>${thymeleaf.version}</version>
         </dependency>
-        <!-- JSTL -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring4</artifactId>
+            <version>${thymeleaf.version}</version>
         </dependency>
         <!-- PostgreSQL JDBC Driver -->
         <dependency>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Single Page App Template</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/resources/app/lib/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/resources/app/lib/font-awesome/4.6.3/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/resources/app/stylesheets/styles.css}">
+    <base th:href="@{/}">
+</head>
+
+<body ng-cloak>
+    <!--/*Main App component*/-->
+    <main-app></main-app>
+
+    <!--/*Load RequireJS first, so we can add some config data to the app.module*/-->
+    <script th:src="@{/resources/app/lib/require/2.2.0/require.min.js}"></script>
+    <!--/*Have a require.config here to capture some variables that need to be set in the JSP that the app module will need*/-->
+    <script th:inline="javascript">
+        require.config({
+            config: {
+                "app.module": {
+                    spatGlobals: {
+                        restServiceUrl: /*[[@{/}]]*/"",
+                        version: /*[[${version}]]*/""
+                    }
+                }
+            }
+        });
+    </script>
+    <!--/*Example of how to load optimized JavaScript versus non-optimized based on a server variable that is set in HomeController.java*/-->
+    <!--/*A version query parameter is added to the end to ensure the latest version is loaded inside of a browser cached version*/-->
+    <script th:if="${environment == 'prod'}" th:src="@{/resources/app/main-optimized.min.js(version=${version})}"></script>
+    <script th:if="${environment != 'prod'}" th:src="@{/resources/app/main.js(version=${version})}"></script>
+</body>
+</html>

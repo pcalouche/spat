@@ -9,12 +9,15 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 
 @EnableWebMvc
 @EnableAspectJAutoProxy
@@ -23,12 +26,16 @@ import org.springframework.web.servlet.view.JstlView;
 @PropertySource("classpath:database.properties")
 @Configuration
 public class SpatWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
+    private final Environment environment;
+    private final AuthorizationInterceptor authorizationInterceptor;
+    private final LoggerInterceptor loggerInterceptor;
+
     @Autowired
-    private Environment environment;
-    @Autowired
-    private AuthorizationInterceptor authorizationInterceptor;
-    @Autowired
-    private LoggerInterceptor loggerInterceptor;
+    public SpatWebMvcConfigurerAdapter(Environment environment, LoggerInterceptor loggerInterceptor, AuthorizationInterceptor authorizationInterceptor) {
+        this.environment = environment;
+        this.loggerInterceptor = loggerInterceptor;
+        this.authorizationInterceptor = authorizationInterceptor;
+    }
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
@@ -36,12 +43,28 @@ public class SpatWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public InternalResourceViewResolver internalResourceViewResolver() {
-        InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
-        internalResourceViewResolver.setPrefix("/WEB-INF/views/");
-        internalResourceViewResolver.setSuffix(".jsp");
-        internalResourceViewResolver.setViewClass(JstlView.class);
-        return internalResourceViewResolver;
+    public SpringResourceTemplateResolver templateResolver() {
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setPrefix("/WEB-INF/views/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setCacheable(false);
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setEnableSpringELCompiler(true);
+        templateEngine.setTemplateResolver(templateResolver());
+        return templateEngine;
+    }
+
+    @Bean
+    public ViewResolver viewResolver() {
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine());
+        return viewResolver;
     }
 
     @Bean
