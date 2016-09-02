@@ -4,7 +4,9 @@ define([
     "use strict";
 
     var teamManagerComponent = {
-        templateUrl: "resources/app/components/features/team-manager/team-manager.component.html",
+        templateUrl: ["spatGlobals", function(spatGlobals) {
+            return spatGlobals.featuresRoot + "/team-manager/team-manager.component.html"
+        }],
         controller: TeamManagerController,
         controllerAs: "vm"
     };

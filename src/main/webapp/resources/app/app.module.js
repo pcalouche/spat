@@ -7,20 +7,15 @@ define([
 ], function(angular, module, coreModule, mainAppModule, featuresModule) {
     "use strict";
 
-    routeConfig.$inject = ["$httpProvider", "$locationProvider", "$stateProvider", "$urlRouterProvider"];
+    routeConfig.$inject = ["$httpProvider", "$locationProvider", "$urlRouterProvider"];
 
-    function routeConfig($httpProvider, $locationProvider, $stateProvider, $urlRouterProvider) {
-        $httpProvider.defaults.headers.common["AUTH_TOKEN"] = "myAuthCode"
+    function routeConfig($httpProvider, $locationProvider, $urlRouterProvider) {
+        $httpProvider.defaults.headers.common["AUTH_TOKEN"] = "myAuthCode";
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise("team-manager");
 
-        $stateProvider.state("team-manager", {
-            url: "/team-manager",
-            template: "<team-manager></team-manager>"
-        }).state("user-manager", {
-            url: "/user-manager",
-            template: "<user-manager></user-manager>"
-        });
+        // In a large project the routes can get quite long.  To avoid a large list,
+        // each feature module declares its own route config
     }
 
     // The Main App Module

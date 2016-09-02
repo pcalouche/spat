@@ -2,7 +2,9 @@ define([], function() {
     "use strict";
 
     var basicModalComponent = {
-        templateUrl: "resources/app/components/general-components/basic-modal/basic-modal.html",
+        templateUrl: ["spatGlobals", function(spatGlobals) {
+            return spatGlobals.componentsRoot + "/general-components/basic-modal/basic-modal.html"
+        }],
         controller: BasicModalController,
         bindings: {
             modalInstance: "<",

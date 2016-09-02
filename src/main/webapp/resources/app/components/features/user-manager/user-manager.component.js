@@ -4,7 +4,9 @@ define([
     "use strict";
 
     var userManagerComponent = {
-        templateUrl: "resources/app/components/features/user-manager/user-manager.component.html",
+        templateUrl: ["spatGlobals", function(spatGlobals) {
+            return spatGlobals.featuresRoot + "/user-manager/user-manager.component.html"
+        }],
         controller: UserManagerController,
         controllerAs: "vm"
     };

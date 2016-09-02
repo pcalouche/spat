@@ -2,7 +2,9 @@ define([], function() {
     "use strict";
 
     var userManagerModalComponent = {
-        templateUrl: "resources/app/components/features/user-manager/user-manager-modal.component.html",
+        templateUrl: ["spatGlobals", function(spatGlobals) {
+            return spatGlobals.featuresRoot + "/user-manager/user-manager-modal.component.html"
+        }],
         controller: UserManagerModalController,
         bindings: {
             modalInstance: "<",

@@ -2,7 +2,9 @@ define([], function() {
     "use strict";
 
     var teamManagerModalComponent = {
-        templateUrl: "resources/app/components/features/team-manager/team-manager-modal.component.html",
+        templateUrl: ["spatGlobals", function(spatGlobals) {
+            return spatGlobals.featuresRoot + "/team-manager/team-manager-modal.component.html"
+        }],
         controller: TeamManagerModalController,
         bindings: {
             modalInstance: "<",

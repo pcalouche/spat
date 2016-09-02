@@ -2,7 +2,9 @@ define([], function() {
     "use strict";
 
     var mainAppComponent = {
-        templateUrl: "resources/app/components/main-app/main-app.component.html",
+        templateUrl: ["spatGlobals", function(spatGlobals) {
+            return spatGlobals.componentsRoot + "/main-app/main-app.component.html"
+        }],
         controller: MainNavigationController,
         controllerAs: "vm"
     };
