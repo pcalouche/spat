@@ -23,8 +23,9 @@
             config: {
                 "app.module": {
                     spatGlobals: {
-                        restServiceUrl: /*[[@{/}]]*/"",
+                        environment: /*[[${environment}]]*/"",
                         version: /*[[${version}]]*/"",
+                        restServiceUrl: /*[[@{/}]]*/"",
                         componentsRoot: "resources/app/components",
                         featuresRoot: "resources/app/components/features"
                     }
@@ -34,7 +35,7 @@
     </script>
     <!--/*Example of how to load optimized JavaScript versus non-optimized based on a server variable that is set in HomeController.java*/-->
     <!--/*A version query parameter is added to the end to ensure the latest version is loaded inside of a browser cached version*/-->
-    <script th:if="${environment == 'prod'}" th:src="@{/resources/app/main-optimized.min.js(version=${version})}"></script>
-    <script th:if="${environment != 'prod'}" th:src="@{/resources/app/main.js(version=${version})}"></script>
+    <script th:if="${environment == 'dev'}" th:src="@{/resources/app/main.js(version=${version})}"></script>
+    <script th:if="${environment != 'dev'}" th:src="@{/resources/app/main-optimized.min.js(version=${version})}"></script>
 </body>
 </html>

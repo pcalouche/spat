@@ -5,9 +5,9 @@ define([
 ], function(angular, userManagerComponent, userManagerModalComponent) {
     "use strict";
 
-    routeConfig.$inject = ["$stateProvider"];
+    moduleConfig.$inject = ["$stateProvider"];
 
-    function routeConfig($stateProvider) {
+    function moduleConfig($stateProvider) {
         $stateProvider.state("user-manager", {
             url: "/user-manager",
             template: "<user-manager></user-manager>"
@@ -15,7 +15,7 @@ define([
     }
 
     return angular.module("app.user-manager", [])
-        .config(routeConfig)
+        .config(moduleConfig)
         .component("userManager", userManagerComponent)
         .component("userManagerModal", userManagerModalComponent);
 });

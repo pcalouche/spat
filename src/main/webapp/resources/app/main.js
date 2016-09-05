@@ -1,6 +1,5 @@
 require.config({
-    // This is only for development, so that nothing is cached by RequireJS
-    urlArgs: "bust=" + (new Date()).getTime(),
+    waitSeconds: 30,
     baseUrl: "resources/app",
     paths: {
         // AngularJS and Angular Core modules

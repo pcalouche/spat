@@ -5,9 +5,9 @@ define([
 ], function(angular, teamManagerComponent, TeamManagerModalComponent) {
     "use strict";
 
-    routeConfig.$inject = ["$stateProvider"];
+    moduleConfig.$inject = ["$stateProvider"];
 
-    function routeConfig($stateProvider) {
+    function moduleConfig($stateProvider) {
         $stateProvider.state("team-manager", {
             url: "/team-manager",
             template: "<team-manager></team-manager>"
@@ -15,7 +15,7 @@ define([
     }
 
     return angular.module("app.team-manager", [])
-        .config(routeConfig)
+        .config(moduleConfig)
         .component("teamManager", teamManagerComponent)
         .component("teamManagerModal", TeamManagerModalComponent);
 });

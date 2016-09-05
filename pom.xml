@@ -12,8 +12,8 @@
         <java.version>1.8</java.version>
         <!-- Dependency Versions -->
         <log4j.version>2.6.2</log4j.version><!-- Jul 2016 -->
-        <spring.version>4.3.0.RELEASE</spring.version><!-- June 2016 -->
-        <jackson.version>2.7.5</jackson.version><!-- June 2016 -->
+        <spring.version>4.3.2.RELEASE</spring.version><!-- Jul 2016 -->
+        <jackson.version>2.8.1</jackson.version><!-- Jul 2016 -->
         <aspectj.version>1.8.9</aspectj.version><!-- Mar 2016 -->
         <servlet.api.version>3.1.0</servlet.api.version><!-- Apr 2013 -->
         <thymeleaf.version>3.0.1.RELEASE</thymeleaf.version>
@@ -22,8 +22,8 @@
         <testng.version>6.9.10</testng.version><!--Dec 2015-->
         <mockito.version>1.10.19</mockito.version><!-- Dec 2014 -->
         <!-- Plugin Versions -->
-        <maven.compiler.version>3.3</maven.compiler.version><!-- Mar 2015 -->
-        <maven.war.version>2.6</maven.war.version><!-- Jan 2015 -->
+        <maven.compiler.version>3.5.1</maven.compiler.version><!-- Feb 2016 -->
+        <maven.war.version>3.0.0</maven.war.version><!-- Aug 2016 -->
     </properties>
     <dependencies>
         <!-- Apache Log4j Core -->
