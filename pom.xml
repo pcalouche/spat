@@ -12,12 +12,12 @@
         <java.version>1.8</java.version>
         <!-- Dependency Versions -->
         <log4j.version>2.6.2</log4j.version><!-- Jul 2016 -->
-        <spring.version>4.3.2.RELEASE</spring.version><!-- Jul 2016 -->
-        <jackson.version>2.8.1</jackson.version><!-- Jul 2016 -->
+        <spring.version>4.3.3.RELEASE</spring.version><!-- Sep 2016 -->
+        <jackson.version>2.8.2</jackson.version><!-- Aug 2016 -->
         <aspectj.version>1.8.9</aspectj.version><!-- Mar 2016 -->
         <servlet.api.version>3.1.0</servlet.api.version><!-- Apr 2013 -->
         <thymeleaf.version>3.0.1.RELEASE</thymeleaf.version>
-        <postgresql.version>9.4.1209</postgresql.version><!-- Jul 2016 -->
+        <postgresql.version>9.4.1210</postgresql.version><!-- Sep 2016 -->
         <!-- Test Dependency Versions -->
         <testng.version>6.9.10</testng.version><!--Dec 2015-->
         <mockito.version>1.10.19</mockito.version><!-- Dec 2014 -->
