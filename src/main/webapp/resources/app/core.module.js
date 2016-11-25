@@ -6,12 +6,10 @@ define([
     // Required AngularUI Modules
     "uiBootstrap",
     "uiRouter",
-    // Other Angular Modules
-    "smartTable",
     // Shared Application Modules
     "components/general-components/general-components.module",
     "components/services/services.module"
-], function(angular, ngAnimate, ngResource, uiBootstrap, uiRouter, smartTable, generalComponentsModule, servicesModule) {
+], function(angular, ngAnimate, ngResource, uiBootstrap, uiRouter, generalComponentsModule, servicesModule) {
     "use strict";
 
     return angular.module("app.core", [
@@ -21,8 +19,6 @@ define([
         // Required AngularUI Modules
         "ui.bootstrap",
         "ui.router",
-        // Other Angular Modules
-        "smart-table",
         // Shared Application Modules
         generalComponentsModule.name,
         servicesModule.name

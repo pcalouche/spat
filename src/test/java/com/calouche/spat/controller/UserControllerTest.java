@@ -1,5 +1,7 @@
 package com.calouche.spat.controller;
 
+import com.calouche.spat.controller.user.UserController;
+import com.calouche.spat.controller.user.UserControllerUris;
 import com.calouche.spat.model.User;
 import com.calouche.spat.service.user.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;

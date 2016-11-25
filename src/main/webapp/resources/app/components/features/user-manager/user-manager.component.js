@@ -77,15 +77,13 @@ define([
             })
         };
 
-        function activate() {
+        vm.$onInit = function() {
             UserResource.query(function(response) {
                 vm.users = response;
             }, function(response) {
                 mainAppService.showErrorModal("Unable to retrieve users.", response);
             });
-        }
-
-        activate();
+        };
     }
 
     return userManagerComponent;

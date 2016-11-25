@@ -77,16 +77,13 @@ define([
             });
         };
 
-        function activate() {
+        vm.$onInit = function() {
             TeamResource.query(function(response) {
                 vm.teams = response;
             }, function(response) {
                 mainAppService.showErrorModal("Unable to retrieve teams.", response);
             });
-        }
-
-        activate();
-
+        };
     }
 
     return teamManagerComponent;

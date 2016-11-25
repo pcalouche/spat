@@ -16,6 +16,9 @@ public class HomeController {
         logger.info("Accessing Home Page");
         // Simulating get some server side data for AngularJS frontend
         model.addAttribute("environment", "dev");
+        // Set this for environment in order to load minified JS.  See index.html
+//        model.addAttribute("environment", "prod");
+        // Adding a version number for HTML/CSS/JS caching
         model.addAttribute("version", "1.0");
         return "index";
     }

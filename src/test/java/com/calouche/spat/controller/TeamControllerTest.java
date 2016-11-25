@@ -1,5 +1,7 @@
 package com.calouche.spat.controller;
 
+import com.calouche.spat.controller.team.TeamController;
+import com.calouche.spat.controller.team.TeamControllerUris;
 import com.calouche.spat.model.Team;
 import com.calouche.spat.service.team.TeamService;
 import com.fasterxml.jackson.core.type.TypeReference;
