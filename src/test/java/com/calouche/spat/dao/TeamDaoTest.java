@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TeamDaoTest extends IntegratedTest {
     @Autowired
-    TeamDao teamDao;
+    private TeamDao teamDao;
 
     @Test
     void getTeamsTest() {

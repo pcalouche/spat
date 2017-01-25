@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UserDaoTest extends IntegratedTest {
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
     @Test
     void getUsersTest() {
