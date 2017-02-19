@@ -17,6 +17,14 @@ define([
         var vm = this;
         vm.users = [];
 
+        vm.$onInit = function() {
+            UserResource.query(function(response) {
+                vm.users = response;
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to retrieve users.", response);
+            });
+        };
+
         vm.addUser = function() {
             modalService.showModal({
                 component: "userManagerModal",
@@ -34,7 +42,7 @@ define([
                 }, function(response) {
                     mainAppService.showErrorModal("Unable to add user.", response);
                 });
-            });
+            }, angular.noop);
         };
 
         vm.editUser = function(user) {
@@ -54,7 +62,7 @@ define([
                 }, function(response) {
                     mainAppService.showErrorModal("Unable to edit user.", response);
                 });
-            });
+            }, angular.noop);
         };
 
         vm.deleteUser = function(user) {
@@ -74,15 +82,7 @@ define([
                 }, function(response) {
                     mainAppService.showErrorModal("Unable to delete user.", response);
                 });
-            })
-        };
-
-        vm.$onInit = function() {
-            UserResource.query(function(response) {
-                vm.users = response;
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to retrieve users.", response);
-            });
+            }, angular.noop)
         };
     }
 

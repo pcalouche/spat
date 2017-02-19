@@ -17,9 +17,12 @@ define([], function() {
 
     function UserManagerModalController() {
         var vm = this;
-        var modalData = vm.resolve.modalData;
-        vm.title = modalData.action == "Add" ? "Add User" : "Edit User";
-        vm.user = modalData.user;
+
+        vm.$onInit = function() {
+            var modalData = vm.resolve.modalData;
+            vm.title = modalData.action == "Add" ? "Add User" : "Edit User";
+            vm.user = modalData.user;
+        }
 
         vm.save = function() {
             vm.modalInstance.close(vm.user);

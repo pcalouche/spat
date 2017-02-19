@@ -17,6 +17,14 @@ define([
         var vm = this;
         vm.teams = null;
 
+        vm.$onInit = function() {
+            TeamResource.query(function(response) {
+                vm.teams = response;
+            }, function(response) {
+                mainAppService.showErrorModal("Unable to retrieve teams.", response);
+            });
+        };
+
         vm.addUser = function() {
             modalService.showModal({
                 component: "teamManagerModal",
@@ -34,7 +42,7 @@ define([
                 }, function(response) {
                     mainAppService.showErrorModal("Unable to add team.", response);
                 });
-            });
+            }, angular.noop);
         };
 
         vm.editUser = function(team) {
@@ -54,7 +62,7 @@ define([
                 }, function(response) {
                     mainAppService.showErrorModal("Unable to edit team.", response);
                 });
-            });
+            }, angular.noop);
         };
 
         vm.deleteUser = function(team) {
@@ -74,15 +82,7 @@ define([
                 }, function(response) {
                     mainAppService.showErrorModal("Unable to delete team.", response);
                 });
-            });
-        };
-
-        vm.$onInit = function() {
-            TeamResource.query(function(response) {
-                vm.teams = response;
-            }, function(response) {
-                mainAppService.showErrorModal("Unable to retrieve teams.", response);
-            });
+            }, angular.noop);
         };
     }
 

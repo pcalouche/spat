@@ -17,13 +17,16 @@ define([], function() {
 
     function BasicModalController() {
         var vm = this;
-        var modalData = vm.resolve.modalData;
-        vm.title = modalData.title;
-        vm.message = modalData.message;
-        vm.includeCancelButton = modalData.includeCancelButton ? modalData.includeCancelButton : false;
-        vm.okText = modalData.okText ? modalData.okText : "Ok";
-        vm.cancelText = modalData.cancelText ? modalData.cancelText : "Cancel";
 
+        vm.$onInit = function() {
+            var modalData = vm.resolve.modalData;
+            vm.title = modalData.title;
+            vm.message = modalData.message;
+            vm.includeCancelButton = modalData.includeCancelButton ? modalData.includeCancelButton : false;
+            vm.okText = modalData.okText ? modalData.okText : "Ok";
+            vm.cancelText = modalData.cancelText ? modalData.cancelText : "Cancel";
+        }
+        
         vm.ok = function() {
             vm.modalInstance.close();
         };
