@@ -1,23 +1,38 @@
 {
   "name": "spat",
   "version": "1.0.0",
-  "description": "Single Page App Template",
-  "main": "gulpfile.js",
-  "dependencies": {},
-  "devDependencies": {
-    "gulp": "^3.9.1"
-  },
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pcalouche/singlePageAppTemplate.git"
+    "build:dev": "webpack -d --env=dev --watch --progress --colors",
+    "build:prod": "webpack -p --env=prod --progress --colors"
   },
   "author": "Philip Calouche",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pcalouche/singlePageAppTemplate/issues"
+  "description": "Single Page App Template",
+  "dependencies": {
   },
-  "homepage": "https://github.com/pcalouche/singlePageAppTemplate#readme"
+  "devDependencies": {
+    "angular": "1.6.1",
+    "angular-animate": "1.6.1",
+    "angular-resource": "1.6.1",
+    "angular-ui-bootstrap": "2.5.0",
+    "angular-ui-router": "0.4.2",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "bootstrap": "3.3.7",
+    "clean-webpack-plugin": "^0.1.16",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "font-awesome": "^4.7.0",
+    "html-loader": "^0.4.5",
+    "html-webpack-plugin": "^2.28.0",
+    "jshint": "^2.9.4",
+    "jshint-loader": "^0.8.4",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.2",
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.2"
+  }
 }
