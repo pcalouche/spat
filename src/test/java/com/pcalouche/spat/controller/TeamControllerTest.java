@@ -1,11 +1,11 @@
 package com.pcalouche.spat.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.controller.team.TeamController;
 import com.pcalouche.spat.controller.team.TeamControllerUris;
 import com.pcalouche.spat.model.Team;
 import com.pcalouche.spat.service.team.TeamService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,8 +30,8 @@ public class TeamControllerTest {
     @Test
     public void getTeamsTest() throws Exception {
         List<Team> expectedTeams = new ArrayList<>();
-        expectedTeams.add(new Team(1L, "Team1", "Basketball", "NBA"));
-        expectedTeams.add(new Team(2L, "Team2", "Soccer", "FIBA"));
+        expectedTeams.add(new Team(1L, "Team1"));
+        expectedTeams.add(new Team(2L, "Team2"));
 
         Mockito.when(teamService.getTeams()).thenReturn(expectedTeams);
 
@@ -50,7 +50,7 @@ public class TeamControllerTest {
 
     @Test
     public void saveTeamTest() throws Exception {
-        Team expectedTeam = new Team(1L, "Team1", "Basketball", "NBA");
+        Team expectedTeam = new Team(1L, "Team1");
 
         Mockito.when(teamService.saveTeam(expectedTeam)).thenReturn(expectedTeam);
 

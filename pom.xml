@@ -11,20 +11,22 @@
         <!-- Misc Properties -->
         <java.version>1.8</java.version>
         <!-- Dependency Versions -->
-        <log4j.version>2.8</log4j.version> <!-- Jan 2017 -->
-        <spring.version>4.3.7.RELEASE</spring.version><!-- March 2017 -->
-        <jackson.version>2.8.7</jackson.version><!-- Feb 2017 -->
-        <aspectj.version>1.8.10</aspectj.version><!-- Dec 2016 -->
-        <servlet.api.version>3.1.0</servlet.api.version><!-- Apr 2013 -->
-        <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version><!-- Jan 2017-->
-        <postgresql.version>42.0.0.jre7</postgresql.version><!-- Feb 2017 -->
+        <log4j.version>2.8.2</log4j.version><!-- April 2017 -->
+        <spring.version>4.3.9.RELEASE</spring.version><!-- June 2017 -->
+        <jackson.version>2.8.7</jackson.version><!-- February 2017 -->
+        <aspectj.version>1.8.10</aspectj.version><!-- December 2016 -->
+        <servlet.api.version>3.1.0</servlet.api.version><!-- April 2013 -->
+        <thymeleaf.version>3.0.6.RELEASE</thymeleaf.version><!-- May 2017 -->
+        <postgresql.version>42.0.0.jre7</postgresql.version><!-- February 2017 -->
         <!-- Test Dependency Versions -->
-        <testng.version>6.11</testng.version><!--March 2017-->
-        <mockito.version>2.7.13</mockito.version><!-- Feb 2017-->
+        <testng.version>6.11</testng.version><!-- March 2017-->
+        <!--<mockito.version>2.7.13</mockito.version>&lt;!&ndash; Feb 2017&ndash;&gt;-->
+        <mockito.version>2.8.47</mockito.version><!-- June 2017-->
         <!-- Plugin Versions -->
-        <maven.surefire.version>2.19.1</maven.surefire.version> <!-- Dec 2015 -->
-        <maven.compiler.version>3.6.1</maven.compiler.version><!-- Jan 2017 -->
-        <maven.war.version>3.0.0</maven.war.version><!-- Aug 2016 -->
+        <maven.exec.version>1.6.0</maven.exec.version> <!--March 2017-->
+        <maven.surefire.version>2.20</maven.surefire.version> <!-- April 2015 -->
+        <maven.compiler.version>3.6.1</maven.compiler.version><!-- January 2017 -->
+        <maven.war.version>3.0.0</maven.war.version><!-- August 2016 -->
     </properties>
     <dependencies>
         <!-- Apache Log4j Core -->
@@ -119,6 +121,40 @@
     <build>
         <finalName>spat</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${maven.exec.version}</version>
+                <executions>
+                    <execution>
+                        <id>exec-npm-install</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>exec-webpack</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build:prod</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <!-- Maven Surefire Plugin -->
                 <groupId>org.apache.maven.plugins</groupId>

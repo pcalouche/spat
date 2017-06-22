@@ -21,7 +21,7 @@ public class TeamDaoTest extends IntegratedTest {
 
     @Test
     void saveTeamTest() {
-        Team newTeam = new Team(null, "Team1", "Basketball", "NBA");
+        Team newTeam = new Team(null, "Team1");
 
         Team savedTeam = teamDao.saveTeam(newTeam);
         Assert.assertEquals(savedTeam, newTeam);

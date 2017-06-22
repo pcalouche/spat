@@ -31,9 +31,7 @@ public class TeamDaoImpl extends NamedParameterJdbcDaoSupport implements TeamDao
     @Override
     public Team saveTeam(Team team) {
         String sql;
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("name", team.getName())
-                .addValue("sport", team.getSport())
-                .addValue("league", team.getLeague());
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("name", team.getName());
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         if (team.getId() == null) {
@@ -44,7 +42,7 @@ public class TeamDaoImpl extends NamedParameterJdbcDaoSupport implements TeamDao
             sql = TeamQueries.UPDATE_TEAM;
             mapSqlParameterSource.addValue("id", team.getId());
         }
-        
+
         getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource, keyHolder, new String[]{"id"});
         mapSqlParameterSource = new MapSqlParameterSource("id", keyHolder.getKey().longValue());
         return getNamedParameterJdbcTemplate().queryForObject(TeamQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Team.class));

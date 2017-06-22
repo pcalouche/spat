@@ -23,8 +23,6 @@ public class HomeControllerTest {
                 .andReturn();
 
         ModelAndView mv = mvcResult.getModelAndView();
-        Assert.assertEquals(mv.getModel().get("environment"), "dev");
-        Assert.assertEquals(mv.getModel().get("version"), "1.0");
 
         Assert.assertEquals(mv.getViewName(), "index");
     }
@@ -37,8 +35,6 @@ public class HomeControllerTest {
                 .andReturn();
 
         ModelAndView mv = mvcResult.getModelAndView();
-        Assert.assertEquals(mv.getModel().get("environment"), "dev");
-        Assert.assertEquals(mv.getModel().get("version"), "1.0");
 
         Assert.assertEquals(mv.getViewName(), "index");
     }

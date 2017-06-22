@@ -38,3 +38,4 @@ public class UserDaoTest extends IntegratedTest {
         Assert.assertFalse(userDao.deleteUser(-1L));
     }
 }
+

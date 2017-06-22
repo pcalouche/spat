@@ -1,0 +1,30 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">User Manager</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="control-row"></th>
+                    <th class="control-row"></th>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Full Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in $ctrl.users">
+                    <td class="control-row"><i class="fa fa-pencil" ng-click="$ctrl.editUser(user)"></i></td>
+                    <td class="control-row"><i class="fa fa-trash" ng-click="$ctrl.deleteUser(user)"></i></td>
+                    <td>{{user.id}}</td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                    <td>{{user.fullName}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <button ng-click="$ctrl.addUser()">Add User</button>
+    </div>
+</div>

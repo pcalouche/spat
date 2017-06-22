@@ -18,8 +18,8 @@ public class TeamServiceTest {
     @Test
     public void getTeamsTest() {
         List<Team> expectedTeams = new ArrayList<>();
-        expectedTeams.add(new Team(1L, "Team1", "Basketball", "NBA"));
-        expectedTeams.add(new Team(2L, "Team2", "Soccer", "FIBA"));
+        expectedTeams.add(new Team(1L, "Team1"));
+        expectedTeams.add(new Team(2L, "Team2"));
 
         Mockito.when(teamDao.getTeams()).thenReturn(expectedTeams);
 
@@ -32,7 +32,7 @@ public class TeamServiceTest {
 
     @Test
     void saveTeamTest() {
-        Team expectedTeam = new Team(1L, "Team1", "Basketball", "NBA");
+        Team expectedTeam = new Team(1L, "Team1");
 
         Mockito.when(teamDao.saveTeam(expectedTeam)).thenReturn(expectedTeam);
 

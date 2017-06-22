@@ -14,7 +14,7 @@ public class SpatWebApplicationInitializer implements WebApplicationInitializer 
     public void onStartup(ServletContext servletContext) throws ServletException {
         // Create the 'root' Spring application context
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.register(SpatWebMvcConfigurerAdapter.class);
+        rootContext.register(SpatConfig.class);
 
         // Manage the lifecycle of the root application context
         servletContext.addListener(new ContextLoaderListener(rootContext));
