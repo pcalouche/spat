@@ -57,7 +57,6 @@ public class User {
             return false;
         }
         return lastName != null ? lastName.equals(user.lastName) : user.lastName == null;
-
     }
 
     @Override

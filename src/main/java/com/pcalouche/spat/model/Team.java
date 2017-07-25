@@ -39,11 +39,11 @@ public class Team {
 
         Team team = (Team) o;
 
-        return name.equals(team.name);
+        return name != null ? name.equals(team.name) : team.name == null;
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return name != null ? name.hashCode() : 0;
     }
 }
