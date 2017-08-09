@@ -10,6 +10,7 @@
     <properties>
         <!-- Misc Properties -->
         <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Dependency Versions -->
         <log4j.version>2.8.2</log4j.version><!-- April 2017 -->
         <spring.version>4.3.10.RELEASE</spring.version><!-- July 2017 -->
