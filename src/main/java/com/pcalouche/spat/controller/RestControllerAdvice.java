@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
-@ControllerAdvice(annotations = RestController.class)
+@ControllerAdvice(basePackages = "com.pcalouche.spat")
 public class RestControllerAdvice {
     private static final Logger logger = LoggerFactory.getLogger(RestController.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exception(Exception e) throws Exception {
-        logger.error("Exception Exception Occurred", e);
+        logger.error("Uncaught Exception Occurred", e);
         return new ResponseEntity<>(buildErrorObject(e).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<String> dataAccessException(DataAccessException e) throws Exception {
-        logger.error("DataAccessException Exception Occurred", e);
+    @ExceptionHandler({DataAccessException.class})
+    public ResponseEntity<String> dataAccessException(Exception e) throws Exception {
+        logger.error("Uncaught DataAccessException Occurred", e);
         return new ResponseEntity<>(buildErrorObject(e).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
