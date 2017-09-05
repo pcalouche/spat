@@ -228,4 +228,4 @@ crashlytics-build.properties
 fabric.properties
 
 ### Webpack
-src/main/webapp/resources/dist
+src/main/resources/static/dist

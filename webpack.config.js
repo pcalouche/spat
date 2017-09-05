@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
-const resourcesPath = path.join(__dirname, "/src/main/webapp/resources");
+const resourcesPath = path.join(__dirname, "/src/main/resources/static");
+const publicPath = "dist/";
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -21,7 +22,7 @@ module.exports = function(env) {
         output: {
             path: path.join(resourcesPath, "/dist"),
             filename: env === "dev" ? "[name].bundle.js" : "[name].[hash].bundle.js",
-            publicPath: "resources/dist/"
+            publicPath: publicPath
         },
         module: {
             rules: [{
@@ -76,7 +77,7 @@ module.exports = function(env) {
                     options: {
                         name: env === "dev" ? "[name].[ext]" : "[name].[hash].[ext]",
                         outputPath: "assets/app/",
-                        publicPath: "resources/dist/"
+                        publicPath: publicPath
                     }
                 }]
             }, {

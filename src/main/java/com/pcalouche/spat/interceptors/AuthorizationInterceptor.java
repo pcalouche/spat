@@ -26,7 +26,10 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (request.getHeader("Accept").contains("text/html")) {
             return true;
         } else {
-            return authorizationDao.isAuthorized(request.getHeader("AUTH_TOKEN"));
+            if (!authorizationDao.isAuthorized(request.getHeader("AUTH_TOKEN"))) {
+                throw new SecurityException("AUTH_TOKEN is invalid");
+            }
+            return true;
         }
     }
 }

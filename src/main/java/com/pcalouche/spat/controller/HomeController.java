@@ -11,7 +11,7 @@ public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @RequestMapping(value = HomeControllerUris.ROOT, method = RequestMethod.GET)
-    public String home() {
+    public String index() {
         logger.info("Accessing Home Page");
         return "index";
     }

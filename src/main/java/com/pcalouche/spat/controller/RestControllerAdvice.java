@@ -17,15 +17,21 @@ public class RestControllerAdvice {
     private static final Logger logger = LoggerFactory.getLogger(RestController.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> exception(Exception e) throws Exception {
-        logger.error("Uncaught Exception Occurred", e);
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<String> securityException(SecurityException e) throws Exception {
+        logger.error("Uncaught SecurityException", e);
         return new ResponseEntity<>(buildErrorObject(e).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({DataAccessException.class})
     public ResponseEntity<String> dataAccessException(Exception e) throws Exception {
-        logger.error("Uncaught DataAccessException Occurred", e);
+        logger.error("Uncaught DataAccessException", e);
+        return new ResponseEntity<>(buildErrorObject(e).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> exception(Exception e) throws Exception {
+        logger.error("Uncaught Exception", e);
         return new ResponseEntity<>(buildErrorObject(e).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

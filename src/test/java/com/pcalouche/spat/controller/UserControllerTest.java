@@ -1,32 +1,31 @@
 package com.pcalouche.spat.controller;
 
+import com.pcalouche.spat.ControllerTest;
 import com.pcalouche.spat.controller.user.UserController;
 import com.pcalouche.spat.controller.user.UserControllerUris;
 import com.pcalouche.spat.model.User;
 import com.pcalouche.spat.service.user.UserService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.mockito.Mockito;
+import org.junit.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserControllerTest {
-    private final UserService userService = Mockito.mock(UserService.class);
-    private final UserController userController = new UserController(userService);
-    private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+
+@WebMvcTest(value = UserController.class)
+public class UserControllerTest extends ControllerTest {
+    @MockBean
+    private UserService userService;
 
     @Test
     public void getUsersTest() throws Exception {
@@ -34,51 +33,43 @@ public class UserControllerTest {
         expectedUsers.add(new User(1L, "Philip", "Calouche"));
         expectedUsers.add(new User(2L, "Joe", "Smith"));
 
-        Mockito.when(userService.getUsers()).thenReturn(expectedUsers);
+        given(userService.getUsers()).willReturn(expectedUsers);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(UserControllerUris.ROOT);
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(get(UserControllerUris.ROOT))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedUsers)));
 
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        List<User> actualUsers = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<User>>() {
-        });
-        Assert.assertEquals(actualUsers.size(), expectedUsers.size());
-        for (int i = 0; i < actualUsers.size(); i++) {
-            Assert.assertEquals(actualUsers.get(i), expectedUsers.get(i));
-        }
+        verify(userService, times(1)).getUsers();
     }
 
     @Test
     public void saveUserTest() throws Exception {
         User expectedUser = new User(1L, "Philip", "Calouche");
 
-        Mockito.when(userService.saveUser(expectedUser)).thenReturn(expectedUser);
+        given(userService.saveUser(expectedUser)).willReturn(expectedUser);
 
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserControllerUris.ROOT)
+        MockHttpServletRequestBuilder request = post(UserControllerUris.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedUser));
 
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedUser)));
 
-        User actualUser = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-        Assert.assertEquals(actualUser, expectedUser);
+        verify(userService, times(1)).saveUser(expectedUser);
     }
 
     @Test
     public void deleteUserTest() throws Exception {
-        Mockito.when(userService.deleteUser(1L)).thenReturn(true);
+        given(userService.deleteUser(1L)).willReturn(true);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(String.format("%s/%d", UserControllerUris.ROOT, 1L));
-
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(delete(String.format("%s/%d", UserControllerUris.ROOT, 1L)))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(content().string(Boolean.TRUE.toString()));
 
-        Assert.assertTrue(Boolean.valueOf(mvcResult.getResponse().getContentAsString()));
+        verify(userService, times(1)).deleteUser(1L);
     }
+
 }

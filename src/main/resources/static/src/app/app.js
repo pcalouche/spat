@@ -15,13 +15,6 @@ function interceptors() {
     return {
         request: function(config) {
             config.headers.AUTH_TOKEN = "myAuthCode";
-            // config.headers["Cache-Control"] = "no-cache";
-            // config.headers["Pragma"] = "no-cache";
-            // var urReqExp = /components[(\w|\/)|\-|\.]*.html/;
-            // if (config.method == "GET" && urReqExp.test(config.url)) {
-            //     config.params = config.params ? config.params : {};
-            //     config.params.version = versionToUse;
-            // }
             return config;
         }
     };

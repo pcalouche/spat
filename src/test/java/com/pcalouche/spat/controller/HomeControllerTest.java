@@ -1,41 +1,28 @@
 package com.pcalouche.spat.controller;
 
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.ModelAndView;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import com.pcalouche.spat.ControllerTest;
+import org.junit.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class HomeControllerTest {
-    private final HomeController homeController = new HomeController();
-    private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
-
+@WebMvcTest(controllers = {HomeController.class})
+public class HomeControllerTest extends ControllerTest {
     @Test
     public void homeDefaultPathTest() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(HomeControllerUris.ROOT);
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(get(HomeControllerUris.ROOT))
                 .andExpect(status().isOk())
+                .andExpect(view().name("index"))
                 .andReturn();
-
-        ModelAndView mv = mvcResult.getModelAndView();
-
-        Assert.assertEquals(mv.getViewName(), "index");
     }
 
     @Test
     public void homeBogusPathTest() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/bogus");
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(get("/bogus"))
                 .andExpect(status().isOk())
+                .andExpect(view().name("index"))
                 .andReturn();
-
-        ModelAndView mv = mvcResult.getModelAndView();
-
-        Assert.assertEquals(mv.getViewName(), "index");
     }
 }

@@ -1,31 +1,30 @@
 package com.pcalouche.spat.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcalouche.spat.ControllerTest;
 import com.pcalouche.spat.controller.team.TeamController;
 import com.pcalouche.spat.controller.team.TeamControllerUris;
 import com.pcalouche.spat.model.Team;
 import com.pcalouche.spat.service.team.TeamService;
-import org.mockito.Mockito;
+import org.junit.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class TeamControllerTest {
-    private final TeamService teamService = Mockito.mock(TeamService.class);
-    private final TeamController teamController = new TeamController(teamService);
-    private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(teamController).build();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+@WebMvcTest(value = TeamController.class)
+public class TeamControllerTest extends ControllerTest {
+    @MockBean
+    private TeamService teamService;
 
     @Test
     public void getTeamsTest() throws Exception {
@@ -33,49 +32,42 @@ public class TeamControllerTest {
         expectedTeams.add(new Team(1L, "Team1"));
         expectedTeams.add(new Team(2L, "Team2"));
 
-        Mockito.when(teamService.getTeams()).thenReturn(expectedTeams);
+        given(teamService.getTeams()).willReturn(expectedTeams);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(TeamControllerUris.ROOT);
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(get(TeamControllerUris.ROOT))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedTeams)));
 
-        List<Team> actualTeams = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<Team>>() {
-        });
-        Assert.assertEquals(actualTeams.size(), expectedTeams.size());
-        for (int i = 0; i < actualTeams.size(); i++) {
-            Assert.assertEquals(actualTeams.get(i), expectedTeams.get(i));
-        }
+        verify(teamService, times(1)).getTeams();
     }
 
     @Test
     public void saveTeamTest() throws Exception {
         Team expectedTeam = new Team(1L, "Team1");
 
-        Mockito.when(teamService.saveTeam(expectedTeam)).thenReturn(expectedTeam);
+        given(teamService.saveTeam(expectedTeam)).willReturn(expectedTeam);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(TeamControllerUris.ROOT)
+        MockHttpServletRequestBuilder request = post(TeamControllerUris.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedTeam));
 
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedTeam)));
 
-        Team actualTeam = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Team.class);
-        Assert.assertEquals(actualTeam, expectedTeam);
+        verify(teamService, times(1)).saveTeam(expectedTeam);
     }
 
     @Test
     public void deleteTeamTest() throws Exception {
-        Mockito.when(teamService.deleteTeam(1L)).thenReturn(true);
+        given(teamService.deleteTeam(1L)).willReturn(true);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(String.format("%s/%d", TeamControllerUris.ROOT, 1L));
-
-        MvcResult mvcResult = mockMvc.perform(request)
+        mockMvc.perform(delete(String.format("%s/%d", TeamControllerUris.ROOT, 1L)))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(content().string(Boolean.TRUE.toString()));
 
-        Assert.assertTrue(Boolean.valueOf(mvcResult.getResponse().getContentAsString()));
+        verify(teamService, times(1)).deleteTeam(1L);
     }
 }
