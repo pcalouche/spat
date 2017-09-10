@@ -1,9 +1,8 @@
 package com.pcalouche.spat.controller.user;
 
+import com.pcalouche.spat.controller.AbstractController;
 import com.pcalouche.spat.model.User;
 import com.pcalouche.spat.service.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = UserControllerUris.ROOT)
-public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+public class UserController extends AbstractController {
     private final UserService userService;
 
     @Autowired

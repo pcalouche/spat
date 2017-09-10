@@ -1,6 +1,8 @@
 package com.pcalouche.spat.controller;
 
 import com.pcalouche.spat.ControllerTest;
+import com.pcalouche.spat.controller.home.HomeController;
+import com.pcalouche.spat.controller.home.HomeControllerUris;
 import org.junit.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 

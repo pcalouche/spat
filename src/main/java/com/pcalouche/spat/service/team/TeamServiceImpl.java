@@ -2,13 +2,14 @@ package com.pcalouche.spat.service.team;
 
 import com.pcalouche.spat.dao.team.TeamDao;
 import com.pcalouche.spat.model.Team;
+import com.pcalouche.spat.service.AbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TeamServiceImpl implements TeamService {
+public class TeamServiceImpl extends AbstractServiceImpl implements TeamService {
     private final TeamDao teamDao;
 
     @Autowired

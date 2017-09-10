@@ -83,6 +83,7 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!--Test Dependencies-->
         <dependency>
@@ -101,14 +102,14 @@
     </dependencies>
     <build>
         <finalName>spat</finalName>
-        <resources>
-            <resource>
-                <directory>/src/main/resources/static/src</directory>
-                <excludes>
-                    <exclude>/*.*</exclude>
-                </excludes>
-            </resource>
-        </resources>
+        <!--<resources>-->
+        <!--<resource>-->
+        <!--<directory>/src/main/resources/static/src</directory>-->
+        <!--<excludes>-->
+        <!--<exclude>/*.*</exclude>-->
+        <!--</excludes>-->
+        <!--</resource>-->
+        <!--</resources>-->
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -169,9 +170,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
                 <configuration>
-                    <!--<excludes>-->
-                    <!--<exclude>src/main/resources/static/src</exclude>-->
-                    <!--</excludes>-->
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
@@ -182,7 +180,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven.war.version}</version>
                 <configuration>
-                    <!--<packagingExcludes>src/main/resources/static/src</packagingExcludes>-->
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>

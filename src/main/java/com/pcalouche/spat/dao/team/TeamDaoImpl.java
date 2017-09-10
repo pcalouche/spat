@@ -1,12 +1,11 @@
 package com.pcalouche.spat.dao.team;
 
+import com.pcalouche.spat.dao.AbstractDaoImpl;
 import com.pcalouche.spat.model.Team;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,11 +14,9 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class TeamDaoImpl extends NamedParameterJdbcDaoSupport implements TeamDao {
-    private static final Logger logger = LoggerFactory.getLogger(TeamDaoImpl.class);
-
+public class TeamDaoImpl extends AbstractDaoImpl implements TeamDao {
     @Autowired
-    public TeamDaoImpl(DataSource dataSource) {
+    public TeamDaoImpl(@Qualifier("dataSource") DataSource dataSource) {
         setDataSource(dataSource);
     }
 

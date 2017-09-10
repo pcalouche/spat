@@ -1,4 +1,4 @@
-package com.pcalouche.spat.controller;
+package com.pcalouche.spat.controller.home;
 
 /**
  * Class to help manage any {@link HomeController} URIs.

@@ -2,13 +2,14 @@ package com.pcalouche.spat.service.user;
 
 import com.pcalouche.spat.dao.user.UserDao;
 import com.pcalouche.spat.model.User;
+import com.pcalouche.spat.service.AbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractServiceImpl implements UserService {
     private final UserDao userDao;
 
     @Autowired
