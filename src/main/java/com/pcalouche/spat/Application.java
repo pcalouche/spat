@@ -8,7 +8,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static void main(String[] args) {
         configureApplication(new SpringApplicationBuilder()).run(args);

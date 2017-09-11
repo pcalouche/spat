@@ -27,7 +27,7 @@ public class TeamControllerTest extends ControllerTest {
     private TeamService teamService;
 
     @Test
-    public void getTeamsTest() throws Exception {
+    public void testGetTeams() throws Exception {
         List<Team> expectedTeams = new ArrayList<>();
         expectedTeams.add(new Team(1L, "Team1"));
         expectedTeams.add(new Team(2L, "Team2"));
@@ -43,7 +43,7 @@ public class TeamControllerTest extends ControllerTest {
     }
 
     @Test
-    public void saveTeamTest() throws Exception {
+    public void testSaveTeam() throws Exception {
         Team expectedTeam = new Team(1L, "Team1");
 
         given(teamService.saveTeam(expectedTeam)).willReturn(expectedTeam);
@@ -61,12 +61,23 @@ public class TeamControllerTest extends ControllerTest {
     }
 
     @Test
-    public void deleteTeamTest() throws Exception {
+    public void testDeleteTeam() throws Exception {
         given(teamService.deleteTeam(1L)).willReturn(true);
 
         mockMvc.perform(delete(String.format("%s/%d", TeamControllerUris.ROOT, 1L)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.TRUE.toString()));
+
+        verify(teamService, times(1)).deleteTeam(1L);
+    }
+
+    @Test
+    public void testDeleteTeamNotFound() throws Exception {
+        given(teamService.deleteTeam(1L)).willReturn(false);
+
+        mockMvc.perform(delete(String.format("%s/%d", TeamControllerUris.ROOT, 1L)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(Boolean.FALSE.toString()));
 
         verify(teamService, times(1)).deleteTeam(1L);
     }

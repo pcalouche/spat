@@ -36,8 +36,10 @@ public class TeamDaoImpl extends AbstractDaoImpl implements TeamDao {
             sql = TeamQueries.INSERT_TEAM;
         } else {
             logger.debug("in update case");
-            sql = TeamQueries.UPDATE_TEAM;
+            // Query too see if it exists in the database first
             mapSqlParameterSource.addValue("id", team.getId());
+            getNamedParameterJdbcTemplate().queryForObject(TeamQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Team.class));
+            sql = TeamQueries.UPDATE_TEAM;
         }
 
         getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource, keyHolder, new String[]{"id"});

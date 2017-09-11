@@ -10,11 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 
 @ControllerAdvice(basePackages = "com.pcalouche.spat")
-public class RestControllerAdvice {
-    private static final Logger logger = LoggerFactory.getLogger(RestController.class);
+public class ControllerExceptionAdvice {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @ExceptionHandler(SecurityException.class)
@@ -35,7 +34,7 @@ public class RestControllerAdvice {
         return new ResponseEntity<>(buildErrorObject(e).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private JsonNode buildErrorObject(Exception e) {
+    public static JsonNode buildErrorObject(Exception e) {
         ObjectNode errorObjectNode = objectMapper.createObjectNode();
         errorObjectNode.put("type", e.getClass().getName());
         errorObjectNode.put("message", e.getMessage());

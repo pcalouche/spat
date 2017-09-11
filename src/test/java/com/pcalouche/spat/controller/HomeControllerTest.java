@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = {HomeController.class})
 public class HomeControllerTest extends ControllerTest {
     @Test
-    public void homeDefaultPathTest() throws Exception {
+    public void testDefaultPath() throws Exception {
         mockMvc.perform(get(HomeControllerUris.ROOT))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
@@ -21,7 +21,7 @@ public class HomeControllerTest extends ControllerTest {
     }
 
     @Test
-    public void homeBogusPathTest() throws Exception {
+    public void testRedirectFromNonMatchingUrl() throws Exception {
         mockMvc.perform(get("/bogus"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))

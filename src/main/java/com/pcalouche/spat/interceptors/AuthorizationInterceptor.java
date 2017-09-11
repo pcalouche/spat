@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(AuthorizationInterceptor.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final AuthorizationDao authorizationDao;
 
     @Autowired

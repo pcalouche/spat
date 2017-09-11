@@ -28,7 +28,7 @@ public class UserControllerTest extends ControllerTest {
     private UserService userService;
 
     @Test
-    public void getUsersTest() throws Exception {
+    public void testGetUsers() throws Exception {
         List<User> expectedUsers = new ArrayList<>();
         expectedUsers.add(new User(1L, "Philip", "Calouche"));
         expectedUsers.add(new User(2L, "Joe", "Smith"));
@@ -44,7 +44,7 @@ public class UserControllerTest extends ControllerTest {
     }
 
     @Test
-    public void saveUserTest() throws Exception {
+    public void testSaveUser() throws Exception {
         User expectedUser = new User(1L, "Philip", "Calouche");
 
         given(userService.saveUser(expectedUser)).willReturn(expectedUser);
@@ -62,12 +62,23 @@ public class UserControllerTest extends ControllerTest {
     }
 
     @Test
-    public void deleteUserTest() throws Exception {
+    public void testDeleteUser() throws Exception {
         given(userService.deleteUser(1L)).willReturn(true);
 
         mockMvc.perform(delete(String.format("%s/%d", UserControllerUris.ROOT, 1L)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.TRUE.toString()));
+
+        verify(userService, times(1)).deleteUser(1L);
+    }
+
+    @Test
+    public void testDeleteUserNotFound() throws Exception {
+        given(userService.deleteUser(1L)).willReturn(true);
+
+        mockMvc.perform(delete(String.format("%s/%d", UserControllerUris.ROOT, 1L)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(Boolean.FALSE.toString()));
 
         verify(userService, times(1)).deleteUser(1L);
     }

@@ -6,5 +6,5 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
 public abstract class AbstractDaoImpl extends NamedParameterJdbcDaoSupport {
     // Logger instance that all child classes can use
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 }

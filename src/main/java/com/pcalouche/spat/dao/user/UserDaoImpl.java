@@ -37,8 +37,10 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             sql = UserQueries.INSERT_USER;
         } else {
             logger.debug("in update case");
-            sql = UserQueries.UPDATE_USER;
+            // Query too see if it exists in the database first
             mapSqlParameterSource.addValue("id", user.getId());
+            getNamedParameterJdbcTemplate().queryForObject(UserQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(User.class));
+            sql = UserQueries.UPDATE_USER;
         }
 
         getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource, keyHolder, new String[]{"id"});
