@@ -1,4 +1,4 @@
 package com.pcalouche.spat;
 
-public class IntegrationTestCategory {
+public interface IntegrationTestCategory {
 }
