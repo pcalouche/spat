@@ -1,6 +1,6 @@
 package com.pcalouche.spat.controller;
 
-import com.pcalouche.spat.ControllerTest;
+import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.controller.team.TeamController;
 import com.pcalouche.spat.controller.team.TeamControllerUris;
 import com.pcalouche.spat.model.Team;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = TeamController.class)
-public class TeamControllerTest extends ControllerTest {
+public class TeamControllerTest extends AbstractControllerTest {
     @MockBean
     private TeamService teamService;
 

@@ -23,7 +23,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("in pre handle " + request.getMethod() + " " + request.getRequestURL() + " " + request.getHeader("Accept"));
-        if (request.getHeader("Accept").contains("application/json") && !authorizationDao.isAuthorized(request.getHeader("AUTH_TOKEN"))) {
+        if (request.getHeader("Accept").toLowerCase().contains("application/json") && !authorizationDao.isAuthorized(request.getHeader("AUTH_TOKEN"))) {
             throw new SecurityException("AUTH_TOKEN is invalid");
         }
         return true;

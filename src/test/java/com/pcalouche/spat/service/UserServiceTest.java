@@ -1,6 +1,6 @@
 package com.pcalouche.spat.service;
 
-import com.pcalouche.spat.ServiceTest;
+import com.pcalouche.spat.AbstractServiceTest;
 import com.pcalouche.spat.dao.user.UserDao;
 import com.pcalouche.spat.model.User;
 import com.pcalouche.spat.service.user.UserService;
@@ -17,7 +17,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class UserServiceTest extends ServiceTest {
+public class UserServiceTest extends AbstractServiceTest {
     @MockBean
     private UserDao userDao;
     private UserService userService;
@@ -46,7 +46,7 @@ public class UserServiceTest extends ServiceTest {
 
         given(userDao.saveUser(expectedUser)).willReturn(expectedUser);
 
-        assertThat(userService.saveUser(expectedUser)).isEqualToComparingFieldByField(expectedUser);
+        assertThat(userService.saveUser(expectedUser)).isEqualTo(expectedUser);
 
         verify(userDao, times(1)).saveUser(expectedUser);
     }

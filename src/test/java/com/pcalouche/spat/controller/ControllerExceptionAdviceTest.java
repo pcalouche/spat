@@ -1,7 +1,7 @@
 package com.pcalouche.spat.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.pcalouche.spat.ControllerTest;
+import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.controller.user.UserController;
 import com.pcalouche.spat.controller.user.UserControllerUris;
 import com.pcalouche.spat.model.User;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = UserController.class)
-public class ControllerExceptionAdviceTest extends ControllerTest {
+public class ControllerExceptionAdviceTest extends AbstractControllerTest {
     @MockBean
     private UserService userService;
 

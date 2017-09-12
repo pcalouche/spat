@@ -13,7 +13,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
 @Category(UnitTestCategory.class)
-public abstract class ControllerTest extends AbstractTest {
+public abstract class AbstractControllerTest extends AbstractTest {
     protected final ObjectMapper objectMapper = new ObjectMapper();
     @MockBean
     protected LoggerInterceptor loggerInterceptor;

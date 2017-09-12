@@ -1,6 +1,6 @@
 package com.pcalouche.spat.controller;
 
-import com.pcalouche.spat.ControllerTest;
+import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.controller.home.HomeController;
 import com.pcalouche.spat.controller.home.HomeControllerUris;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(controllers = {HomeController.class})
-public class HomeControllerTest extends ControllerTest {
+public class HomeControllerTest extends AbstractControllerTest {
     @Test
     public void testDefaultPath() throws Exception {
         mockMvc.perform(get(HomeControllerUris.ROOT))

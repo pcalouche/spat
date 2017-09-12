@@ -1,6 +1,6 @@
 package com.pcalouche.spat.service;
 
-import com.pcalouche.spat.ServiceTest;
+import com.pcalouche.spat.AbstractServiceTest;
 import com.pcalouche.spat.dao.team.TeamDao;
 import com.pcalouche.spat.model.Team;
 import com.pcalouche.spat.service.team.TeamService;
@@ -17,7 +17,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class TeamServiceTest extends ServiceTest {
+public class TeamServiceTest extends AbstractServiceTest {
     @MockBean
     private TeamDao teamDao;
     private TeamService teamService;
@@ -46,7 +46,7 @@ public class TeamServiceTest extends ServiceTest {
 
         given(teamDao.saveTeam(expectedTeam)).willReturn(expectedTeam);
 
-        assertThat(teamService.saveTeam(expectedTeam)).isEqualToComparingFieldByField(expectedTeam);
+        assertThat(teamService.saveTeam(expectedTeam)).isEqualTo(expectedTeam);
 
         verify(teamDao, times(1)).saveTeam(expectedTeam);
     }

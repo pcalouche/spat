@@ -1,6 +1,6 @@
 package com.pcalouche.spat.controller;
 
-import com.pcalouche.spat.ControllerTest;
+import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.controller.user.UserController;
 import com.pcalouche.spat.controller.user.UserControllerUris;
 import com.pcalouche.spat.model.User;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(value = UserController.class)
-public class UserControllerTest extends ControllerTest {
+public class UserControllerTest extends AbstractControllerTest {
     @MockBean
     private UserService userService;
 
