@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.pcalouche</groupId>
     <artifactId>spat</artifactId>
-    <packaging>${packaging.type}</packaging>
+    <packaging>${packaging}</packaging>
     <version>2.0</version>
     <name>Single Page App Template</name>
 
@@ -17,7 +17,7 @@
         <profile>
             <id>jar</id>
             <properties>
-                <packaging.type>jar</packaging.type>
+                <packaging>jar</packaging>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -26,7 +26,7 @@
         <profile>
             <id>war</id>
             <properties>
-                <packaging.type>war</packaging.type>
+                <packaging>war</packaging>
             </properties>
             <dependencies>
                 <dependency>
