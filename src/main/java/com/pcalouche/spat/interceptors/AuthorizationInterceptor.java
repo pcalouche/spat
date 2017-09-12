@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final AuthorizationDao authorizationDao;
 
     @Autowired
@@ -22,14 +22,10 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info("in pre handle " + request.getMethod() + " " + request.getRequestURL());
-        if (request.getHeader("Accept").contains("text/html")) {
-            return true;
-        } else {
-            if (!authorizationDao.isAuthorized(request.getHeader("AUTH_TOKEN"))) {
-                throw new SecurityException("AUTH_TOKEN is invalid");
-            }
-            return true;
+        logger.info("in pre handle " + request.getMethod() + " " + request.getRequestURL() + " " + request.getHeader("Accept"));
+        if (request.getHeader("Accept").contains("application/json") && !authorizationDao.isAuthorized(request.getHeader("AUTH_TOKEN"))) {
+            throw new SecurityException("AUTH_TOKEN is invalid");
         }
+        return true;
     }
 }

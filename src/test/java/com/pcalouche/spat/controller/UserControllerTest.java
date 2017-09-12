@@ -74,7 +74,7 @@ public class UserControllerTest extends ControllerTest {
 
     @Test
     public void testDeleteUserNotFound() throws Exception {
-        given(userService.deleteUser(1L)).willReturn(true);
+        given(userService.deleteUser(1L)).willReturn(false);
 
         mockMvc.perform(delete(String.format("%s/%d", UserControllerUris.ROOT, 1L)))
                 .andExpect(status().isOk())
