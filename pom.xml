@@ -1,17 +1,17 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.pcalouche</groupId>
+
+    <parent>
+        <groupId>com.pcalouche</groupId>
+        <artifactId>spring-boot-project</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
     <artifactId>spat</artifactId>
     <packaging>${packaging}</packaging>
     <version>2.0</version>
     <name>Single Page App Template</name>
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.6.RELEASE</version><!-- July 2017 -->
-    </parent>
 
     <profiles>
         <profile>
@@ -40,22 +40,10 @@
 
     <properties>
         <!-- Misc Properties -->
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <!-- This can be passed in as true from the command prompt to run tests quicker -->
-        <skipUiBuild>false</skipUiBuild>
+        <skipUiBuild>false</skipUiBuild> <!-- This can be passed in as true from the command prompt to run tests quicker -->
         <!-- Application Dependency Versions -->
-        <postgresql.version>42.1.4</postgresql.version> <!-- August 2017 -->
-        <thymeleaf.version>3.0.7.RELEASE</thymeleaf.version> <!-- July 2017 -->
         <!-- Test Dependency Versions -->
         <!-- Plugin Versions -->
-        <maven.exec.version>1.6.0</maven.exec.version> <!--March 2017-->
-        <maven.surefire.version>2.20</maven.surefire.version> <!-- April 2017 -->
-        <maven.failsafe.version>2.20</maven.failsafe.version> <!-- April 2017 -->
-        <maven.compiler.version>3.6.1</maven.compiler.version><!-- January 2017 -->
-        <maven.war.version>3.1.0</maven.war.version><!-- April 2017 -->
     </properties>
     <dependencies>
         <!-- Application Dependencies -->
@@ -85,7 +73,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
+            <!--<version>${postgresql.version}</version>-->
             <scope>runtime</scope>
         </dependency>
         <!--Test Dependencies-->
@@ -110,7 +98,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>${maven.exec.version}</version>
                 <executions>
                     <execution>
                         <id>exec-npm-install</id>
@@ -157,36 +144,10 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--Maven Surefire Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
-                <configuration>
-                    <groups>com.pcalouche.spat.UnitTestCategory</groups>
-                </configuration>
-            </plugin>
-            <!--Maven Failsafe Plugin for Integration Tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven.failsafe.version}</version>
-                <configuration>
-                    <includes>
-                        <include>**/*Tests.java</include>
-                        <include>**/*Test.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/Abstract*.java</exclude>
-                    </excludes>
-                    <groups>com.pcalouche.spat.IntegrationTestCategory</groups>
-                </configuration>
-            </plugin>
             <!-- Apache Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -196,9 +157,36 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${maven.war.version}</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <!--Maven Surefire Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/Abstract*.java</exclude>
+                    </excludes>
+                    <groups>com.pcalouche.spat.UnitTestCategory</groups>
+                </configuration>
+            </plugin>
+            <!--Maven Failsafe Plugin for Integration Tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/Abstract*.java</exclude>
+                    </excludes>
+                    <groups>com.pcalouche.spat.IntegrationTestCategory</groups>
                 </configuration>
             </plugin>
         </plugins>
