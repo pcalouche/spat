@@ -12,7 +12,7 @@ import javax.naming.AuthenticationException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = TeamControllerUris.ROOT)
+@RequestMapping(value = TeamUris.ROOT)
 public class TeamController extends AbstractController {
     private final TeamService teamService;
 

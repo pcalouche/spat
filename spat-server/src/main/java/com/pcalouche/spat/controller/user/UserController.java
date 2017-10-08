@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = UserControllerUris.ROOT)
+@RequestMapping(value = UserUris.ROOT)
 public class UserController extends AbstractController {
     private final UserService userService;
 

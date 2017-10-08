@@ -3,7 +3,7 @@ package com.pcalouche.spat.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.controller.user.UserController;
-import com.pcalouche.spat.controller.user.UserControllerUris;
+import com.pcalouche.spat.controller.user.UserUris;
 import com.pcalouche.spat.model.User;
 import com.pcalouche.spat.service.user.UserService;
 import org.assertj.core.api.Assertions;
@@ -35,7 +35,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
         User expectedUser = new User(1L, "Test", "User");
         BDDMockito.given(userService.saveUser(expectedUser)).willReturn(expectedUser);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserControllerUris.ROOT)
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserUris.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedUser));
 
@@ -58,7 +58,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
         User expectedUser = new User(1L, "Test", "User");
         BDDMockito.given(userService.saveUser(expectedUser)).willThrow(exception);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserControllerUris.ROOT)
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserUris.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedUser));
 
@@ -80,7 +80,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
         User expectedUser = new User(1L, "Test", "User");
         BDDMockito.given(userService.saveUser(expectedUser)).willThrow(exception);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserControllerUris.ROOT)
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserUris.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedUser));
 

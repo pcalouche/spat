@@ -2,7 +2,7 @@ package com.pcalouche.spat.controller;
 
 import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.controller.team.TeamController;
-import com.pcalouche.spat.controller.team.TeamControllerUris;
+import com.pcalouche.spat.controller.team.TeamUris;
 import com.pcalouche.spat.model.Team;
 import com.pcalouche.spat.service.team.TeamService;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         BDDMockito.given(teamService.getTeams()).willReturn(expectedTeams);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(TeamControllerUris.ROOT))
+        mockMvc.perform(MockMvcRequestBuilders.get(TeamUris.ROOT))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedTeams)));
@@ -45,7 +45,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         BDDMockito.given(teamService.saveTeam(expectedTeam)).willReturn(expectedTeam);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(TeamControllerUris.ROOT)
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(TeamUris.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedTeam));
 
@@ -61,7 +61,7 @@ public class TeamControllerTest extends AbstractControllerTest {
     public void testDeleteTeam() throws Exception {
         BDDMockito.given(teamService.deleteTeam(1L)).willReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", TeamControllerUris.ROOT, 1L)))
+        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", TeamUris.ROOT, 1L)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(Boolean.TRUE.toString()));
 
@@ -72,7 +72,7 @@ public class TeamControllerTest extends AbstractControllerTest {
     public void testDeleteTeamNotFound() throws Exception {
         BDDMockito.given(teamService.deleteTeam(1L)).willReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", TeamControllerUris.ROOT, 1L)))
+        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", TeamUris.ROOT, 1L)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(Boolean.FALSE.toString()));
 

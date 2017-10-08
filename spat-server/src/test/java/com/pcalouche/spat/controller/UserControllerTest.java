@@ -2,7 +2,7 @@ package com.pcalouche.spat.controller;
 
 import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.controller.user.UserController;
-import com.pcalouche.spat.controller.user.UserControllerUris;
+import com.pcalouche.spat.controller.user.UserUris;
 import com.pcalouche.spat.model.User;
 import com.pcalouche.spat.service.user.UserService;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         BDDMockito.given(userService.getUsers()).willReturn(expectedUsers);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(UserControllerUris.ROOT))
+        mockMvc.perform(MockMvcRequestBuilders.get(UserUris.ROOT))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedUsers)));
@@ -46,7 +46,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         BDDMockito.given(userService.saveUser(expectedUser)).willReturn(expectedUser);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserControllerUris.ROOT)
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(UserUris.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedUser));
 
@@ -62,7 +62,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteUser() throws Exception {
         BDDMockito.given(userService.deleteUser(1L)).willReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", UserControllerUris.ROOT, 1L)))
+        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", UserUris.ROOT, 1L)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(Boolean.TRUE.toString()));
 
@@ -73,7 +73,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteUserNotFound() throws Exception {
         BDDMockito.given(userService.deleteUser(1L)).willReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", UserControllerUris.ROOT, 1L)))
+        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", UserUris.ROOT, 1L)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(Boolean.FALSE.toString()));
 
