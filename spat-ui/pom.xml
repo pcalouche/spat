@@ -11,6 +11,10 @@
 
   <artifactId>spat-ui</artifactId>
 
+  <properties>
+    <skipUiBuild>false</skipUiBuild>
+  </properties>
+
   <build>
     <plugins>
       <plugin>

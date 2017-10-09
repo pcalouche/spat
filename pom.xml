@@ -17,11 +17,6 @@
     <name>Single Page App Template</name>
 
     <properties>
-        <!-- Properties Below -->
-        <skipUiBuild>false</skipUiBuild> <!-- This can be passed in as true from the command prompt to run tests quicker -->
-        <!-- Application Dependency Versions Below -->
-        <!-- Provided, Runtime, and Optional Dependencies Below -->
-        <!-- Test Dependency Versions Below -->
-        <!-- Plugin Versions Below -->
+        <!-- Properties required by one or more module here-->
     </properties>
 </project>
