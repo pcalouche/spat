@@ -2,7 +2,6 @@ package com.pcalouche.spat.controller;
 
 import com.pcalouche.spat.controller.home.HomeController;
 import com.pcalouche.spat.controller.home.HomeUris;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -11,6 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class HomeControllerTest {
@@ -25,8 +25,7 @@ public class HomeControllerTest {
                 .andReturn();
 
         ModelAndView mv = mvcResult.getModelAndView();
-
-        Assert.assertEquals(mv.getViewName(), "index");
+        assertThat(mv.getViewName()).isEqualTo("forward:/dist/index.html");
     }
 
     @Test
@@ -38,6 +37,6 @@ public class HomeControllerTest {
 
         ModelAndView mv = mvcResult.getModelAndView();
 
-        Assert.assertEquals(mv.getViewName(), "index");
+        assertThat(mv.getViewName()).isEqualTo("forward:/dist/index.html");
     }
 }

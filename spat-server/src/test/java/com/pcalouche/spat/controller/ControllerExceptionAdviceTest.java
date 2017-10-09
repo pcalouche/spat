@@ -6,7 +6,6 @@ import com.pcalouche.spat.controller.user.UserController;
 import com.pcalouche.spat.controller.user.UserUris;
 import com.pcalouche.spat.model.User;
 import com.pcalouche.spat.service.user.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Matchers;
@@ -20,6 +19,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(value = UserController.class)
 public class ControllerExceptionAdviceTest extends AbstractControllerTest {
@@ -45,7 +46,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(jsonNode.toString()))
                 .andReturn();
 
-        Assertions.assertThat(mvcResult.getResolvedException()).isInstanceOf(SecurityException.class);
+        assertThat(mvcResult.getResolvedException()).isInstanceOf(SecurityException.class);
 
         Mockito.verify(authorizationInterceptor, Mockito.times(1)).preHandle(Matchers.any(), Matchers.any(), Matchers.any());
         Mockito.verify(userService, Mockito.times(0)).saveUser(expectedUser);
@@ -68,14 +69,14 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(jsonNode.toString()))
                 .andReturn();
 
-        Assertions.assertThat(mvcResult.getResolvedException()).isInstanceOf(DataAccessException.class);
+        assertThat(mvcResult.getResolvedException()).isInstanceOf(DataAccessException.class);
 
         Mockito.verify(userService, Mockito.times(1)).saveUser(expectedUser);
     }
 
     @Test
     public void testExceptionAdvice() throws Exception {
-        Exception exception = new RuntimeException("Inducted Runtime Exception");
+        Exception exception = new RuntimeException("Induced Runtime Exception");
         JsonNode jsonNode = ControllerExceptionAdvice.buildErrorObject(exception);
         User expectedUser = new User(1L, "Test", "User");
         BDDMockito.given(userService.saveUser(expectedUser)).willThrow(exception);
@@ -90,7 +91,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(jsonNode.toString()))
                 .andReturn();
 
-        Assertions.assertThat(mvcResult.getResolvedException()).isInstanceOf(RuntimeException.class);
+        assertThat(mvcResult.getResolvedException()).isInstanceOf(RuntimeException.class);
 
         Mockito.verify(userService, Mockito.times(1)).saveUser(expectedUser);
     }

@@ -5,7 +5,6 @@ import com.pcalouche.spat.dao.user.UserDao;
 import com.pcalouche.spat.model.User;
 import com.pcalouche.spat.service.user.UserService;
 import com.pcalouche.spat.service.user.UserServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.BDDMockito;
@@ -14,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserServiceTest extends AbstractServiceTest {
     @MockBean
@@ -33,7 +34,7 @@ public class UserServiceTest extends AbstractServiceTest {
 
         BDDMockito.given(userDao.getUsers()).willReturn(expectedUsers);
 
-        Assertions.assertThat(userService.getUsers()).isEqualTo(expectedUsers);
+        assertThat(userService.getUsers()).isEqualTo(expectedUsers);
 
         Mockito.verify(userDao, Mockito.times(1)).getUsers();
     }
@@ -44,7 +45,7 @@ public class UserServiceTest extends AbstractServiceTest {
 
         BDDMockito.given(userDao.saveUser(expectedUser)).willReturn(expectedUser);
 
-        Assertions.assertThat(userService.saveUser(expectedUser)).isEqualTo(expectedUser);
+        assertThat(userService.saveUser(expectedUser)).isEqualTo(expectedUser);
 
         Mockito.verify(userDao, Mockito.times(1)).saveUser(expectedUser);
     }
@@ -53,7 +54,7 @@ public class UserServiceTest extends AbstractServiceTest {
     public void testDeleteUser() {
         BDDMockito.given(userDao.deleteUser(1L)).willReturn(true);
 
-        Assertions.assertThat(userService.deleteUser(1L)).isTrue();
+        assertThat(userService.deleteUser(1L)).isTrue();
     }
 
 }

@@ -3,7 +3,6 @@ package com.pcalouche.spat.dao;
 import com.pcalouche.spat.AbstractDaoTest;
 import com.pcalouche.spat.dao.user.UserDao;
 import com.pcalouche.spat.model.User;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +17,7 @@ public class UserDaoTest extends AbstractDaoTest {
     @Test
     public void testGetUsers() {
         List<User> users = userDao.getUsers();
-        Assertions.assertThat(users).isNotNull();
+        assertThat(users).isNotNull();
     }
 
     @Test

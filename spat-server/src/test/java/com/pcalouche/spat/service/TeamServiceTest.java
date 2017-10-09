@@ -5,7 +5,6 @@ import com.pcalouche.spat.dao.team.TeamDao;
 import com.pcalouche.spat.model.Team;
 import com.pcalouche.spat.service.team.TeamService;
 import com.pcalouche.spat.service.team.TeamServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.BDDMockito;
@@ -14,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TeamServiceTest extends AbstractServiceTest {
     @MockBean
@@ -33,7 +34,7 @@ public class TeamServiceTest extends AbstractServiceTest {
 
         BDDMockito.given(teamDao.getTeams()).willReturn(expectedTeams);
 
-        Assertions.assertThat(teamService.getTeams()).isEqualTo(expectedTeams);
+        assertThat(teamService.getTeams()).isEqualTo(expectedTeams);
 
         Mockito.verify(teamDao, Mockito.times(1)).getTeams();
     }
@@ -44,7 +45,7 @@ public class TeamServiceTest extends AbstractServiceTest {
 
         BDDMockito.given(teamDao.saveTeam(expectedTeam)).willReturn(expectedTeam);
 
-        Assertions.assertThat(teamService.saveTeam(expectedTeam)).isEqualTo(expectedTeam);
+        assertThat(teamService.saveTeam(expectedTeam)).isEqualTo(expectedTeam);
 
         Mockito.verify(teamDao, Mockito.times(1)).saveTeam(expectedTeam);
     }
@@ -53,7 +54,7 @@ public class TeamServiceTest extends AbstractServiceTest {
     public void testDeleteTeam() {
         BDDMockito.given(teamDao.deleteTeam(1L)).willReturn(true);
 
-        Assertions.assertThat(teamService.deleteTeam(1L)).isTrue();
+        assertThat(teamService.deleteTeam(1L)).isTrue();
     }
 
 }
