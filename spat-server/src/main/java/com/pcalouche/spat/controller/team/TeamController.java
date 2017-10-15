@@ -21,18 +21,18 @@ public class TeamController extends AbstractController {
         this.teamService = teamService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<Team> getTeams() throws AuthenticationException {
         return teamService.getTeams();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public Team saveTeam(@RequestBody Team team) {
         logger.debug("Team to save name is " + team.getName() + " " + team.getId());
         return teamService.saveTeam(team);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteTeam(@PathVariable Long id) {
         logger.info("ID to delete from controller is " + id);
         return new ResponseEntity<>(teamService.deleteTeam(id), HttpStatus.OK);

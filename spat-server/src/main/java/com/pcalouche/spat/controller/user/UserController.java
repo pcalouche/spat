@@ -20,18 +20,18 @@ public class UserController extends AbstractController {
         this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<User> getUsers() {
         return userService.getUsers();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public User saveUser(@RequestBody User user) {
         logger.debug("User to save name is " + user.getFullName() + " " + user.getId());
         return userService.saveUser(user);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable Long id) {
         logger.info("ID to delete from controller is " + id);
         return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
