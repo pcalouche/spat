@@ -8,7 +8,7 @@ import javax.validation.Valid;
 
 @ConfigurationProperties(prefix = "app")
 @Validated
-public class AppConfig {
+public class AppProperties {
     /**
      * my description 2
      */

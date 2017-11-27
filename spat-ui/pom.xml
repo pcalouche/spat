@@ -60,7 +60,7 @@
               <executable>npm</executable>
               <arguments>
                 <argument>run</argument>
-                <argument>prod</argument>
+                <argument>build</argument>
               </arguments>
             </configuration>
           </execution>

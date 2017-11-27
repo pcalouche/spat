@@ -39,12 +39,6 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
                 username,
                 password
         ));
-
-        //        AuthRequest authRequest = objectMapper.readValue(request.getReader(), AuthRequest.class);
-        //        return this.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
-        //                authRequest.getUsername(),
-        //                authRequest.getPassword()
-        //        ));
     }
 
     @Override
@@ -54,8 +48,6 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getWriter(), authResponse);
-        //        SecurityContextHolder.getContext().setAuthentication(authResult);
-        //        chain.doFilter(request, response);
     }
 
     @Override
