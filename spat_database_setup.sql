@@ -7,9 +7,14 @@ CREATE TABLE teams (
 );
 
 CREATE TABLE users (
-  id        SERIAL PRIMARY KEY,
-  firstName VARCHAR(200) DEFAULT NULL,
-  lastName  VARCHAR(200) DEFAULT NULL
+  id                      SERIAL PRIMARY KEY,
+  username                VARCHAR(50)  NOT NULL,
+  password                VARCHAR(200) NOT NULL,
+  account_non_expired     BOOLEAN      DEFAULT TRUE,
+  credentials_non_expired BOOLEAN      DEFAULT TRUE,
+  account_non_locked      BOOLEAN      DEFAULT TRUE,
+  enabled                 BOOLEAN      DEFAULT TRUE,
+  authorities             VARCHAR(200) DEFAULT 'USER'
 );
 
 BEGIN;
@@ -21,9 +26,16 @@ INSERT INTO teams (name) VALUES ('Tech-Knights');
 INSERT INTO teams (name) VALUES ('Team Ninja');
 INSERT INTO teams (name) VALUES ('Team Heimdall');
 
-INSERT INTO users (firstName, lastName) VALUES ('Homer', 'Simpson');
-INSERT INTO users (firstName, lastName) VALUES ('Cobra', 'Commander');
-INSERT INTO users (firstName, lastName) VALUES ('Optimus', 'Prime');
-INSERT INTO users (firstName, lastName) VALUES ('Peter', 'Griffin');
-INSERT INTO users (firstName, lastName) VALUES ('Luke', 'Skywalker');
+INSERT INTO users (username, password, account_non_expired, credentials_non_expired, account_non_locked, enabled, authorities)
+VALUES ('activeUser', '$2a$10$fjqJYwzpTxqpIus8PvwFpe2/qlK2yjU0n.uQkrZKXR1lOGSWPVQM2', TRUE, TRUE, TRUE, TRUE, 'ROLE_USER');
+INSERT INTO users (username, password, account_non_expired, credentials_non_expired, account_non_locked, enabled, authorities)
+VALUES ('activeAdmin', '$2a$10$fjqJYwzpTxqpIus8PvwFpe2/qlK2yjU0n.uQkrZKXR1lOGSWPVQM2', TRUE, TRUE, TRUE, TRUE, 'ROLE_USER, ROLE_ADMIN');
+INSERT INTO users (username, password, account_non_expired, credentials_non_expired, account_non_locked, enabled, authorities)
+VALUES ('expiredUser', '$2a$10$fjqJYwzpTxqpIus8PvwFpe2/qlK2yjU0n.uQkrZKXR1lOGSWPVQM2', FALSE, TRUE, TRUE, TRUE, 'ROLE_USER');
+INSERT INTO users (username, password, account_non_expired, credentials_non_expired, account_non_locked, enabled, authorities)
+VALUES ('credentialsExpiredUser', '$2a$10$fjqJYwzpTxqpIus8PvwFpe2/qlK2yjU0n.uQkrZKXR1lOGSWPVQM2', TRUE, FALSE, TRUE, TRUE, 'ROLE_USER');
+INSERT INTO users (username, password, account_non_expired, credentials_non_expired, account_non_locked, enabled, authorities)
+VALUES ('lockedUser', '$2a$10$fjqJYwzpTxqpIus8PvwFpe2/qlK2yjU0n.uQkrZKXR1lOGSWPVQM2', TRUE, TRUE, FALSE, TRUE, 'ROLE_USER');
+INSERT INTO users (username, password, account_non_expired, credentials_non_expired, account_non_locked, enabled, authorities)
+VALUES ('disabledUser', '$2a$10$fjqJYwzpTxqpIus8PvwFpe2/qlK2yjU0n.uQkrZKXR1lOGSWPVQM2', TRUE, TRUE, TRUE, FALSE, 'ROLE_USER');
 COMMIT;
