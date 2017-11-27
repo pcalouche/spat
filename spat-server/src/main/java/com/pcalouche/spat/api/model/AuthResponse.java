@@ -12,7 +12,7 @@ public class AuthResponse {
     }
 
     public String getPrefix() {
-        return SecurityUtils.AUTH_HEADER_PREFIX;
+        return SecurityUtils.AUTH_HEADER_BEARER_PREFIX;
     }
 
     public String getToken() {

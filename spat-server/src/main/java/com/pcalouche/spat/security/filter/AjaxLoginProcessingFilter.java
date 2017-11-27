@@ -1,7 +1,6 @@
 package com.pcalouche.spat.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pcalouche.spat.api.model.AuthRequest;
 import com.pcalouche.spat.api.model.AuthResponse;
 import com.pcalouche.spat.security.util.SecurityUtils;
 import com.pcalouche.spat.util.ExceptionUtils;
@@ -25,19 +24,27 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     private final ObjectMapper objectMapper;
 
     public AjaxLoginProcessingFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
-        super(SecurityUtils.LOGIN_PATH);
+        super(SecurityUtils.TOKEN_PATH);
         this.setAuthenticationManager(authenticationManager);
         this.objectMapper = objectMapper;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        AuthRequest authRequest = objectMapper.readValue(request.getReader(), AuthRequest.class);
+        String[] decodedBasicAuthorizationParts = SecurityUtils.getDecodedBasicAuthFromRequest(request);
+        String username = decodedBasicAuthorizationParts[0];
+        String password = decodedBasicAuthorizationParts[1];
 
         return this.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
-                authRequest.getUsername(),
-                authRequest.getPassword())
-        );
+                username,
+                password
+        ));
+
+        //        AuthRequest authRequest = objectMapper.readValue(request.getReader(), AuthRequest.class);
+        //        return this.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
+        //                authRequest.getUsername(),
+        //                authRequest.getPassword()
+        //        ));
     }
 
     @Override
@@ -47,6 +54,8 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getWriter(), authResponse);
+        //        SecurityContextHolder.getContext().setAuthentication(authResult);
+        //        chain.doFilter(request, response);
     }
 
     @Override

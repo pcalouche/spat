@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class JwtAuthenticationRequestMatcher implements RequestMatcher {
     private final OrRequestMatcher ignoredMatcher = new OrRequestMatcher(
-            new AntPathRequestMatcher(SecurityUtils.LOGIN_PATH)
+            new AntPathRequestMatcher(SecurityUtils.TOKEN_PATH)
     );
     private final OrRequestMatcher filteredMatcher = new OrRequestMatcher(
             new AntPathRequestMatcher(SecurityUtils.AUTHENTICATED_PATH)

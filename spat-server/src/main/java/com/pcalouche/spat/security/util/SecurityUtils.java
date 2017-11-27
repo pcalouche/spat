@@ -1,18 +1,15 @@
 package com.pcalouche.spat.security.util;
 
 import com.pcalouche.spat.api.BaseUris;
-import com.pcalouche.spat.api.auth.controller.AuthUris;
 import com.pcalouche.spat.api.model.AuthResponse;
 import com.pcalouche.spat.api.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AccountExpiredException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,13 +21,29 @@ import java.util.stream.Collectors;
 
 public class SecurityUtils {
     public static final String AUTHENTICATED_PATH = String.format("%s/**", BaseUris.API_ROOT);
-    public static final String LOGIN_PATH = String.format("%s/%s", AuthUris.ROOT, AuthUris.TOKEN);
-    public static final String REFRESH_TOKEN_PATH = String.format("%s/%s", AuthUris.ROOT, AuthUris.REFRESH_TOKEN);
-    public static final String AUTH_HEADER_PREFIX = "Bearer ";
+    public static final String TOKEN_PATH = String.format("%s/auth/token", BaseUris.API_ROOT);
+    public static final String REFRESH_TOKEN_PATH = String.format("%s/auth/refresh-token", BaseUris.API_ROOT);
+    public static final String AUTH_HEADER_BASIC_PREFIX = "Basic ";
+    public static final String AUTH_HEADER_BEARER_PREFIX = "Bearer ";
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";
     private static final String SIGNING_KEY = Base64.getEncoder().encodeToString("farside597".getBytes());
     private static final long TOKEN_DURATION_IN_MINUTES = 10L;
     private static final long REFRESH_TOKEN_DURATION_IN_MINUTES = 15L;
+
+    public static String[] getDecodedBasicAuthFromRequest(HttpServletRequest request) throws AuthenticationException {
+        String headerValue = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (headerValue != null && headerValue.startsWith(AUTH_HEADER_BASIC_PREFIX)) {
+            String encodedBase64String = headerValue.replace(AUTH_HEADER_BASIC_PREFIX, "");
+            String[] decodedBasicAuthorizationParts = new String(Base64.getDecoder().decode(encodedBase64String)).split(":");
+            if (decodedBasicAuthorizationParts.length != 2) {
+                throw new BadCredentialsException("Basic Authentication header is invalid");
+            } else {
+                return decodedBasicAuthorizationParts;
+            }
+        } else {
+            throw new BadCredentialsException("Basic Authentication header is invalid");
+        }
+    }
 
     public static String getTokenFromRequest(HttpServletRequest request) {
         return getTokenFromHeaderValue(request.getHeader(HttpHeaders.AUTHORIZATION));
@@ -38,8 +51,8 @@ public class SecurityUtils {
 
     public static String getTokenFromHeaderValue(String headerValue) {
         String token = null;
-        if (headerValue != null && headerValue.startsWith(AUTH_HEADER_PREFIX)) {
-            token = headerValue.substring(7);
+        if (headerValue != null && headerValue.startsWith(AUTH_HEADER_BEARER_PREFIX)) {
+            token = headerValue.replace(AUTH_HEADER_BEARER_PREFIX, "");
         }
         return token;
     }

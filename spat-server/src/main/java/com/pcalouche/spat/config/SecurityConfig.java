@@ -6,6 +6,7 @@ import com.pcalouche.spat.security.filter.JwtAuthenticationProcessingFilter;
 import com.pcalouche.spat.security.provider.AjaxLoginAuthenticationProvider;
 import com.pcalouche.spat.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.security.util.SecurityUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -22,6 +23,8 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final AjaxLoginProcessingFilter ajaxLoginProcessingFilter;
     private final JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter;
     private final AuthenticationManager authenticationManager;
@@ -29,19 +32,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider,
                           JwtAuthenticationProvider jwtAuthenticationProvider,
                           ObjectMapper objectMapper) {
+        this.ajaxLoginAuthenticationProvider = ajaxLoginAuthenticationProvider;
+        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.authenticationManager = new ProviderManager(Arrays.asList(ajaxLoginAuthenticationProvider, jwtAuthenticationProvider));
         this.ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager, objectMapper);
         this.jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
     }
 
+    @Bean
     @Override
-    public AuthenticationManager authenticationManager() {
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return authenticationManager;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // Disable basic security since we won't be using that
+                .httpBasic().disable()
                 // We don't need CSRF for JWT based authentication.  The nature JWT authentication prevents CSRF.
                 .csrf().disable()
                 // Sessions are stateless with JWT based authentication
@@ -49,9 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Setup which endpoints that do not require authentication
                 .and()
                 .authorizeRequests()
-                //                .antMatchers(SecurityUtils.LOGIN_PATH).permitAll()
-                .antMatchers(SecurityUtils.LOGIN_PATH, SecurityUtils.REFRESH_TOKEN_PATH).permitAll()
-                //                .antMatchers(HttpMethod.POST, SecurityUtils.LOGIN_PATH).permitAll()
+                //                .antMatchers(SecurityUtils.TOKEN_PATH).permitAll()
+                .antMatchers(SecurityUtils.TOKEN_PATH, SecurityUtils.REFRESH_TOKEN_PATH).permitAll()
+                //                .antMatchers(HttpMethod.POST, SecurityUtils.TOKEN_PATH).permitAll()
                 //                .antMatchers(HttpMethod.GET, SecurityUtils.REFRESH_TOKEN_PATH).permitAll()
                 // Setup which endpoints that do require authentication
                 .and()
@@ -59,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(SecurityUtils.AUTHENTICATED_PATH).authenticated()
                 // Setup filters for the endpoints
                 .and()
-                .addFilterBefore(ajaxLoginProcessingFilter, UsernamePasswordAuthenticationFilter.class)
+                //                .addFilterBefore(ajaxLoginProcessingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

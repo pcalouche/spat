@@ -1,10 +1,7 @@
 package com.pcalouche.spat.api.auth.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-@RequestMapping(value = AuthUris.ROOT)
+//@RestController
+//@RequestMapping(value = AuthUris.ROOT)
 public class AuthController {
     //    private final AuthenticationManager authenticationManager;
     //    @Autowired
@@ -16,14 +13,8 @@ public class AuthController {
     //    }
     //
     //    @PostMapping(value = AuthUris.TOKEN)
-    //    public AuthResponse token(@Valid @RequestBody AuthRequest authRequest, HttpServletRequest request) {
-    //        Authentication authenticationFromClient = new UsernamePasswordAuthenticationToken(
-    //                authRequest.getUsername(),
-    //                authRequest.getPassword()
-    //        );
-    //
-    //        Authentication authenticationFromServer = authenticationManager.authenticate(authenticationFromClient);
-    //        return SecurityUtils.createAuthResponse(authenticationFromServer);
+    //    public AuthResponse token() {
+    //        return SecurityUtils.createAuthResponse(SecurityContextHolder.getContext().getAuthentication());
     //    }
     //
     //    @GetMapping(value = AuthUris.REFRESH_TOKEN)
