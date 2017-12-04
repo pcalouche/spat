@@ -29,11 +29,15 @@
     </profiles>
 
     <properties>
-        <!-- Properties Below-->
+        <!--Properties Below-->
         <packaging>jar</packaging>
-        <!-- Application Dependency Versions Below-->
+
+        <!--Application Dependency Versions Below-->
+
         <!--Test Dependency Versions Below-->
+
         <!--Provided, Runtime, and Optional Dependencies Below-->
+
         <!--Plugin Versions Below-->
     </properties>
 
@@ -68,6 +72,7 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
         </dependency>
+
         <!--Test Dependencies Below-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
