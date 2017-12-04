@@ -21,6 +21,11 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
+    //    @Override
+    //    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    //        registry.addResourceHandler("/static/**").addResourceLocations("/static/ui/");
+    //    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loggerInterceptor);

@@ -3,6 +3,7 @@ package com.pcalouche.spat.api.team.controller;
 import com.pcalouche.spat.api.AbstractController;
 import com.pcalouche.spat.api.model.Team;
 import com.pcalouche.spat.api.team.service.TeamService;
+import com.pcalouche.spat.util.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +29,13 @@ public class TeamController extends AbstractController {
 
     @PostMapping
     public Team saveTeam(@RequestBody Team team) {
-        logger.debug("Team to save name is " + team.getName() + " " + team.getId());
+        LoggerUtils.logDebug("Team to save name is " + team.getName() + " " + team.getId());
         return teamService.saveTeam(team);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteTeam(@PathVariable Long id) {
-        logger.info("ID to delete from controller is " + id);
+        LoggerUtils.logDebug("ID to delete from controller is " + id);
         return new ResponseEntity<>(teamService.deleteTeam(id), HttpStatus.OK);
     }
 }

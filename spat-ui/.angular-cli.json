@@ -6,7 +6,7 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "../spat-server/src/main/resources/static/dist",
+      "outDir": "../spat-server/src/main/resources/static/ui",
       "assets": [
         "assets",
         "favicon.ico"
@@ -19,6 +19,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
+        "../node_modules/font-awesome/css/font-awesome.css",
         "styles.scss"
       ],
       "scripts": [],

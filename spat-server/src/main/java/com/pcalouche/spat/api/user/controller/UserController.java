@@ -3,6 +3,7 @@ package com.pcalouche.spat.api.user.controller;
 import com.pcalouche.spat.api.AbstractController;
 import com.pcalouche.spat.api.model.User;
 import com.pcalouche.spat.api.user.service.UserService;
+import com.pcalouche.spat.util.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,13 @@ public class UserController extends AbstractController {
 
     @PostMapping
     public User saveUser(@RequestBody User user) {
-        logger.debug("User to save name is " + user.getUsername() + " " + user.getId());
+        LoggerUtils.logDebug("User to save name is " + user.getUsername() + " " + user.getId());
         return userService.saveUser(user);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable Long id) {
-        logger.info("ID to delete from controller is " + id);
+        LoggerUtils.logDebug("ID to delete from controller is " + id);
         return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
     }
 }

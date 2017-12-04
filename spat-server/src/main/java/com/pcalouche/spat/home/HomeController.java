@@ -1,18 +1,22 @@
 package com.pcalouche.spat.home;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.pcalouche.spat.util.LoggerUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = HomeUris.ROOT)
 public class HomeController {
-    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
-    //    @GetMapping
-    //    public String home() {
-    //        logger.info("Accessing Home Page");
-    //        return "forward:/dist/index.html";
-    //    }
+    @GetMapping
+    public String home(HttpServletRequest request) {
+        LoggerUtils.logInfo("Accessing Home Page");
+        if (!request.getRequestURI().contains(".")) {
+            return "forward:/ui/index.html";
+        } else {
+            return "/ui" + request.getRequestURI();
+        }
+    }
 }

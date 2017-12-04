@@ -8,6 +8,7 @@ import com.pcalouche.spat.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.security.util.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -23,8 +24,6 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
-    private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final AjaxLoginProcessingFilter ajaxLoginProcessingFilter;
     private final JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter;
     private final AuthenticationManager authenticationManager;
@@ -32,8 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider,
                           JwtAuthenticationProvider jwtAuthenticationProvider,
                           ObjectMapper objectMapper) {
-        this.ajaxLoginAuthenticationProvider = ajaxLoginAuthenticationProvider;
-        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.authenticationManager = new ProviderManager(Arrays.asList(ajaxLoginAuthenticationProvider, jwtAuthenticationProvider));
         this.ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager, objectMapper);
         this.jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
@@ -41,9 +38,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
+    public AuthenticationManager authenticationManagerBean() {
         return authenticationManager;
     }
+
+    //    @Override
+    //    public void configure(WebSecurity web) throws Exception {
+    //        web.ignoring().antMatchers("*/.css**", "*/*.js**");
+    //    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,10 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Setup which endpoints that do not require authentication
                 .and()
                 .authorizeRequests()
-                //                .antMatchers(SecurityUtils.TOKEN_PATH).permitAll()
-                .antMatchers(SecurityUtils.TOKEN_PATH, SecurityUtils.REFRESH_TOKEN_PATH).permitAll()
-                //                .antMatchers(HttpMethod.POST, SecurityUtils.TOKEN_PATH).permitAll()
-                //                .antMatchers(HttpMethod.GET, SecurityUtils.REFRESH_TOKEN_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityUtils.TOKEN_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityUtils.REFRESH_TOKEN_PATH).permitAll()
                 // Setup which endpoints that do require authentication
                 .and()
                 .authorizeRequests()

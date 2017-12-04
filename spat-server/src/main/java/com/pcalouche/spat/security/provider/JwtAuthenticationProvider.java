@@ -6,6 +6,7 @@ import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,6 +27,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // Try to validate the provided authentication as JwtAuthentication
         JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authentication;
+        if (jwtAuthentication.getCredentials() == null) {
+            throw new BadCredentialsException("No credentials found in JWT.  Was a JWT provided in the Authorization header?");
+        }
         String token = jwtAuthentication.getCredentials().toString();
         Claims claims = SecurityUtils.getClaimsFromToken(token);
         String subject = claims.getSubject();
