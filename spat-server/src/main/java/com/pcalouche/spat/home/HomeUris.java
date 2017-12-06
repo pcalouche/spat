@@ -5,5 +5,5 @@ package com.pcalouche.spat.home;
  * Helpful when wanting to easily refactor URIs in large project
  */
 public class HomeUris {
-    public static final String ROOT = "/*";
+    public static final String ROOT = "/";
 }

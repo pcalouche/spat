@@ -42,11 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return authenticationManager;
     }
 
-    //    @Override
-    //    public void configure(WebSecurity web) throws Exception {
-    //        web.ignoring().antMatchers("*/.css**", "*/*.js**");
-    //    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -54,6 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 // We don't need CSRF for JWT based authentication.  The nature JWT authentication prevents CSRF.
                 .csrf().disable()
+                // Need for H2 console to work properly
+                .headers().frameOptions().sameOrigin()
+                .and()
                 // Sessions are stateless with JWT based authentication
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 // Setup which endpoints that do not require authentication
