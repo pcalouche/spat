@@ -6,7 +6,7 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "../spat-server/src/main/resources/static/ui",
+      "outDir": "../spat-server/src/main/resources/public",
       "assets": [
         "assets",
         "favicon.ico"

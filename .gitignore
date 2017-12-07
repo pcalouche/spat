@@ -1,5 +1,5 @@
 # Additional ignores in addition to gitignore creation tool
-spat-server/src/main/resources/static/ui
+spat-server/src/main/resources/public
 # End of additional ignores in addition to gitignore creation tool
 
 # Created by https://www.gitignore.io/api/git,node,linux,macos,eclipse,windows,angular,intellij,visualstudiocode,maven

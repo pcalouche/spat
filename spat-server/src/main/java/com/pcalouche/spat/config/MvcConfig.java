@@ -24,7 +24,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/ui/")
+                .addResourceLocations("classpath:/public/")
                 .setCachePeriod(3600)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
@@ -33,7 +33,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
                                                    Resource location) throws IOException {
                         Resource requestedResource = location.createRelative(resourcePath);
                         return requestedResource.exists() && requestedResource.isReadable() ? requestedResource
-                                : new ClassPathResource("/static/ui/index.html");
+                                : new ClassPathResource("/public/index.html");
                     }
                 });
     }
