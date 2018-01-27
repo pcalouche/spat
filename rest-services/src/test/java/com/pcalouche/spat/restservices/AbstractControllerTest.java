@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import org.junit.Before;
 import org.junit.experimental.categories.Category;
-import org.mockito.BDDMockito;
-import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 
 @Category(UnitTestCategory.class)
 public abstract class AbstractControllerTest extends AbstractTest {
@@ -20,6 +21,6 @@ public abstract class AbstractControllerTest extends AbstractTest {
 
     @Before
     public void setup() throws Exception {
-        BDDMockito.given(loggerInterceptor.preHandle(Matchers.any(), Matchers.any(), Matchers.any())).willReturn(true);
+        given(loggerInterceptor.preHandle(any(), any(), any())).willReturn(true);
     }
 }

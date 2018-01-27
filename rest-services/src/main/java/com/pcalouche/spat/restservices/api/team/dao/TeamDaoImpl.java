@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.api.team.dao;
 
-import com.pcalouche.spat.restservices.api.AbstractDaoImpl;
+import com.pcalouche.spat.restservices.api.AbstractSpatDaoImpl;
 import com.pcalouche.spat.restservices.api.model.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class TeamDaoImpl extends AbstractDaoImpl implements TeamDao {
+public class TeamDaoImpl extends AbstractSpatDaoImpl implements TeamDao {
     @Autowired
     public TeamDaoImpl(@Qualifier("dataSource") DataSource dataSource) {
         setDataSource(dataSource);

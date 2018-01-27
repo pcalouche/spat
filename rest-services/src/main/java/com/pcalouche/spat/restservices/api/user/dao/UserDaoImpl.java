@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.api.user.dao;
 
-import com.pcalouche.spat.restservices.api.AbstractDaoImpl;
+import com.pcalouche.spat.restservices.api.AbstractSpatDaoImpl;
 import com.pcalouche.spat.restservices.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
+public class UserDaoImpl extends AbstractSpatDaoImpl implements UserDao {
     @Autowired
     public UserDaoImpl(@Qualifier("dataSource") DataSource dataSource) {
         setDataSource(dataSource);
