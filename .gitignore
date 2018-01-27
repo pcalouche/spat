@@ -305,6 +305,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/git,node,linux,macos,eclipse,windows,angular,intellij,visualstudiocode,maven
-package-lock.json
-rest-services/src/main/java/com/pcalouche/spat/restservices/security/util/
-ui/package-lock.json
