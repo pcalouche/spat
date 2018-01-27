@@ -5,6 +5,7 @@ import com.pcalouche.spat.restservices.api.model.AuthResponse;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +35,12 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
         if (SecurityUtils.REFRESH_TOKEN_ENDPOINT.equals(request.getRequestURI())) {
             authenticationToken.setDetails("refreshToken");
         }
-        return getAuthenticationManager().authenticate(authenticationToken);
+        try {
+            return getAuthenticationManager().authenticate(authenticationToken);
+        } catch (JwtException e) {
+            ExceptionUtils.writeExceptionToResponse(e, response);
+            return null;
+        }
     }
 
     @Override
