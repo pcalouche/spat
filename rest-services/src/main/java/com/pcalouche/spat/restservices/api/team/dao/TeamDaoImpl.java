@@ -28,28 +28,30 @@ public class TeamDaoImpl extends AbstractSpatDaoImpl implements TeamDao {
     @Override
     public Team saveTeam(Team team) {
         String sql;
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("name", team.getName());
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", team.getName());
 
         if (team.getId() == null) {
             logger.debug("in create case");
             sql = TeamQueries.INSERT_TEAM;
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource, keyHolder, new String[]{"id"});
+            mapSqlParameterSource.addValue("id", keyHolder.getKey().longValue());
         } else {
             logger.debug("in update case");
+            sql = TeamQueries.UPDATE_TEAM;
             // Query too see if it exists in the database first
             mapSqlParameterSource.addValue("id", team.getId());
             getNamedParameterJdbcTemplate().queryForObject(TeamQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Team.class));
-            sql = TeamQueries.UPDATE_TEAM;
+            getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource);
         }
-
-        getNamedParameterJdbcTemplate().update(sql, mapSqlParameterSource, keyHolder, new String[]{"id"});
-        mapSqlParameterSource = new MapSqlParameterSource("id", keyHolder.getKey().longValue());
         return getNamedParameterJdbcTemplate().queryForObject(TeamQueries.GET_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Team.class));
     }
 
     @Override
     public Boolean deleteTeam(Long id) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("id", id);
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
         int numRowsAffected = getNamedParameterJdbcTemplate().update(TeamQueries.DELETE_TEAM, mapSqlParameterSource);
         return numRowsAffected > 0;
     }

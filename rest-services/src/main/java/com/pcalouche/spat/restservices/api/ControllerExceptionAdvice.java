@@ -13,7 +13,7 @@ public class ControllerExceptionAdvice {
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionAdvice.class);
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<JsonNode> exceptionResponse(Exception e) throws Exception {
+    public ResponseEntity<JsonNode> exceptionResponse(Exception e) {
         logger.error(String.format("%s occurred", e.getClass().getName()), e);
         return new ResponseEntity<>(ExceptionUtils.buildJsonErrorObject(e), ExceptionUtils.getHttpStatusForException(e));
     }

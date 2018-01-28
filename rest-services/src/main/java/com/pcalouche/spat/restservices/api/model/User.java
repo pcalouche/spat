@@ -1,30 +1,31 @@
 package com.pcalouche.spat.restservices.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pcalouche.spat.restservices.api.deserializers.SimpleGrantedAuthorityDeserializer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
+import java.util.Objects;
 
 public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
+    @JsonDeserialize(using = SimpleGrantedAuthorityDeserializer.class)
     private List<SimpleGrantedAuthority> authorities;
-    private String firstName;
-    private String lastName;
 
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName) {
+    public User(Long id, String username, List<SimpleGrantedAuthority> authorities) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.username = username;
+        this.authorities = authorities;
     }
 
     public Long getId() {
@@ -44,7 +45,6 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
@@ -99,19 +99,25 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
-    public String getFirstName() {
-        return firstName;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return accountNonExpired == user.accountNonExpired &&
+                accountNonLocked == user.accountNonLocked &&
+                credentialsNonExpired == user.credentialsNonExpired &&
+                enabled == user.enabled &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(authorities, user.authorities);
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, authorities);
     }
 }

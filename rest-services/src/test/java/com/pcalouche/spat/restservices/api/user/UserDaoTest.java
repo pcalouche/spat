@@ -5,7 +5,9 @@ import com.pcalouche.spat.restservices.api.model.User;
 import com.pcalouche.spat.restservices.api.user.dao.UserDao;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,12 +24,15 @@ public class UserDaoTest extends AbstractDaoTest {
 
     @Test
     public void testSaveUser() {
-        User newUser = new User(null, "FirstName", "LastName");
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        User newUser = new User(null, "pcalouche", authorities);
+        newUser.setPassword("password");
 
         User savedUser = userDao.saveUser(newUser);
         assertThat(savedUser).isEqualTo(newUser);
 
-        savedUser.setFirstName("NewFirstName");
+        savedUser.setUsername("pcalouche2");
 
         User updatedUser = userDao.saveUser(savedUser);
         assertThat(updatedUser).isEqualTo(savedUser);

@@ -12,15 +12,16 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
 @Category(UnitTestCategory.class)
-public abstract class AbstractControllerTest extends AbstractTest {
-    protected final ObjectMapper objectMapper = new ObjectMapper();
+public abstract class AbstractControllerTest extends AbstractUnitTest {
+    @Autowired
+    protected ObjectMapper objectMapper;
     @MockBean
     protected LoggerInterceptor loggerInterceptor;
     @Autowired
     protected MockMvc mockMvc;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         given(loggerInterceptor.preHandle(any(), any(), any())).willReturn(true);
     }
 }

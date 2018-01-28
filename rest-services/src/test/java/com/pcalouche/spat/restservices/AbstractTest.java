@@ -6,8 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+/**
+ * Parent class for all tests and for other abstract test classes.
+ * See {@link AbstractUnitTest}, {@link AbstractIntegrationTest},
+ * and {@link AbstractServiceTest} for a few examples.  The test
+ * runner type and property configuration for  all tests are set
+ * here.
+ */
 @RunWith(SpringRunner.class)
-@TestPropertySource(locations = {"classpath:/application-test.properties"})
+@TestPropertySource({"classpath:application-test.properties"})
 public abstract class AbstractTest {
     // Logger instance that all child classes can use
     protected final Logger logger = LoggerFactory.getLogger(getClass());

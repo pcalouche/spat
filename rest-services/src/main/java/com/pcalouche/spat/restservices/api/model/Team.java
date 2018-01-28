@@ -1,5 +1,7 @@
 package com.pcalouche.spat.restservices.api.model;
 
+import java.util.Objects;
+
 public class Team {
     private Long id;
     private String name;
@@ -36,14 +38,13 @@ public class Team {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Team team = (Team) o;
-
-        return name != null ? name.equals(team.name) : team.name == null;
+        return Objects.equals(name, team.name);
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return Objects.hash(name);
     }
+
 }
