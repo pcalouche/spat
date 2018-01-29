@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.api;
 
-import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.junit.Test;

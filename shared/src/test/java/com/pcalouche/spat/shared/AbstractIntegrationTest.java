@@ -1,8 +1,7 @@
-package com.pcalouche.spat.restservices;
+package com.pcalouche.spat.shared;
 
 import org.junit.experimental.categories.Category;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Parent class for all Integrated Tests.  These types of tests load
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
  * be leveraged by the Maven Failsafe plugin configuration.
  */
 @SpringBootTest
-@Transactional
 @Category(IntegrationTestCategory.class)
 public abstract class AbstractIntegrationTest extends AbstractTest {
 }

@@ -1,11 +1,8 @@
 package com.pcalouche.spat.restservices;
 
-import org.junit.experimental.categories.Category;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.pcalouche.spat.shared.AbstractIntegrationTest;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
 @Transactional
-@Category(IntegrationTestCategory.class)
-public abstract class AbstractDaoTest extends AbstractTest {
+public abstract class AbstractDaoTest extends AbstractIntegrationTest {
 }

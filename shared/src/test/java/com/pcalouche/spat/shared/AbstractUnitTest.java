@@ -1,4 +1,4 @@
-package com.pcalouche.spat.restservices;
+package com.pcalouche.spat.shared;
 
 import org.junit.experimental.categories.Category;
 

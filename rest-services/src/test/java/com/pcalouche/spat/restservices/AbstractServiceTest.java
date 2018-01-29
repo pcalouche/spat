@@ -1,7 +1,6 @@
 package com.pcalouche.spat.restservices;
 
-import org.junit.experimental.categories.Category;
+import com.pcalouche.spat.shared.AbstractTest;
 
-@Category(UnitTestCategory.class)
 public abstract class AbstractServiceTest extends AbstractTest {
 }

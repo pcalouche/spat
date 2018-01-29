@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.util;
 
-import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;

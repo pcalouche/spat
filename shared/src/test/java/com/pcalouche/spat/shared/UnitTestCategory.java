@@ -1,4 +1,4 @@
 package com.pcalouche.spat.shared;
 
-public class SharedModel {
+public interface UnitTestCategory {
 }

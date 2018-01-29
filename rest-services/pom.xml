@@ -59,6 +59,13 @@
 
         <!--Test Dependencies Below-->
         <dependency>
+            <groupId>com.pcalouche.spat</groupId>
+            <artifactId>shared</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -94,12 +101,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <groups>com.pcalouche.spat.UnitTestCategory</groups>
+                    <groups>com.pcalouche.spat.shared.UnitTestCategory</groups>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!--The Maven Failsafe plugin does not includes the file patterns below by default-->
+                <!--http://maven.apache.org/surefire/maven-failsafe-plugin/examples/inclusion-exclusion.html-->
                 <configuration>
                     <includes>
                         <include>**/*Tests.java</include>
@@ -108,7 +117,7 @@
                     <excludes>
                         <exclude>**/Abstract*.java</exclude>
                     </excludes>
-                    <groups>com.pcalouche.spat.IntegrationTestCategory</groups>
+                    <groups>com.pcalouche.spat.shared.IntegrationTestCategory</groups>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,4 +1,4 @@
-package com.pcalouche.spat.restservices;
+package com.pcalouche.spat.shared;
 
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -8,10 +8,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Parent class for all tests and for other abstract test classes.
- * See {@link AbstractUnitTest}, {@link AbstractIntegrationTest},
- * and {@link AbstractServiceTest} for a few examples.  The test
- * runner type and property configuration for  all tests are set
- * here.
+ * See {@link AbstractUnitTest} and {@link AbstractIntegrationTest}.
+ * The test runner type and property configuration for all tests
+ * are set here.
  */
 @RunWith(SpringRunner.class)
 @TestPropertySource({"classpath:application-test.properties"})
