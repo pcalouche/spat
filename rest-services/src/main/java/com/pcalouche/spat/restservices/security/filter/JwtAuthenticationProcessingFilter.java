@@ -38,7 +38,7 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
         try {
             return getAuthenticationManager().authenticate(authenticationToken);
         } catch (JwtException e) {
-            ExceptionUtils.writeExceptionToResponse(e, response);
+            ExceptionUtils.writeExceptionToResponse(e, request, response);
             return null;
         }
     }
@@ -60,6 +60,6 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        ExceptionUtils.writeExceptionToResponse(failed, response);
+        ExceptionUtils.writeExceptionToResponse(failed, request, response);
     }
 }

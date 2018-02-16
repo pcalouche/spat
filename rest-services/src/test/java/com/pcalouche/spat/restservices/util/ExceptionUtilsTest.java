@@ -1,10 +1,13 @@
 package com.pcalouche.spat.restservices.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -52,11 +55,27 @@ public class ExceptionUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testWriteExceptionToResponse() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
         MockHttpServletResponse response = new MockHttpServletResponse();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/request-path");
         AuthenticationException authenticationException = new BadCredentialsException("bad credentials");
 
-        ExceptionUtils.writeExceptionToResponse(authenticationException, response);
+        ObjectNode expectedObjectNode = (ObjectNode) objectMapper.readTree(ExceptionUtils.buildJsonErrorObject(authenticationException, request).toString());
+        // Remove timestamp for easier comparision
+        expectedObjectNode.remove("timestamp");
 
-        assertThat(response.getContentAsString()).isEqualTo(ExceptionUtils.buildJsonErrorObject(authenticationException).toString());
+        ExceptionUtils.writeExceptionToResponse(authenticationException, request, response);
+
+        ObjectNode actualObjectNode = (ObjectNode) objectMapper.readTree(response.getContentAsString());
+
+        // Check timestamp is not null
+        assertThat(actualObjectNode.get("timestamp"))
+                .isNotNull();
+
+        // Remove timestamp for easier comparision
+        actualObjectNode.remove("timestamp");
+
+        assertThat(actualObjectNode).isEqualTo(expectedObjectNode);
     }
 }

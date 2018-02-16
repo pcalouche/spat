@@ -25,12 +25,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        // Try to validate the provided authentication as JwtAuthentication
-        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authentication;
-        if (jwtAuthentication.getCredentials() == null) {
-            throw new BadCredentialsException("No credentials found in JWT.  Was a JWT provided in the Authorization header?");
+        // Try to validate the provided authentication as JwtAuthenticationToken
+        JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
+        if (jwtAuthenticationToken.getCredentials() == null) {
+            throw new BadCredentialsException("No Authorization header found in request.");
         }
-        String token = jwtAuthentication.getCredentials().toString();
+        String token = jwtAuthenticationToken.getCredentials().toString();
         Claims claims = SecurityUtils.getClaimsFromToken(token);
         String subject = claims.getSubject();
 

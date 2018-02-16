@@ -8,13 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
+
 @ControllerAdvice(basePackages = "com.pcalouche.spat")
 public class ControllerExceptionAdvice {
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionAdvice.class);
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<JsonNode> exceptionResponse(Exception e) {
+    public ResponseEntity<JsonNode> exceptionResponse(Exception e, HttpServletRequest request) {
         logger.error(String.format("%s occurred", e.getClass().getName()), e);
-        return new ResponseEntity<>(ExceptionUtils.buildJsonErrorObject(e), ExceptionUtils.getHttpStatusForException(e));
+        return new ResponseEntity<>(ExceptionUtils.buildJsonErrorObject(e, request), ExceptionUtils.getHttpStatusForException(e));
     }
 }

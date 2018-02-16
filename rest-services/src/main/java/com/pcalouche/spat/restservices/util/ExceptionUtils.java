@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -22,9 +23,16 @@ import java.util.stream.Collectors;
 public class ExceptionUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static JsonNode buildJsonErrorObject(Exception e) {
+    public static JsonNode buildJsonErrorObject(Exception e, HttpServletRequest request) {
         ObjectNode errorObjectNode = objectMapper.createObjectNode();
-        errorObjectNode.put("serverException", e.getClass().getName());
+        errorObjectNode.put("timestamp", System.currentTimeMillis());
+        if (request != null) {
+            errorObjectNode.put("path", request.getRequestURI());
+        }
+        HttpStatus status = getHttpStatusForException(e);
+        errorObjectNode.put("status", status.value());
+        errorObjectNode.put("error", status.getReasonPhrase());
+        errorObjectNode.put("exception", e.getClass().getName());
         if (e instanceof MethodArgumentNotValidException) {
             // Make the message output a little prettier by getting some information from the BindingResult
             MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
@@ -56,9 +64,9 @@ public class ExceptionUtils {
         }
     }
 
-    public static void writeExceptionToResponse(Exception e, HttpServletResponse response) throws IOException {
+    public static void writeExceptionToResponse(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(getHttpStatusForException(e).value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), ExceptionUtils.buildJsonErrorObject(e));
+        objectMapper.writeValue(response.getWriter(), ExceptionUtils.buildJsonErrorObject(e, request));
     }
 }
