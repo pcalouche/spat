@@ -4,8 +4,6 @@ import com.pcalouche.spat.restservices.api.AbstractSpatController;
 import com.pcalouche.spat.restservices.api.model.Team;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +30,8 @@ public class TeamController extends AbstractSpatController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Boolean> deleteTeam(@PathVariable Long id) {
+    public boolean deleteTeam(@PathVariable Long id) {
         logger.debug("ID to delete from controller is " + id);
-        return new ResponseEntity<>(teamService.deleteTeam(id), HttpStatus.OK);
+        return teamService.deleteTeam(id);
     }
 }

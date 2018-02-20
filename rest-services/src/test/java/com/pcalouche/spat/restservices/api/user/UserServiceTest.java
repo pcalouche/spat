@@ -44,6 +44,19 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void testGetByUsername() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        User expectedUser = new User(1L, "pcalouche", authorities);
+
+        given(userDao.getByUsername(expectedUser.getUsername())).willReturn(expectedUser);
+
+        assertThat(userService.getByUsername(expectedUser.getUsername())).isEqualTo(expectedUser);
+
+        verify(userDao, Mockito.times(1)).getByUsername(expectedUser.getUsername());
+    }
+
+    @Test
     public void testSaveUser() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -62,5 +75,4 @@ public class UserServiceTest extends AbstractServiceTest {
 
         assertThat(userService.deleteUser(1L)).isTrue();
     }
-
 }

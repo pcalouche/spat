@@ -30,7 +30,7 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(SecurityUtils.getTokenFromRequest(request));
         if (SecurityUtils.REFRESH_TOKEN_ENDPOINT.equals(request.getRequestURI())) {
             authenticationToken.setDetails("refreshToken");
@@ -59,7 +59,7 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         ExceptionUtils.writeExceptionToResponse(failed, request, response);
     }
 }

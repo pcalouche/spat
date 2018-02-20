@@ -3,6 +3,8 @@ package com.pcalouche.spat.restservices.config;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -18,5 +20,23 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loggerInterceptor);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("OPTIONS",
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE")
+                .exposedHeaders(HttpHeaders.LOCATION,
+                        HttpHeaders.CONTENT_LOCATION,
+                        HttpHeaders.CONTENT_TYPE,
+                        HttpHeaders.CONTENT_LENGTH,
+                        HttpHeaders.CONTENT_DISPOSITION)
+                .allowCredentials(true)
+                .maxAge(86400);
+        super.addCorsMappings(registry);
     }
 }

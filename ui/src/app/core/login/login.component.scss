@@ -1,0 +1,10 @@
+@import "assets/scss/variables";
+
+.card {
+  width: 30rem;
+  margin: auto;
+  .error {
+    color: $errorColor;
+    font-weight: bold;
+  }
+}

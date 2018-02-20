@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.api.model.AuthResponse;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,10 +12,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,13 +25,13 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     private final ObjectMapper objectMapper;
 
     public AjaxLoginProcessingFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
-        super(SecurityUtils.TOKEN_ENDPOINT);
+        super(new AntPathRequestMatcher(SecurityUtils.TOKEN_ENDPOINT, HttpMethod.GET.toString()));
         setAuthenticationManager(authenticationManager);
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String[] decodedBasicAuthorizationParts = SecurityUtils.getDecodedBasicAuthFromRequest(request);
         String username = decodedBasicAuthorizationParts[0];
         String password = decodedBasicAuthorizationParts[1];

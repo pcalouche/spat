@@ -4,8 +4,6 @@ import com.pcalouche.spat.restservices.api.AbstractSpatController;
 import com.pcalouche.spat.restservices.api.model.User;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +23,11 @@ public class UserController extends AbstractSpatController {
         return userService.getUsers();
     }
 
+    @GetMapping(value = "/{username}")
+    public User getByUsername(@PathVariable String username) {
+        return this.userService.getByUsername(username);
+    }
+
     @PostMapping
     public User saveUser(@RequestBody User user) {
         logger.debug("User to save name is " + user.getUsername() + " " + user.getId());
@@ -32,8 +35,8 @@ public class UserController extends AbstractSpatController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable Long id) {
+    public boolean deleteUser(@PathVariable Long id) {
         logger.debug("ID to delete from controller is " + id);
-        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
+        return userService.deleteUser(id);
     }
 }

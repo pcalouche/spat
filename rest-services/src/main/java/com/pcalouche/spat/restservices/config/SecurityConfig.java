@@ -49,6 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 // We don't need CSRF for JWT based authentication.  The nature of JWT authentication prevents CSRF.
                 .csrf().disable()
+                // Handle CORS (Cross-origin resource sharing)
+                .cors()
+                .and()
                 // Need for H2 console to work properly
                 .headers().frameOptions().sameOrigin()
                 .and()
