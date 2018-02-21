@@ -39,10 +39,6 @@ export class LoginComponent implements OnInit {
     this.authService.token(this.loginForm).subscribe(
       authResponse => {
         this.sessionManagementService.storeTokens(authResponse);
-        // console.log(sessionStorage.getItem('spatSession'));
-        // console.log(this.sessionManagementService.getTokenClaims());
-        // console.log(this.sessionManagementService.getTokenExpiration());
-        // console.log(this.sessionManagementService.getTokenDuration());
 
         // Load the details of the logged in user now
         this.userService.getByUsername(this.loginForm.value.username).subscribe(

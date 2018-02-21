@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ClientUser } from '@core/model/ClientUser';
 import { SessionManagementService } from '@core/services/session-management.service';
 
 @Component({
@@ -8,18 +9,20 @@ import { SessionManagementService } from '@core/services/session-management.serv
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent implements OnInit {
-  public collapsed = false;
-  public loggedIn = false;
+  collapsed = true;
+  loggedInUser: ClientUser = null;
 
-  constructor(public sessionManagementService: SessionManagementService,
+  constructor(private sessionManagementService: SessionManagementService,
               private router: Router) {
   }
 
   ngOnInit() {
+    this.sessionManagementService.getLoggedInUser().subscribe(loggedInUser => {
+      this.loggedInUser = loggedInUser;
+    });
   }
 
   handleLogoutClick() {
-    console.log('will handle logout');
     this.sessionManagementService.clearSession();
     this.router.navigate(['/login']);
   }
