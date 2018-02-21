@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientUser } from '@core/model/ClientUser';
-import { SessionManagementService } from '@core/services/session-management.service';
+import { UserSessionService } from '@core/services/user-session.service';
 
 @Component({
   selector: 'app-nav',
@@ -12,18 +12,19 @@ export class NavComponent implements OnInit {
   collapsed = true;
   loggedInUser: ClientUser = null;
 
-  constructor(private sessionManagementService: SessionManagementService,
+  constructor(private userSessionService: UserSessionService,
               private router: Router) {
   }
 
   ngOnInit() {
-    this.sessionManagementService.getLoggedInUser().subscribe(loggedInUser => {
+    // Subscribe to changes in the logged in user
+    this.userSessionService.getLoggedInUserAsObservable().subscribe(loggedInUser => {
       this.loggedInUser = loggedInUser;
     });
   }
 
   handleLogoutClick() {
-    this.sessionManagementService.clearSession();
+    this.userSessionService.clearSession();
     this.router.navigate(['/login']);
   }
 }

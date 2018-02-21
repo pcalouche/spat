@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/rest/api/auth/auth.service';
 import { RestServiceHelper } from '@app/rest/api/rest-service-helper';
 import { UserService } from '@app/rest/api/user/user.service';
 import { coreModuleErrors } from '@core/core-messages';
 import { ClientUser } from '@core/model/ClientUser';
-import { SessionManagementService } from '@core/services/session-management.service';
+import { UserSessionService } from '@core/services/user-session.service';
 
 @Component({
   selector: 'app-login',
@@ -18,14 +18,15 @@ export class LoginComponent implements OnInit {
   errorMessage: string;
   showErrorMessage: boolean;
   loginForm = new FormGroup({
-    username: new FormControl('activeUser', [Validators.required]),
-    password: new FormControl('password', [Validators.required])
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required])
   });
 
   constructor(private authService: AuthService,
               private userService: UserService,
-              private sessionManagementService: SessionManagementService,
-              private router: Router) {
+              private userSessionService: UserSessionService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -33,28 +34,27 @@ export class LoginComponent implements OnInit {
 
   handleLoginClick() {
     // Clear state before requesting new token
-    this.sessionManagementService.clearSession();
+    this.userSessionService.clearSession();
     this.showErrorMessage = false;
 
     this.authService.token(this.loginForm).subscribe(
       authResponse => {
-        this.sessionManagementService.storeTokens(authResponse);
+        this.userSessionService.storeTokens(authResponse);
 
         // Load the details of the logged in user now
         this.userService.getByUsername(this.loginForm.value.username).subscribe(
           user => {
-            this.sessionManagementService.setLoggedInUser(new ClientUser(user));
-            // If coming from a redirect go there, otherwise go to logged in user's default page
-            // if (this.route.snapshot.params['redirect']) {
-            //   this.router.navigate([this.route.snapshot.paramMap.get('redirect')]);
-            // } else {
-            //   this.router.navigate(['/team']);
-            // }
-            this.router.navigate(['teams']);
+            this.userSessionService.setLoggedInUser(new ClientUser(user));
+            // If coming from a redirect go there, otherwise go to teams page by default
+            if (this.activatedRoute.snapshot.params['redirect']) {
+              this.router.navigate([this.activatedRoute.snapshot.paramMap.get('redirect')]);
+            } else {
+              this.router.navigate(['/teams']);
+            }
           }, () => {
             this.errorMessage = coreModuleErrors.unknown;
             this.showErrorMessage = true;
-            this.sessionManagementService.clearSession();
+            this.userSessionService.clearSession();
           }
         );
 

@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class SessionManagementService {
+export class UserSessionService {
   private readonly storageKey: string = 'spatSession';
   private readonly tokenKey: string = 'token';
   private readonly refreshTokenKey: string = 'refreshToken';
@@ -14,11 +14,11 @@ export class SessionManagementService {
   private tokenExpiration: Date;
   private tokenDuration: number;
   private loggedInUser = new BehaviorSubject<ClientUser>(null);
+  private loggedInUserObservable = this.loggedInUser.asObservable();
 
   constructor() {
     // Check session storage for session on creation
     if (sessionStorage.getItem(this.storageKey)) {
-      console.log('SPAT session found in session storage found');
       this.parseClaims(this.getToken());
       this.loggedInUser.next(new ClientUser(JSON.parse(sessionStorage.getItem(this.storageKey))[this.loggedInUserKey]));
     }
@@ -61,8 +61,8 @@ export class SessionManagementService {
     return this.tokenDuration;
   }
 
-  getLoggedInUser(): Observable<ClientUser> {
-    return this.loggedInUser.asObservable();
+  getLoggedInUser(): ClientUser {
+    return this.loggedInUser.getValue();
   }
 
   setLoggedInUser(loggedInUser: ClientUser) {
@@ -70,6 +70,10 @@ export class SessionManagementService {
     const spatSession = JSON.parse(sessionStorage.getItem(this.storageKey));
     spatSession[this.loggedInUserKey] = JSON.stringify(loggedInUser);
     sessionStorage.setItem(this.storageKey, JSON.stringify(spatSession));
+  }
+
+  getLoggedInUserAsObservable(): Observable<ClientUser> {
+    return this.loggedInUserObservable;
   }
 
   private parseClaims(token: string) {

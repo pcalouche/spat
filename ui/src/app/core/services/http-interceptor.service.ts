@@ -1,13 +1,13 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RestServiceHelper } from '@app/rest/api/rest-service-helper';
-import { SessionManagementService } from '@core/services/session-management.service';
+import { UserSessionService } from '@core/services/user-session.service';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
 
-  constructor(private sessionManagementService: SessionManagementService) {
+  constructor(private userSessionService: UserSessionService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -15,7 +15,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       const newReq = req.clone({
         headers: req.headers.set(
           RestServiceHelper.authHttpHeader,
-          RestServiceHelper.authHeaderBearerPrefix + this.sessionManagementService.getToken()
+          RestServiceHelper.authHeaderBearerPrefix + this.userSessionService.getToken()
         )
       });
       return next.handle(newReq);

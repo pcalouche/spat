@@ -21,7 +21,7 @@ const routes: Routes = [
   // Application Routes
   {path: 'login', canActivate: [RouteGuardService], component: LoginComponent, data: {panelRouteDetails: {title: 'Login'}}},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: '**', component: PageNotFoundComponent, data: {panelRouteDetails: {title: 'Page Not Found'}}}
+  {path: '**', component: PageNotFoundComponent, canActivate: [RouteGuardService], data: {panelRouteDetails: {title: 'Page Not Found'}}}
 ];
 
 @NgModule({

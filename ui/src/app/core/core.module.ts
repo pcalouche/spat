@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SessionManagementService } from '@core/services/session-management.service';
+import { UserSessionService } from '@core/services/user-session.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './login/login.component';
 import { NavComponent } from './nav/nav.component';
@@ -18,7 +18,7 @@ import { RouteGuardService } from './services/route-guard.service';
   ],
   declarations: [LoginComponent, NavComponent, PageNotFoundComponent],
   entryComponents: [],
-  providers: [RouteGuardService, SessionManagementService],
+  providers: [RouteGuardService, UserSessionService],
   exports: [LoginComponent, NavComponent, PageNotFoundComponent]
 })
 export class CoreModule {
