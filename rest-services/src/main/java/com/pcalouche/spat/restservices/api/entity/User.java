@@ -1,14 +1,12 @@
 package com.pcalouche.spat.restservices.api.entity;
 
-import com.pcalouche.spat.restservices.api.dto.UserDto;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Objects;
 
-public class User implements UserDetails, DtoConvertible<UserDto> {
+public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
@@ -96,11 +94,6 @@ public class User implements UserDetails, DtoConvertible<UserDto> {
 
     public void setAuthorities(List<SimpleGrantedAuthority> authorities) {
         this.authorities = authorities;
-    }
-
-    @Override
-    public UserDto convertToDto(ModelMapper modelMapper) {
-        return modelMapper.map(this, UserDto.class);
     }
 
     @Override

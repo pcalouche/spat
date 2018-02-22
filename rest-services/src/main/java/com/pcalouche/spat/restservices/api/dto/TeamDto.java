@@ -1,11 +1,8 @@
 package com.pcalouche.spat.restservices.api.dto;
 
-import com.pcalouche.spat.restservices.api.entity.Team;
-import org.modelmapper.ModelMapper;
-
 import java.util.Objects;
 
-public class TeamDto implements EntityConvertible<Team> {
+public class TeamDto {
     private Long id;
     private String name;
 
@@ -31,11 +28,6 @@ public class TeamDto implements EntityConvertible<Team> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public Team convertToEntity(ModelMapper modelMapper) {
-        return modelMapper.map(this, Team.class);
     }
 
     @Override
