@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.security.provider;
 
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.springframework.security.authentication.AuthenticationProvider;

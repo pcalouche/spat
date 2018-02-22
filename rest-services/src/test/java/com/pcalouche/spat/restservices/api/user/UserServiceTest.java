@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.user;
 
 import com.pcalouche.spat.restservices.AbstractServiceTest;
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.dao.UserDao;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import com.pcalouche.spat.restservices.api.user.service.UserServiceImpl;

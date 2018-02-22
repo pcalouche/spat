@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.security.provider;
 
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.dao.UserDao;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;

@@ -1,14 +1,14 @@
-package com.pcalouche.spat.restservices.api.model;
+package com.pcalouche.spat.restservices.api.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pcalouche.spat.restservices.api.deserializers.SimpleGrantedAuthorityDeserializer;
+import com.pcalouche.spat.restservices.api.dto.UserDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Objects;
 
-public class User implements UserDetails {
+public class User implements UserDetails, DtoConvertible<UserDto> {
     private Long id;
     private String username;
     private String password;
@@ -16,7 +16,6 @@ public class User implements UserDetails {
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
     private boolean enabled = true;
-    @JsonDeserialize(using = SimpleGrantedAuthorityDeserializer.class)
     private List<SimpleGrantedAuthority> authorities;
 
     public User() {
@@ -97,6 +96,11 @@ public class User implements UserDetails {
 
     public void setAuthorities(List<SimpleGrantedAuthority> authorities) {
         this.authorities = authorities;
+    }
+
+    @Override
+    public UserDto convertToDto(ModelMapper modelMapper) {
+        return modelMapper.map(this, UserDto.class);
     }
 
     @Override

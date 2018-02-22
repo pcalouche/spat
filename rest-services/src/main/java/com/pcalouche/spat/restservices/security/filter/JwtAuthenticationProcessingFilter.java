@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pcalouche.spat.restservices.api.model.AuthResponse;
+import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
@@ -48,10 +48,10 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
             throws IOException, ServletException {
         // Include a token response if this was a refresh token request, otherwise set the SecurityContextHolder's authentication
         if (SecurityUtils.REFRESH_TOKEN_ENDPOINT.equals(request.getRequestURI())) {
-            AuthResponse authResponse = SecurityUtils.createAuthResponse(authResult);
+            AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authResult);
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            objectMapper.writeValue(response.getWriter(), authResponse);
+            objectMapper.writeValue(response.getWriter(), authResponseDto);
         } else {
             SecurityContextHolder.getContext().setAuthentication(authResult);
             chain.doFilter(request, response);

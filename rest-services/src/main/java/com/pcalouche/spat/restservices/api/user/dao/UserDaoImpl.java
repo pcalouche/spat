@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.user.dao;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatDaoImpl;
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;

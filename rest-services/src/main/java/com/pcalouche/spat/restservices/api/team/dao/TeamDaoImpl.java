@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.team.dao;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatDaoImpl;
-import com.pcalouche.spat.restservices.api.model.Team;
+import com.pcalouche.spat.restservices.api.entity.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

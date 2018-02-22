@@ -1,8 +1,11 @@
-package com.pcalouche.spat.restservices.api.model;
+package com.pcalouche.spat.restservices.api.entity;
+
+import com.pcalouche.spat.restservices.api.dto.TeamDto;
+import org.modelmapper.ModelMapper;
 
 import java.util.Objects;
 
-public class Team {
+public class Team implements DtoConvertible<TeamDto> {
     private Long id;
     private String name;
 
@@ -31,6 +34,11 @@ public class Team {
     }
 
     @Override
+    public TeamDto convertToDto(ModelMapper modelMapper) {
+        return modelMapper.map(this, TeamDto.class);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -46,5 +54,4 @@ public class Team {
     public int hashCode() {
         return Objects.hash(name);
     }
-
 }

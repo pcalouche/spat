@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.user.service;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatServiceImpl;
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,12 @@
-package com.pcalouche.spat.restservices.api.model;
+package com.pcalouche.spat.restservices.api.dto;
 
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 
-public class AuthResponse {
+public class AuthResponseDto {
     private final String token;
     private final String refreshToken;
 
-    public AuthResponse(String token, String refreshToken) {
+    public AuthResponseDto(String token, String refreshToken) {
         this.token = token;
         this.refreshToken = refreshToken;
     }

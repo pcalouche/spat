@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.team;
 
 import com.pcalouche.spat.restservices.AbstractDaoTest;
-import com.pcalouche.spat.restservices.api.model.Team;
+import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.dao.TeamDao;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

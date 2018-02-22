@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.team.service;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatServiceImpl;
-import com.pcalouche.spat.restservices.api.model.Team;
+import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.dao.TeamDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

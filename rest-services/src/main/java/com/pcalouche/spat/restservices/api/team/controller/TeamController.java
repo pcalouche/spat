@@ -1,37 +1,45 @@
 package com.pcalouche.spat.restservices.api.team.controller;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatController;
-import com.pcalouche.spat.restservices.api.model.Team;
+import com.pcalouche.spat.restservices.api.dto.TeamDto;
+import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = TeamEndpoints.ROOT)
 public class TeamController extends AbstractSpatController {
     private final TeamService teamService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService,
+                          ModelMapper modelMapper) {
         this.teamService = teamService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    public List<Team> getTeams() {
-        return teamService.getTeams();
+    public List<TeamDto> getTeams() {
+        return teamService.getTeams()
+                .stream()
+                .map(team -> modelMapper.map(team, TeamDto.class))
+                .collect(Collectors.toList());
     }
 
     @PostMapping
-    public Team saveTeam(@RequestBody Team team) {
-        logger.debug("Team to save name is " + team.getName() + " " + team.getId());
-        return teamService.saveTeam(team);
+    public TeamDto saveTeam(@RequestBody TeamDto teamDto) {
+        Team team = modelMapper.map(teamDto, Team.class);
+        return modelMapper.map(teamService.saveTeam(team), TeamDto.class);
     }
 
     @DeleteMapping(value = "/{id}")
     public boolean deleteTeam(@PathVariable Long id) {
-        logger.debug("ID to delete from controller is " + id);
         return teamService.deleteTeam(id);
     }
 }

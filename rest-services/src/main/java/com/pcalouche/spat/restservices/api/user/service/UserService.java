@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.api.user.service;
 
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.entity.User;
 
 import java.util.List;
 

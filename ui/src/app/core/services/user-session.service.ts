@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class UserSessionService {
-  private readonly storageKey: string = 'spatSession';
+  private readonly spatSessionKey: string = 'spatSession';
   private readonly tokenKey: string = 'token';
   private readonly refreshTokenKey: string = 'refreshToken';
   private readonly loggedInUserKey: string = 'loggedInUser';
@@ -18,9 +18,10 @@ export class UserSessionService {
 
   constructor() {
     // Check session storage for session on creation
-    if (sessionStorage.getItem(this.storageKey)) {
+    if (sessionStorage.getItem(this.spatSessionKey)) {
       this.parseClaims(this.getToken());
-      this.loggedInUser.next(new ClientUser(JSON.parse(sessionStorage.getItem(this.storageKey))[this.loggedInUserKey]));
+      const spatSession = JSON.parse(sessionStorage.getItem(this.spatSessionKey));
+      this.loggedInUser.next(new ClientUser(JSON.parse(spatSession[this.loggedInUserKey])));
     }
   }
 
@@ -28,25 +29,25 @@ export class UserSessionService {
     // Parse the claims
     this.parseClaims(authResponse.token);
     // Store tokens in session storage object
-    const spatSession = sessionStorage.getItem(this.storageKey) ? JSON.parse(sessionStorage.getItem(this.storageKey)) : {};
+    const spatSession = sessionStorage.getItem(this.spatSessionKey) ? JSON.parse(sessionStorage.getItem(this.spatSessionKey)) : {};
     spatSession[this.tokenKey] = authResponse.token;
     spatSession[this.refreshTokenKey] = authResponse.refreshToken;
-    sessionStorage.setItem(this.storageKey, JSON.stringify(spatSession));
+    sessionStorage.setItem(this.spatSessionKey, JSON.stringify(spatSession));
   }
 
   clearSession() {
     this.tokenClaims = null;
     this.tokenExpiration = null;
     this.loggedInUser.next(null);
-    sessionStorage.removeItem(this.storageKey);
+    sessionStorage.removeItem(this.spatSessionKey);
   }
 
   getToken(): string {
-    return JSON.parse(sessionStorage.getItem(this.storageKey))[this.tokenKey];
+    return JSON.parse(sessionStorage.getItem(this.spatSessionKey))[this.tokenKey];
   }
 
   getRefreshToken(): string {
-    return JSON.parse(sessionStorage.getItem(this.storageKey))[this.refreshTokenKey];
+    return JSON.parse(sessionStorage.getItem(this.spatSessionKey))[this.refreshTokenKey];
   }
 
   getTokenClaims(): any {
@@ -67,9 +68,9 @@ export class UserSessionService {
 
   setLoggedInUser(loggedInUser: ClientUser) {
     this.loggedInUser.next(loggedInUser);
-    const spatSession = JSON.parse(sessionStorage.getItem(this.storageKey));
+    const spatSession = JSON.parse(sessionStorage.getItem(this.spatSessionKey));
     spatSession[this.loggedInUserKey] = JSON.stringify(loggedInUser);
-    sessionStorage.setItem(this.storageKey, JSON.stringify(spatSession));
+    sessionStorage.setItem(this.spatSessionKey, JSON.stringify(spatSession));
   }
 
   getLoggedInUserAsObservable(): Observable<ClientUser> {

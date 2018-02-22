@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.user;
 
 import com.pcalouche.spat.restservices.AbstractDaoTest;
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.dao.UserDao;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

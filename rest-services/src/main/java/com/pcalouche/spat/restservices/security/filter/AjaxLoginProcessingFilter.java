@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pcalouche.spat.restservices.api.model.AuthResponse;
+import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
 import org.springframework.http.HttpMethod;
@@ -45,10 +45,10 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException {
-        AuthResponse authResponse = SecurityUtils.createAuthResponse(authResult);
+        AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authResult);
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), authResponse);
+        objectMapper.writeValue(response.getWriter(), authResponseDto);
     }
 
     @Override

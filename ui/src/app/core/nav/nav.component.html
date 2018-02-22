@@ -17,5 +17,6 @@
         <a class="nav-link" (click)="handleLogoutClick()">Logout</a>
       </li>
     </ul>
+    <span class="navbar-text" *ngIf="loggedInUser"> | {{loggedInUser.username}}</span>
   </div>
 </nav>

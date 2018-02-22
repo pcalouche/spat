@@ -1,7 +1,8 @@
 package com.pcalouche.spat.restservices.api.team;
 
 import com.pcalouche.spat.restservices.AbstractControllerTest;
-import com.pcalouche.spat.restservices.api.model.Team;
+import com.pcalouche.spat.restservices.api.dto.TeamDto;
+import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.controller.TeamController;
 import com.pcalouche.spat.restservices.api.team.controller.TeamEndpoints;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
@@ -33,12 +34,16 @@ public class TeamControllerTest extends AbstractControllerTest {
         expectedTeams.add(new Team(1L, "Team1"));
         expectedTeams.add(new Team(2L, "Team2"));
 
+        List<TeamDto> expectedTeamDtos = new ArrayList<>();
+        expectedTeamDtos.add(new TeamDto(1L, "Team1"));
+        expectedTeamDtos.add(new TeamDto(2L, "Team2"));
+
         given(teamService.getTeams()).willReturn(expectedTeams);
 
         mockMvc.perform(MockMvcRequestBuilders.get(TeamEndpoints.ROOT))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedTeams)));
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedTeamDtos)));
 
         verify(teamService, Mockito.times(1)).getTeams();
     }
@@ -46,17 +51,18 @@ public class TeamControllerTest extends AbstractControllerTest {
     @Test
     public void testSaveTeam() throws Exception {
         Team expectedTeam = new Team(1L, "Team1");
+        TeamDto expectedTeamDto = new TeamDto(1L, "Team1");
 
         given(teamService.saveTeam(expectedTeam)).willReturn(expectedTeam);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(TeamEndpoints.ROOT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(expectedTeam));
+                .content(objectMapper.writeValueAsString(expectedTeamDto));
 
         mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedTeam)));
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedTeamDto)));
 
         verify(teamService, Mockito.times(1)).saveTeam(expectedTeam);
     }

@@ -1,8 +1,8 @@
 package com.pcalouche.spat.restservices.security.util;
 
 import com.pcalouche.spat.restservices.api.BaseEndpoints;
-import com.pcalouche.spat.restservices.api.model.AuthResponse;
-import com.pcalouche.spat.restservices.api.model.User;
+import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
+import com.pcalouche.spat.restservices.api.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -77,13 +77,13 @@ public class SecurityUtils {
     }
 
 
-    public static AuthResponse createAuthResponse(Authentication authentication) {
+    public static AuthResponseDto createAuthResponse(Authentication authentication) {
         Date now = new Date();
         String tokenId = UUID.randomUUID().toString();
         Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
         Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
 
-        return new AuthResponse(
+        return new AuthResponseDto(
                 createToken(authentication, tokenId, now, tokenExpiration),
                 createToken(authentication, tokenId, now, refreshTokenExpiration)
         );

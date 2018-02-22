@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.team;
 
 import com.pcalouche.spat.restservices.AbstractServiceTest;
-import com.pcalouche.spat.restservices.api.model.Team;
+import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.dao.TeamDao;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
 import com.pcalouche.spat.restservices.api.team.service.TeamServiceImpl;
