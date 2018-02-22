@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.restservices.api.ClientCode;
+import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,8 @@ public class ExceptionUtils {
             return HttpStatus.FORBIDDEN;
         } else if (e instanceof HttpMessageConversionException || e instanceof MethodArgumentNotValidException) {
             return HttpStatus.BAD_REQUEST;
+        } else if (e instanceof RestResourceNotFoundException) {
+            return HttpStatus.NOT_FOUND;
         } else {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }

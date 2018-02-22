@@ -3,6 +3,7 @@ package com.pcalouche.spat.restservices.api.user.controller;
 import com.pcalouche.spat.restservices.api.AbstractSpatController;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
 import com.pcalouche.spat.restservices.api.entity.User;
+import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,12 @@ public class UserController extends AbstractSpatController {
     }
 
     @GetMapping(value = "/{username}")
-    public UserDto getByUsername(@PathVariable String username) {
-        return modelMapper.map(userService.getByUsername(username), UserDto.class);
+    public UserDto getByUsername(@PathVariable String username) throws RestResourceNotFoundException {
+        User user = userService.getByUsername(username);
+        if (user == null) {
+            throw new RestResourceNotFoundException(String.format("User with %s not found", username));
+        }
+        return modelMapper.map(user, UserDto.class);
     }
 
     @PostMapping

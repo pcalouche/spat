@@ -2,6 +2,7 @@ package com.pcalouche.spat.restservices.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.Test;
@@ -44,7 +45,13 @@ public class ExceptionUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testHttpStatusForMethodArgumentNotValidException() {
+        // TODO need to figure out test for this
+    }
 
+    @Test
+    public void testHtppStatusForRestResourceNotFoundException() {
+        HttpStatus httpStatus = ExceptionUtils.getHttpStatusForException(new RestResourceNotFoundException("message"));
+        assertThat(httpStatus).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
