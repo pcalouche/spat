@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AuthResponse } from '@app/rest/api/model/auth-response.model';
-import { RestServiceHelper } from '@app/rest/api/rest-service-helper';
+import { AuthResponse } from '@app/rest-services/api/model/auth-response.model';
+import { RestServiceHelper } from '@app/rest-services/api/rest-service-helper';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()

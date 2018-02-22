@@ -1,5 +1,5 @@
 export class RestServiceHelper {
-  public static readonly apiRoot = 'http://localhost:10000/spat/rest/api';
+  public static readonly apiRoot = 'http://localhost:10000/spat/rest-services/api';
   public static readonly authHeaderBasicPrefix = 'Basic ';
   public static readonly authHeaderBearerPrefix = 'Bearer ';
   public static readonly authHttpHeader = 'Authorization';

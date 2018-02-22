@@ -1,4 +1,4 @@
-import { User } from '@app/rest/api/model/user.model';
+import { User } from '@app/rest-services/api/model/user.model';
 
 export class ClientUser {
   id: number;

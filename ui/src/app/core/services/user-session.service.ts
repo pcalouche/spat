@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthResponse } from '@app/rest/api/model/auth-response.model';
+import { AuthResponse } from '@app/rest-services/api/model/auth-response.model';
 import { ClientUser } from '@core/model/ClientUser';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';

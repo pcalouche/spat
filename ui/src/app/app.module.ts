@@ -1,7 +1,7 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RestModule } from '@app/rest/rest.module';
+import { RestModule } from '@app/rest-services/rest.module';
 import { CoreModule } from '@core/core.module';
 import { CustomErrorHandler } from '@core/custom-error-handler';
 import { HttpInterceptorService } from '@core/services/http-interceptor.service';

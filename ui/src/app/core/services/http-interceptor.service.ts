@@ -1,6 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RestServiceHelper } from '@app/rest/api/rest-service-helper';
+import { RestServiceHelper } from '@app/rest-services/api/rest-service-helper';
 import { UserSessionService } from '@core/services/user-session.service';
 import { Observable } from 'rxjs/Observable';
 

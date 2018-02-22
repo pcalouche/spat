@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '@app/rest/api/model/user.model';
-import { RestServiceHelper } from '@app/rest/api/rest-service-helper';
+import { User } from '@app/rest-services/api/model/user.model';
+import { RestServiceHelper } from '@app/rest-services/api/rest-service-helper';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
