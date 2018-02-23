@@ -1,11 +1,17 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { TeamService } from './team.service';
 
 describe('TeamService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [TeamService]
+      imports: [
+        HttpClientTestingModule
+      ],
+      providers: [
+        TeamService
+      ]
     });
   });
 

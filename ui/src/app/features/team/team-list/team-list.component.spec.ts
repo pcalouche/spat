@@ -1,5 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TeamService } from '@rest-services/api/team/team.service';
 import { TeamListComponent } from './team-list.component';
 
 describe('TeamListComponent', () => {
@@ -8,9 +9,17 @@ describe('TeamListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TeamListComponent ]
+      imports: [
+        HttpClientTestingModule
+      ],
+      declarations: [
+        TeamListComponent
+      ],
+      providers: [
+        TeamService
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

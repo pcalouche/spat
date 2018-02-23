@@ -1,8 +1,18 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Team } from '@rest-services/api/model/team.model.a';
+import { RestServiceHelper } from '@rest-services/api/rest-service-helper';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class TeamService {
+  private readonly teamRoot = RestServiceHelper.apiRoot + '/team';
 
-  constructor() { }
+  constructor(private http: HttpClient) {
+  }
+
+  teams(): Observable<Team[]> {
+    return this.http.get<Team[]>(this.teamRoot);
+  }
 
 }

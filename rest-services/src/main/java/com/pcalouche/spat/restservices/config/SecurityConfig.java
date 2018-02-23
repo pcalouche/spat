@@ -61,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, SecurityUtils.TOKEN_ENDPOINT).permitAll()
-                .antMatchers(HttpMethod.GET, SecurityUtils.REFRESH_TOKEN_ENDPOINT).permitAll()
                 // Setup which endpoints that do require authentication
                 .and()
                 .authorizeRequests()

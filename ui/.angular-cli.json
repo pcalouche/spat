@@ -23,7 +23,8 @@
       ],
       "stylePreprocessorOptions": {
         "includePaths": [
-          "./"
+          "./",
+          "./assets/scss"
         ]
       },
       "scripts": [],

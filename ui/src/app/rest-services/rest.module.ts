@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { AuthService } from '@app/rest-services/api/auth/auth.service';
-import { TeamService } from '@app/rest-services/api/team/team.service';
-import { UserService } from '@app/rest-services/api/user/user.service';
+import { AuthService } from '@rest-services/api/auth/auth.service';
+import { TeamService } from '@rest-services/api/team/team.service';
+import { UserService } from '@rest-services/api/user/user.service';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   providers: [AuthService, TeamService, UserService]
 })

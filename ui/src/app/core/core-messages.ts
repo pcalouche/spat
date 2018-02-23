@@ -4,7 +4,7 @@ export const coreModuleMessages = {
   // General messages
   // Component messages
   loginComponent: {},
-  topNavComponent: {
+  appComponent: {
     logoutWarning: 'You will be logged out shortly from inactivity.  Click OK to stay logged in.',
     loggedOut: 'You were logged out due to inactivity.'
   }

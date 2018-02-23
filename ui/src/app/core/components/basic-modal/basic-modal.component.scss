@@ -1,0 +1,14 @@
+@import 'variables';
+
+.modal-body {
+  p {
+    font-size: 1.25rem;
+  }
+  .fa-exclamation-circle.warning {
+    color: $warning-color
+  }
+  .fa-exclamation-circle.error {
+    color: $error-color;
+  }
+}
+

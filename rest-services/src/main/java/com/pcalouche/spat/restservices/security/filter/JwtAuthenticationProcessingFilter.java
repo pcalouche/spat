@@ -32,7 +32,7 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(SecurityUtils.getTokenFromRequest(request));
-        if (SecurityUtils.REFRESH_TOKEN_ENDPOINT.equals(request.getRequestURI())) {
+        if (request.getRequestURI().endsWith(SecurityUtils.REFRESH_TOKEN_ENDPOINT)) {
             authenticationToken.setDetails("refreshToken");
         }
         try {
@@ -47,7 +47,7 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
         // Include a token response if this was a refresh token request, otherwise set the SecurityContextHolder's authentication
-        if (SecurityUtils.REFRESH_TOKEN_ENDPOINT.equals(request.getRequestURI())) {
+        if (request.getRequestURI().endsWith(SecurityUtils.REFRESH_TOKEN_ENDPOINT)) {
             AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authResult);
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);

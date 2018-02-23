@@ -2,12 +2,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '@app/rest-services/api/auth/auth.service';
-import { RestServiceHelper } from '@app/rest-services/api/rest-service-helper';
-import { UserService } from '@app/rest-services/api/user/user.service';
 import { coreModuleErrors } from '@core/core-messages';
 import { ClientUser } from '@core/model/ClientUser';
 import { UserSessionService } from '@core/services/user-session.service';
+import { AuthService } from '@rest-services/api/auth/auth.service';
+import { RestServiceHelper } from '@rest-services/api/rest-service-helper';
+import { UserService } from '@rest-services/api/user/user.service';
 
 @Component({
   selector: 'app-login',

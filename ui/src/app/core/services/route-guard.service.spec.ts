@@ -1,11 +1,21 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { inject, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { UserSessionService } from '@core/services/user-session.service';
 
 import { RouteGuardService } from './route-guard.service';
 
 describe('RouteGuardService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RouteGuardService]
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule
+      ],
+      providers: [
+        RouteGuardService,
+        UserSessionService
+      ]
     });
   });
 
