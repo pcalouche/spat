@@ -1,3 +1,7 @@
 a:not(.disabled) {
   cursor: pointer;
 }
+
+th.action-column, td.action-column {
+  width: 25px;
+}

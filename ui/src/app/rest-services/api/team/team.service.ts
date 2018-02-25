@@ -15,4 +15,11 @@ export class TeamService {
     return this.http.get<Team[]>(this.teamRoot);
   }
 
+  saveTeam(team: Team): Observable<Team> {
+    return this.http.post<Team>(this.teamRoot, team);
+  }
+
+  deleteTeam(team: Team): Observable<boolean> {
+    return this.http.delete<boolean>(this.teamRoot + '/' + team.id);
+  }
 }
