@@ -18,4 +18,12 @@ export class UserService {
   getByUsername(username: string): Observable<User> {
     return this.http.get<User>(this.userRoot + '/' + username);
   }
+
+  saveUser(user: User): Observable<User> {
+    return this.http.post<User>(this.userRoot, user);
+  }
+
+  deleteUser(user: User): Observable<boolean> {
+    return this.http.delete<boolean>(this.userRoot + '/' + user.id);
+  }
 }

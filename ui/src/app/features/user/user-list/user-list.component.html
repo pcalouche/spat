@@ -1,3 +1,24 @@
-<p>
-  user-list works!
-</p>
+<div class="card m-2">
+  <div class="card-header">Users</div>
+  <div class="card-body">
+    <button class="btn btn-secondary mb-2" *ngIf="userSessionService.getLoggedInUser().hasAuthority('ROLE_ADMIN')" (click)="handleAddClick()">Add User</button>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="action-column" *ngIf="userSessionService.getLoggedInUser().hasAuthority('ROLE_ADMIN')"></th>
+          <th class="action-column" *ngIf="userSessionService.getLoggedInUser().hasAuthority('ROLE_ADMIN')"></th>
+          <th>Id</th>
+          <th>Username</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td class="action-column" *ngIf="userSessionService.getLoggedInUser().hasAuthority('ROLE_ADMIN')"><a (click)="handleEditClick(user)"><i class="fa fa-pencil"></i></a></td>
+          <td class="action-column" *ngIf="userSessionService.getLoggedInUser().hasAuthority('ROLE_ADMIN')"><a (click)="handleDeleteClick(user)"><i class="fa fa-trash"></i></a></td>
+          <td>{{user.id}}</td>
+          <td>{{user.username}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

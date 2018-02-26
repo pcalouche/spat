@@ -2,12 +2,12 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TeamService } from '../../../../rest-services/api/team/team.service';
-import { TeamModalComponent } from './team-modal.component';
+import { UserService } from '../../../../rest-services/api/user/user.service';
+import { UserModalComponent } from './user-modal.component';
 
-describe('TeamModalComponent', () => {
-  let component: TeamModalComponent;
-  let fixture: ComponentFixture<TeamModalComponent>;
+describe('UserModalComponent', () => {
+  let component: UserModalComponent;
+  let fixture: ComponentFixture<UserModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -17,18 +17,18 @@ describe('TeamModalComponent', () => {
         NgbModule.forRoot()
       ],
       declarations: [
-        TeamModalComponent
+        UserModalComponent
       ],
       providers: [
         NgbActiveModal,
-        TeamService
+        UserService
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TeamModalComponent);
+    fixture = TestBed.createComponent(UserModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

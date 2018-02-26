@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UserSessionService } from '@core/services/user-session.service';
+import { UserModalComponent } from '@features/user/user-list/user-modal/user-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '@rest-services/api/model/user.model';
 import { UserService } from '@rest-services/api/user/user.service';
 
@@ -10,7 +13,9 @@ import { UserService } from '@rest-services/api/user/user.service';
 export class UserListComponent implements OnInit {
   users: User[] = [];
 
-  constructor(private userService: UserService) {
+  constructor(public userSessionService: UserSessionService,
+              private userService: UserService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -21,4 +26,53 @@ export class UserListComponent implements OnInit {
     );
   }
 
+  handleAddClick() {
+    const modalRef = this.modalService.open(UserModalComponent);
+    modalRef.componentInstance.mode = 'add';
+    modalRef.componentInstance.user = {};
+    modalRef.result.then(
+      (savedUser) => {
+        console.log(savedUser);
+        this.users.push(savedUser);
+      },
+      () => {
+      }
+    );
+  }
+
+  handleEditClick(user: User) {
+    const modalRef = this.modalService.open(UserModalComponent);
+    modalRef.componentInstance.mode = 'edit';
+    modalRef.componentInstance.user = user;
+    modalRef.result.then(
+      (savedUser) => {
+        console.log(savedUser);
+        for (let i = 0; i < this.users.length; i++) {
+          if (this.users[i].id === user.id) {
+            this.users[i] = savedUser;
+          }
+        }
+      },
+      () => {
+      }
+    );
+  }
+
+  handleDeleteClick(user: User) {
+    const modalRef = this.modalService.open(UserModalComponent);
+    modalRef.componentInstance.mode = 'delete';
+    modalRef.componentInstance.user = user;
+    modalRef.result.then(
+      () => {
+        for (let i = 0; i < this.users.length; i++) {
+          if (this.users[i].id === user.id) {
+            this.users.splice(i, 1);
+            break;
+          }
+        }
+      },
+      () => {
+      }
+    );
+  }
 }
