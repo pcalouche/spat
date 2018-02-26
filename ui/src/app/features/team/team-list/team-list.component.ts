@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BasicModalComponent, BasicModalConfig } from '@core/components/basic-modal/basic-modal.component';
 import { UserSessionService } from '@core/services/user-session.service';
+import { TeamModalComponent } from '@features/team/team-list/team-modal/team-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Team } from '@rest-services/api/model/team.model.a';
 import { TeamService } from '@rest-services/api/team/team.service';
-import { NgbModal } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-team-list',
@@ -13,7 +13,7 @@ import { NgbModal } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap
 export class TeamListComponent implements OnInit {
   teams: Team[] = [];
 
-  constructor(private userSessionService: UserSessionService,
+  constructor(public userSessionService: UserSessionService,
               private teamService: TeamService,
               private modalService: NgbModal) {
   }
@@ -24,44 +24,55 @@ export class TeamListComponent implements OnInit {
         this.teams = teams;
       }
     );
-    console.info(this.userSessionService.getLoggedInUser());
+  }
+
+  handleAddClick() {
+    const modalRef = this.modalService.open(TeamModalComponent);
+    modalRef.componentInstance.mode = 'add';
+    modalRef.componentInstance.team = {};
+    modalRef.result.then(
+      (savedTeam) => {
+        console.log(savedTeam);
+        this.teams.push(savedTeam);
+      },
+      () => {
+      }
+    );
   }
 
   handleEditClick(team: Team) {
-
+    const modalRef = this.modalService.open(TeamModalComponent);
+    modalRef.componentInstance.mode = 'edit';
+    modalRef.componentInstance.team = team;
+    modalRef.result.then(
+      (savedTeam) => {
+        console.log(savedTeam);
+        for (let i = 0; i < this.teams.length; i++) {
+          if (this.teams[i].id === team.id) {
+            this.teams[i] = savedTeam;
+          }
+        }
+      },
+      () => {
+      }
+    );
   }
 
   handleDeleteClick(team: Team) {
-    const deleteModalConfig: BasicModalConfig = {
-      type: 'confirm',
-      title: 'Delete Confirmation',
-      message: 'Are you sure you want to delete ' + team.name + '?'
-    };
-
-    const modalRef = this.modalService.open(BasicModalComponent);
-    modalRef.componentInstance.config = deleteModalConfig;
-
+    const modalRef = this.modalService.open(TeamModalComponent);
+    modalRef.componentInstance.mode = 'delete';
+    modalRef.componentInstance.team = team;
     modalRef.result.then(
       () => {
-        this.teamService.deleteTeam(team).subscribe(
-          () => {
-            for (let i = 0; i < this.teams.length; i++) {
-              if (this.teams[i].id == team.id) {
-                this.teams.splice(i, 1);
-                break;
-              }
-            }
-          }, () => {
-            const failedDeleteModalConfig: BasicModalConfig = {
-              type: 'error',
-              title: 'Delete failure',
-              message: 'Failed to team ' + team.name + '.'
-            };
-            const modalRef = this.modalService.open(BasicModalComponent);
-            modalRef.componentInstance.config = failedDeleteModalConfig;
+        for (let i = 0; i < this.teams.length; i++) {
+          if (this.teams[i].id === team.id) {
+            this.teams.splice(i, 1);
+            break;
           }
-        );
-      }, () => {
-      });
+        }
+      },
+      () => {
+      }
+    );
   }
 }
