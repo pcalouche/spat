@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '@rest-services/api/model/user.model';
 import { UserService } from '@rest-services/api/user/user.service';
@@ -18,6 +18,14 @@ export class UserModalComponent implements OnInit {
   hideErrorMessage = true;
   errorMessage: string;
   userForm: FormGroup;
+
+  authorityTypes = [{
+    displayName: 'User',
+    value: 'ROLE_USER'
+  }, {
+    displayName: 'Admin',
+    value: 'ROLE_ADMIN'
+  }];
 
   constructor(public activeModal: NgbActiveModal,
               private userService: UserService) {
@@ -39,8 +47,15 @@ export class UserModalComponent implements OnInit {
         break;
     }
     this.userForm = new FormGroup({
-      id: new FormControl(this.user.id, []),
-      username: new FormControl(this.user.username, [Validators.required])
+      username: new FormControl(this.user.username, [Validators.required]),
+      accountExpired: new FormControl(!this.user.accountNonExpired),
+      accountLocked: new FormControl(!this.user.accountNonLocked),
+      credentialsExpired: new FormControl(!this.user.credentialsNonExpired),
+      enabled: new FormControl(this.user.enabled),
+      authorities: new FormArray([
+        new FormControl({value: this.user.authorities.indexOf('ROLE_USER') !== -1, disabled: true}),
+        new FormControl(this.user.authorities.indexOf('ROLE_ADMIN') !== -1)
+      ])
     });
   }
 
@@ -52,7 +67,24 @@ export class UserModalComponent implements OnInit {
       case 'edit':
         this.actionButtonText = 'Saving User';
         this.actionInProgress = true;
-        this.userService.saveUser(this.userForm.value).subscribe(
+        const authorities: string[] = ['ROLE_USER'];
+        for (let i = 0; i < this.userForm.value.authorities.length; i++) {
+          if (this.userForm.value.authorities[i]) {
+            // Offset is because User checkbox is disabled and that value does not get included in the form
+            authorities.push(this.authorityTypes[i + 1].value);
+          }
+        }
+        const userToSave: User = {
+          id: this.user.id,
+          username: this.userForm.value.username,
+          accountNonExpired: !this.userForm.value.accountExpired,
+          accountNonLocked: !this.userForm.value.accountLocked,
+          credentialsNonExpired: !this.userForm.value.credentialsExpired,
+          enabled: this.userForm.value.enabled,
+          authorities: authorities
+        };
+
+        this.userService.saveUser(userToSave).subscribe(
           (savedUser) => {
             this.activeModal.close(savedUser);
           },

@@ -32,7 +32,6 @@ export class TeamListComponent implements OnInit {
     modalRef.componentInstance.team = {};
     modalRef.result.then(
       (savedTeam) => {
-        console.log(savedTeam);
         this.teams.push(savedTeam);
       },
       () => {
@@ -46,7 +45,6 @@ export class TeamListComponent implements OnInit {
     modalRef.componentInstance.team = team;
     modalRef.result.then(
       (savedTeam) => {
-        console.log(savedTeam);
         for (let i = 0; i < this.teams.length; i++) {
           if (this.teams[i].id === team.id) {
             this.teams[i] = savedTeam;

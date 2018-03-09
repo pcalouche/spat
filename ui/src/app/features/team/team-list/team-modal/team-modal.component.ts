@@ -39,7 +39,6 @@ export class TeamModalComponent implements OnInit {
         break;
     }
     this.teamForm = new FormGroup({
-      id: new FormControl(this.team.id, []),
       name: new FormControl(this.team.name, [Validators.required])
     });
   }
@@ -52,7 +51,11 @@ export class TeamModalComponent implements OnInit {
       case 'edit':
         this.actionButtonText = 'Saving Team';
         this.actionInProgress = true;
-        this.teamService.saveTeam(this.teamForm.value).subscribe(
+        const teamToSave: Team = {
+          id: this.team.id,
+          name: this.teamForm.value.name
+        };
+        this.teamService.saveTeam(teamToSave).subscribe(
           (savedTeam) => {
             this.activeModal.close(savedTeam);
           },

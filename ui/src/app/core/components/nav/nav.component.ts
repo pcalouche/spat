@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { NavigationEnd, Router, RoutesRecognized } from '@angular/router';
 import { ClientUser } from '@core/model/ClientUser';
 import { UserSessionService } from '@core/services/user-session.service';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-nav',
@@ -13,7 +15,8 @@ export class NavComponent implements OnInit {
   loggedInUser: ClientUser = null;
 
   constructor(private userSessionService: UserSessionService,
-              private router: Router) {
+              private router: Router,
+              private titleService: Title) {
   }
 
   ngOnInit() {
@@ -21,6 +24,26 @@ export class NavComponent implements OnInit {
     this.userSessionService.getLoggedInUserAsObservable().subscribe(loggedInUser => {
       this.loggedInUser = loggedInUser;
     });
+
+    this.router.events.pipe(
+      filter(event => event instanceof RoutesRecognized),
+      map((event: RoutesRecognized) => {
+        return event.state.root.firstChild.data;
+      }))
+      .subscribe(data => {
+        let fullTitle = 'SPAT';
+        if (data && data.title) {
+          fullTitle += ' - ' + data.title;
+        }
+        this.titleService.setTitle(fullTitle);
+      });
+
+    this.router.events
+      .subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          this.collapsed = true;
+        }
+      });
   }
 
   handleLogoutClick() {

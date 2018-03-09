@@ -10,18 +10,18 @@ const routes: Routes = [
     path: 'teams',
     canActivate: [RouteGuardService],
     loadChildren: 'app/features/team/team.module#TeamModule',
-    data: {}
+    data: {title: 'Teams'}
   },
   {
     path: 'users',
     canActivate: [RouteGuardService],
     loadChildren: 'app/features/user/user.module#UserModule',
-    data: {}
+    data: {title: 'Users'}
   },
   // Application Routes
-  {path: 'login', canActivate: [RouteGuardService], component: LoginComponent, data: {panelRouteDetails: {title: 'Login'}}},
+  {path: 'login', canActivate: [RouteGuardService], component: LoginComponent, data: {title: 'Login'}},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: '**', component: PageNotFoundComponent, canActivate: [RouteGuardService], data: {panelRouteDetails: {title: 'Page Not Found'}}}
+  {path: '**', component: PageNotFoundComponent, canActivate: [RouteGuardService], data: {title: 'Page Not Found'}}
 ];
 
 @NgModule({

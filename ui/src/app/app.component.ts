@@ -65,12 +65,12 @@ export class AppComponent implements OnInit {
         this.modalRef.componentInstance.config = this.logoutWarningModalConfig;
         this.modalRef.result.then(
           () => {
-            // console.debug('User decided to extend session. The token will be refreshed');
+            console.log('User decided to extend session. The token will be refreshed');
             this.modalRef = null;
             this.refreshToken();
           }, () => {
             // Modal was dismissed, so do not count the click that caused the dismissal as part of the last activity
-            // console.debug('modal was dismissed.  The token will not be refreshed');
+            console.log('modal was dismissed.  The token will not be refreshed');
             this.modalRef = null;
             this.lastActivity = tempLastActivity;
           });

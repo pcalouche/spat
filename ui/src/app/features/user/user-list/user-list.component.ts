@@ -32,7 +32,6 @@ export class UserListComponent implements OnInit {
     modalRef.componentInstance.user = {};
     modalRef.result.then(
       (savedUser) => {
-        console.log(savedUser);
         this.users.push(savedUser);
       },
       () => {
@@ -46,7 +45,6 @@ export class UserListComponent implements OnInit {
     modalRef.componentInstance.user = user;
     modalRef.result.then(
       (savedUser) => {
-        console.log(savedUser);
         for (let i = 0; i < this.users.length; i++) {
           if (this.users[i].id === user.id) {
             this.users[i] = savedUser;
