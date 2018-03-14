@@ -49,7 +49,7 @@ public class ExceptionUtilsTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testHtppStatusForRestResourceNotFoundException() {
+    public void testHttpStatusForRestResourceNotFoundException() {
         HttpStatus httpStatus = ExceptionUtils.getHttpStatusForException(new RestResourceNotFoundException("message"));
         assertThat(httpStatus).isEqualTo(HttpStatus.NOT_FOUND);
     }

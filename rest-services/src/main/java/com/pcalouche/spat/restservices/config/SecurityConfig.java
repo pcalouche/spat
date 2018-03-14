@@ -8,7 +8,6 @@ import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvid
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -60,10 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Setup which endpoints that do not require authentication
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, SecurityUtils.TOKEN_ENDPOINT).permitAll()
                 // Setup which endpoints that do require authentication
-                .and()
-                .authorizeRequests()
                 .antMatchers(SecurityUtils.AUTHENTICATED_PATH).authenticated()
                 // Setup filters for the endpoints
                 .and()

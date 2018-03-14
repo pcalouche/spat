@@ -10,6 +10,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTest extends AbstractModelMapperTest {
+
     @Test
     public void testUserDtoModelMapper() {
         UserDto userDto = new UserDto(1L, "username", Arrays.asList("ROLE_USER", "ROLE_ADMIN"));

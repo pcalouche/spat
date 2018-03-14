@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.dao.UserDao;
+import com.pcalouche.spat.restservices.api.user.service.UserService;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-    private final UserDao userDao;
+    private final UserService userService;
 
-    public JwtAuthenticationProvider(UserDao userDao) {
-        this.userDao = userDao;
+    public JwtAuthenticationProvider(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // Try to validate the provided authentication as JwtAuthenticationToken
         JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
         if (jwtAuthenticationToken.getCredentials() == null) {
-            throw new BadCredentialsException("No Authorization header found in request.");
+            throw new BadCredentialsException("JSON web token was empty.");
         }
         String token = jwtAuthenticationToken.getCredentials().toString();
         Claims claims = SecurityUtils.getClaimsFromToken(token);
@@ -38,7 +38,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // with what is in the database to ensure the account is still active.
         List<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if ("refreshToken".equals(authentication.getDetails())) {
-            User user = userDao.getByUsername(subject);
+            User user = userService.getByUsername(subject);
             simpleGrantedAuthorities = user.getAuthorities();
         } else {
             @SuppressWarnings("unchecked")

@@ -49,14 +49,6 @@ public class SecurityUtils {
         return getTokenFromHeaderValue(request.getHeader(HttpHeaders.AUTHORIZATION));
     }
 
-    public static String getTokenFromHeaderValue(String headerValue) {
-        String token = null;
-        if (headerValue != null && headerValue.startsWith(AUTH_HEADER_BEARER_PREFIX)) {
-            token = headerValue.replace(AUTH_HEADER_BEARER_PREFIX, "");
-        }
-        return token;
-    }
-
     public static Claims getClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(SIGNING_KEY)
@@ -89,10 +81,17 @@ public class SecurityUtils {
         );
     }
 
+    private static String getTokenFromHeaderValue(String headerValue) {
+        String token = null;
+        if (headerValue != null && headerValue.startsWith(AUTH_HEADER_BEARER_PREFIX)) {
+            token = headerValue.replace(AUTH_HEADER_BEARER_PREFIX, "");
+        }
+        return token;
+    }
+
     private static String createToken(Authentication authentication, String tokenId, Date now, Date expiration) {
         Claims claims = Jwts.claims();
         claims.setId(tokenId);
-        // Principal will be the username or clientId in this case
         claims.setSubject(authentication.getName());
         claims.setIssuedAt(now);
         claims.setExpiration(expiration);

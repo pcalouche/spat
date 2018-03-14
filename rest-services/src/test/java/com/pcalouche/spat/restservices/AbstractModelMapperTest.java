@@ -4,9 +4,9 @@ import com.pcalouche.spat.restservices.config.ModelMapperConfig;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@Import(ModelMapperConfig.class)
+@SpringBootTest(classes = ModelMapperConfig.class)
 public abstract class AbstractModelMapperTest extends AbstractUnitTest {
     @Autowired
     protected ModelMapper modelMapper;

@@ -13,14 +13,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
 public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;
 
@@ -47,7 +45,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
             throws IOException {
         AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authResult);
         response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         objectMapper.writeValue(response.getWriter(), authResponseDto);
     }
 

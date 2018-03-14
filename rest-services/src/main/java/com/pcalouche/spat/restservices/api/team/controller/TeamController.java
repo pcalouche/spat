@@ -6,6 +6,7 @@ import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,12 +33,14 @@ public class TeamController extends AbstractSpatController {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public TeamDto saveTeam(@RequestBody TeamDto teamDto) {
         Team team = modelMapper.map(teamDto, Team.class);
         return modelMapper.map(teamService.saveTeam(team), TeamDto.class);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public boolean deleteTeam(@PathVariable Long id) {
         return teamService.deleteTeam(id);

@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,7 +25,7 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
     private final ObjectMapper objectMapper;
 
     public JwtAuthenticationProcessingFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
-        super(new JwtAuthenticationRequestMatcher());
+        super(new AntPathRequestMatcher(SecurityUtils.AUTHENTICATED_PATH));
         setAuthenticationManager(authenticationManager);
         this.objectMapper = objectMapper;
     }

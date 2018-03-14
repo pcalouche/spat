@@ -7,6 +7,7 @@ import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundExcepti
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,10 +45,12 @@ public class UserController extends AbstractSpatController {
         return modelMapper.map(user, UserDto.class);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public UserDto saveUser(@RequestBody UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
-        // Set default password if user doesn't have one TODO find better solution for this mapping of password field
+        // TODO this is improvement opportunity
+        // Set default password if user doesn't have one
         if (user.getPassword() == null) {
             user.setPassword("password");
         }
@@ -59,6 +62,7 @@ public class UserController extends AbstractSpatController {
         return modelMapper.map(userService.saveUser(user), UserDto.class);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public boolean deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);

@@ -29,7 +29,14 @@ export class UserListComponent implements OnInit {
   handleAddClick() {
     const modalRef = this.modalService.open(UserModalComponent);
     modalRef.componentInstance.mode = 'add';
-    modalRef.componentInstance.user = {};
+    modalRef.componentInstance.user = {
+      username: null,
+      accountExpired: false,
+      accountLocked: false,
+      credentialsExpired: false,
+      enabled: true,
+      authorities: ['ROLE_USER']
+    };
     modalRef.result.then(
       (savedUser) => {
         this.users.push(savedUser);

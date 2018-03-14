@@ -29,6 +29,9 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
 
     @Override
     public User saveUser(User user) {
+        if (user.getId() == null && userDao.getByUsername(user.getUsername()) != null) {
+            throw new IllegalArgumentException(String.format("A user with a username of %s already exists", user.getUsername()));
+        }
         return userDao.saveUser(user);
     }
 

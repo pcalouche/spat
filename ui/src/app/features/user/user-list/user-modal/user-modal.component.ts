@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -88,11 +89,16 @@ export class UserModalComponent implements OnInit {
           (savedUser) => {
             this.activeModal.close(savedUser);
           },
-          () => {
+          (response: HttpErrorResponse) => {
+            console.log(response);
             this.actionButtonText = 'Save User';
             this.actionInProgress = false;
             this.hideErrorMessage = false;
-            this.errorMessage = 'Unable to save ' + this.user.username + '.  Please try again later.';
+            if (response.status === 0) {
+              this.errorMessage = 'Unable to save ' + this.user.username + '.  Please try again later.';
+            } else {
+              this.errorMessage = response.error.message;
+            }
           }
         );
         break;

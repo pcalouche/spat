@@ -9,13 +9,12 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
-public class ModelMapperConfig extends WebMvcConfigurerAdapter {
+public class ModelMapperConfig {
     private final Converter<List<String>, List<SimpleGrantedAuthority>> authorityConverter = mappingContext -> mappingContext.getSource() == null ? null : mappingContext.getSource()
             .stream()
             .map(SimpleGrantedAuthority::new)
