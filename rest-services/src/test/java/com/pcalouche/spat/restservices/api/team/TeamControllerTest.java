@@ -13,14 +13,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,7 +40,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         given(teamService.getTeams()).willReturn(expectedTeams);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(TeamEndpoints.ROOT)
+        mockMvc.perform(get(TeamEndpoints.ROOT)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedTeamDtos)));
@@ -77,6 +76,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         MockHttpServletRequestBuilder request = post(TeamEndpoints.ROOT)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedTeamDto));
 
         mockMvc.perform(request)
@@ -88,7 +88,7 @@ public class TeamControllerTest extends AbstractControllerTest {
     public void testDeleteTeam() throws Exception {
         given(teamService.deleteTeam(1L)).willReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.TRUE.toString()));
@@ -100,7 +100,7 @@ public class TeamControllerTest extends AbstractControllerTest {
     public void testDeleteTeamNotFound() throws Exception {
         given(teamService.deleteTeam(1L)).willReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.FALSE.toString()));
@@ -112,7 +112,7 @@ public class TeamControllerTest extends AbstractControllerTest {
     public void testDeleteTeamRequireAdminRole() throws Exception {
         given(teamService.deleteTeam(1L)).willReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8));

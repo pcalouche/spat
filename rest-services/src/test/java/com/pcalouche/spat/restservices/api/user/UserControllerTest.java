@@ -12,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +20,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = UserController.class)
@@ -39,7 +38,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         given(userService.getUsers()).willReturn(expectedUsers);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(UserEndpoints.ROOT)
+        mockMvc.perform(get(UserEndpoints.ROOT)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedUserDtos)));
@@ -55,7 +54,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         given(userService.getByUsername(expectedUser.getUsername())).willReturn(expectedUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(UserEndpoints.ROOT + "/" + expectedUser.getUsername())
+        mockMvc.perform(get(UserEndpoints.ROOT + "/" + expectedUser.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedUserDto)));
@@ -69,7 +68,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         given(userService.getByUsername(expectedUser.getUsername())).willReturn(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(UserEndpoints.ROOT + "/" + expectedUser.getUsername())
+        mockMvc.perform(get(UserEndpoints.ROOT + "/" + expectedUser.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(String.format("User with %s not found", expectedUser.getUsername()))));
@@ -121,7 +120,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteUser() throws Exception {
         given(userService.deleteUser(1L)).willReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.TRUE.toString()));
@@ -133,7 +132,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteUserNotFound() throws Exception {
         given(userService.deleteUser(1L)).willReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.FALSE.toString()));
@@ -145,7 +144,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteUserRequiresAdminRole() throws Exception {
         given(userService.deleteUser(1L)).willReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8));
