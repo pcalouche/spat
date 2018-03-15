@@ -45,12 +45,6 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     protected JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
     protected UserService userService;
-    protected User activeUser;
-    protected User activeAdmin;
-    protected User expiredUser;
-    protected User lockedUser;
-    protected User credentialsExpiredUser;
-    protected User disabledUser;
     private String validUserToken;
     private String validAdminToken;
 
