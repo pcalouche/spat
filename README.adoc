@@ -1,1 +1,81 @@
-*bold phrase*
+= Single Page App Template (SPAT)
+Doc Writer <philip.calouche@outlook.com>
+v1.0, 2018-02-24
+:toc:
+:source-highlighter: coderay
+
+== Project Background
+The purpose of this project was to demonstrate a REST service built on Spring Boot 2 that works with an Angular
+5 front end.
+
+Some of my goals in this project were to:
+
+. Create an organized and scalable project structure for Spring Boot application and an Angular CLI application
+. Have a clear developer workflow
+. Have a clear path to production
+. Has web security consisting of a form login, JSON Web Token, and user roles
+. Back end unit testing with the ability to separate unit tests from longer running integration tests during the build process.
+. Front end unit testing (In progress)
+
+== Technologies and Frameworks
+* Spring Boot 2.0
+* Angular 5/Angular CLI
+* JUnit 4 (Hope is to upgrade to JUnit 5 and explore those changes)
+* Maven 3+
+* H2 in memory database (This easily be swapped out for another datasource)
+* Spring JDBC for database queries (This too could be swapped our for another Java database technology)
+
+== Required Software
+* Java 8
+* Maven 3+ (version 3.5 was used)
+* Node.js for Angular CLI and front end dependency management
+* Parent POM project https://github.com/pcalouche/spring-boot-project-pom[spring-boot-project-pom]
+
+== Project Structure
+In Progress
+
+== How to Run
+IMPORTANT: It is assumed that the required software is installed
+
+. Download the https://github.com/pcalouche/spring-boot-project-pom[spring-boot-project-pom] project
+. Download the https://github.com/pcalouche/spat[SPAT] project
+. Install the spring-boot-project-pom project
++
+From inside the install directory:
+
+  mvn clean install
+
+. Install the SPAT project
+From inside the install directory:
++
+  mvn clean install
+
+. Run the REST services executable jar.  This runs at http://localhost:10000/spat/rest-services
++
+  cd <spat_directory>/rest-services/target
+  java -jar rest-services.jar
+
+. Run the UI executable jar
++
+  cd <spat_directory>/ui/target
+  java -jar ui.jar
+
+. Verify UI is running at http://localhost:10001/spat/ui and login works.  Valid users are:
+ .. activeUser/password
+ .. activeAdmin/password
++
+.SPAT Login
+image::readmeImages/login.jpg[]
+.SPAT Teams Page
+image::readmeImages/teams.jpg[]
+. Login can also be tested to show that invalid users don't work.  Invalid users are:
+ .. expiredUser/password
+ .. credentialsExpiredUser/password
+ .. lockedUser/password
+ .. disabledUser/password
++
+.SPAT Bad Login
+image::readmeImages/bad-login.jpg[]
+
+== IDE Setup
+In Progress
