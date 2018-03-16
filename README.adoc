@@ -3,6 +3,7 @@ Doc Writer <philip.calouche@outlook.com>
 v1.0, 2018-02-24
 :toc:
 :source-highlighter: coderay
+:icons: font
 
 == Project Background
 The purpose of this project was to demonstrate a REST service built on Spring Boot 2 that works with an Angular
@@ -65,9 +66,9 @@ From inside the install directory:
  .. activeAdmin/password
 +
 .SPAT Login
-image::readmeImages/login.jpg[]
+image::./readmeImages/login.jpg[]
 .SPAT Teams Page
-image::readmeImages/teams.jpg[]
+image::./readmeImages/teams.jpg[]
 . Login can also be tested to show that invalid users don't work.  Invalid users are:
  .. expiredUser/password
  .. credentialsExpiredUser/password
@@ -75,7 +76,7 @@ image::readmeImages/teams.jpg[]
  .. disabledUser/password
 +
 .SPAT Bad Login
-image::readmeImages/bad-login.jpg[]
+image::./readmeImages/bad-login.jpg[]
 
 == IDE Setup
 In Progress
