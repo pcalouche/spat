@@ -2,7 +2,6 @@ package com.pcalouche.spat.restservices.api.team.dao;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatDaoImpl;
 import com.pcalouche.spat.restservices.api.entity.Team;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Repository
 public class TeamDaoImpl extends AbstractSpatDaoImpl implements TeamDao {
-    @Autowired
+
     public TeamDaoImpl(@Qualifier("dataSource") DataSource dataSource) {
         setDataSource(dataSource);
     }

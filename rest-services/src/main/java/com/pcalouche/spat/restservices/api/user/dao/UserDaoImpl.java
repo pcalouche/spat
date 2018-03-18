@@ -2,7 +2,6 @@ package com.pcalouche.spat.restservices.api.user.dao;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatDaoImpl;
 import com.pcalouche.spat.restservices.api.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 public class UserDaoImpl extends AbstractSpatDaoImpl implements UserDao {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Autowired
     public UserDaoImpl(@Qualifier("dataSource") DataSource dataSource) {
         setDataSource(dataSource);
     }

@@ -1,7 +1,6 @@
 package com.pcalouche.spat.restservices.config;
 
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MvcConfig implements WebMvcConfigurer {
     private final LoggerInterceptor loggerInterceptor;
 
-    @Autowired
     public MvcConfig(LoggerInterceptor loggerInterceptor) {
         this.loggerInterceptor = loggerInterceptor;
     }

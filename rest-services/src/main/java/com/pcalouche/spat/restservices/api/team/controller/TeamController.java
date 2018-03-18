@@ -5,7 +5,6 @@ import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,6 @@ public class TeamController extends AbstractSpatController {
     private final TeamService teamService;
     private final ModelMapper modelMapper;
 
-    @Autowired
     public TeamController(TeamService teamService,
                           ModelMapper modelMapper) {
         this.teamService = teamService;

@@ -6,7 +6,6 @@ import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,6 @@ public class UserController extends AbstractSpatController {
     private final UserService userService;
     private final ModelMapper modelMapper;
 
-    @Autowired
     public UserController(UserService userService,
                           ModelMapper modelMapper) {
         this.userService = userService;
