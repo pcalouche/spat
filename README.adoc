@@ -33,14 +33,14 @@ Some of my goals in this project were to:
 * Java 8 (latest JDK was used)
 * Maven 3+ (version 3.5 was used)
 * Node.js (version 8.9.4 was used)
-* Angular CLI (version 1.6.7 was used)
+* Angular CLI (version 1.7.3 was used)
 * Parent POM https://github.com/pcalouche/spring-boot-project-pom[spring-boot-project-pom] project (I use this as a base for multiple spring boot projects)
 
 == Technologies and Frameworks
 * Java 8
 * Maven 3
 * Spring Boot 2.0
-* Angular 5/Angular CLI 1.6.7
+* Angular 5/Angular CLI 1.7.3
 * Bootstrap 4.0 for UI styling
 * JUnit 4 (I have plans to upgrade the test to use JUnit 5)
 * H2 in memory database (This can easily be swapped out for another datasource)
@@ -66,9 +66,9 @@ From inside Spring Boot Project POM main directory:
 
   mvn clean install
 
-. Install Angular CLI version 1.6.7 globally if it is not
+. Install Angular CLI version 1.7.3 globally if it is not
 +
-  npm install -g @angular/cli@1.6.7
+  npm install -g @angular/cli@1.7.3
 +
 . Install the SPAT project
 From inside SPAT project main directory:
@@ -91,7 +91,7 @@ This will take a couple of minutes, and the following will happen:
 
 . Verify UI is running at http://localhost:10001/spat/ui and login works.  Valid users are:
  .. activeUser/password
- .. activeAdmin/password
+ .. activeAdmin/password (This user will have edit and delete capabilities)
 +
 .SPAT Login
 image::readmeImages/login.jpg[]

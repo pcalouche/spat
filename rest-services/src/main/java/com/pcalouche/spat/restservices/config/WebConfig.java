@@ -8,10 +8,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class MvcConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
     private final LoggerInterceptor loggerInterceptor;
 
-    public MvcConfig(LoggerInterceptor loggerInterceptor) {
+    public WebConfig(LoggerInterceptor loggerInterceptor) {
         this.loggerInterceptor = loggerInterceptor;
     }
 
