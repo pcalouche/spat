@@ -118,4 +118,16 @@ and UI code on the fly when changes are made.
 
 Periodically I will check that the UI is served correctly from the UI Spring application by doing an Maven build as mentioned in the *How to Run* section.
 
+== H2 In Memory Database
+The application uses the H2 in memory database.  On startup the database is always recreated using spat/rest-services/resources/schema.sql and
+spat/rest-services/resources/data.sql.  These are the default files Spring Boot looks for when working with an H2 database.
+
+There is a web console to the database that can be accessed by going to http://localhost:10000/spat/rest-services/h2-console and changing the
+JDBC URL to *jdbc:h2:mem:spat*.
+
+.H2 Console Login
+image::readmeImages/h2-console-login.jpg[]
+
+.H2 Console Main Screen
+image::readmeImages/h2-console-main.jpg[]
 
