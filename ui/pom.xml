@@ -79,7 +79,7 @@
           <!--Run npm install to ensure dependencies are the latest.  The npm cache will be used if the npm dependency already has been installed.-->
           <execution>
             <id>exec-npm-install</id>
-            <phase>initialize</phase>
+            <phase>generate-sources</phase>
             <configuration>
               <skip>${skipUiBuild}</skip>
               <executable>npm</executable>
