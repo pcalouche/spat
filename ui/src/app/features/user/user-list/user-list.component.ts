@@ -80,4 +80,27 @@ export class UserListComponent implements OnInit {
       }
     );
   }
+
+  displayAccountStatus(user: User): String {
+    const accountStatus: string[] = [];
+    if (user.enabled) {
+      accountStatus.push('Enabled');
+    } else {
+      accountStatus.push('Disabled');
+    }
+    if (!user.accountNonExpired) {
+      accountStatus.push('Expired');
+    }
+    if (!user.accountNonLocked) {
+      accountStatus.push('Locked');
+    }
+    if (!user.credentialsNonExpired) {
+      accountStatus.push('Credentials Expired');
+    }
+    return accountStatus.join(', ');
+  }
+
+  displayAuthorities(user: User): string {
+    return user.authorities.join(', ');
+  }
 }

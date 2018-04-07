@@ -9,6 +9,8 @@
           <th class="action-column" *ngIf="userSessionService.getLoggedInUser().hasAuthority('ROLE_ADMIN')"></th>
           <th>Id</th>
           <th>Username</th>
+          <th>Account Status</th>
+          <th>Roles</th>
         </tr>
       </thead>
       <tbody>
@@ -17,6 +19,8 @@
           <td class="action-column" *ngIf="userSessionService.getLoggedInUser().hasAuthority('ROLE_ADMIN')"><a (click)="handleDeleteClick(user)"><i class="fa fa-trash"></i></a></td>
           <td>{{user.id}}</td>
           <td>{{user.username}}</td>
+          <td>{{displayAccountStatus(user)}}</td>
+          <td>{{displayAuthorities(user)}}</td>
         </tr>
       </tbody>
     </table>
