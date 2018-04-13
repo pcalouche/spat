@@ -31,9 +31,9 @@ export class UserListComponent implements OnInit {
     modalRef.componentInstance.mode = 'add';
     modalRef.componentInstance.user = {
       username: null,
-      accountExpired: false,
-      accountLocked: false,
-      credentialsExpired: false,
+      accountNonExpired: true,
+      accountNonLocked: true,
+      credentialsNonExpired: true,
       enabled: true,
       authorities: ['ROLE_USER']
     };
