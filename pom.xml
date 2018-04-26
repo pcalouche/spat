@@ -4,7 +4,7 @@
 
     <artifactId>spat</artifactId>
     <packaging>pom</packaging>
-    <version>2.0-SNAPSHOT</version>
+    <version>3.0</version>
     <name>Single Page App Template (SPAT)</name>
 
     <parent>
