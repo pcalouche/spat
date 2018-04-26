@@ -31,7 +31,7 @@ Some of my goals in this project were to:
 
 == Required Software
 * Java 8 (latest JDK was used)
-* Maven 3+ (version 3.5 was used)
+* Maven 3+ (version 3.5.3 was used)
 * Node.js (version 8.9.4 was used)
 * Angular CLI (version 1.7.3 was used)
 * Parent POM https://github.com/pcalouche/spring-boot-project-pom[spring-boot-project-pom] project (I use this as a base for multiple spring boot projects)
@@ -43,7 +43,7 @@ Some of my goals in this project were to:
 * Spring Security making use of JSON Web Tokens (Learn more at https://jwt.io/[jwt.io])
 * Angular 5/Angular CLI 1.7.3
 * Bootstrap 4.0 for UI styling
-* JUnit 4 (I have plans to upgrade the test to use JUnit 5)
+* JUnit 4 (I have plans to upgrade the tests to use JUnit 5)
 * H2 in memory database (This can easily be swapped out for another datasource)
 * Spring JDBC (This can easily be swapped out for another database access method (e.g. JPA, JOOQ, etc.))
 * Node.js for Angular CLI and front end dependency management
