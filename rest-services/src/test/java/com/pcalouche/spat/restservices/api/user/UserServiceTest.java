@@ -3,6 +3,7 @@ package com.pcalouche.spat.restservices.api.user;
 import com.pcalouche.spat.restservices.AbstractServiceTest;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.dao.UserDao;
+import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import com.pcalouche.spat.restservices.api.user.service.UserServiceImpl;
 import org.junit.Before;
@@ -21,11 +22,13 @@ import static org.mockito.Mockito.verify;
 public class UserServiceTest extends AbstractServiceTest {
     @MockBean
     private UserDao userDao;
+    @MockBean
+    private UserRepository userRepository;
     private UserService userService;
 
     @Before
     public void before() {
-        userService = new UserServiceImpl(userDao);
+        userService = new UserServiceImpl(userDao, userRepository);
     }
 
     @Test

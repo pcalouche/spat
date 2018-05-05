@@ -3,6 +3,7 @@ package com.pcalouche.spat.restservices.api.user.service;
 import com.pcalouche.spat.restservices.api.AbstractSpatServiceImpl;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.dao.UserDao;
+import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends AbstractSpatServiceImpl implements UserService {
     private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, UserRepository userRepository) {
         this.userDao = userDao;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -22,6 +25,9 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
 
     @Override
     public List<User> getUsers() {
+//        List<User> users = new ArrayList<>();
+//        userRepository.findAll().forEach(users::add);
+//        return users;
         return userDao.getUsers();
     }
 

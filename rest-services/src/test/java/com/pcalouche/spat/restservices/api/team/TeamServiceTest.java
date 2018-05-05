@@ -3,6 +3,7 @@ package com.pcalouche.spat.restservices.api.team;
 import com.pcalouche.spat.restservices.AbstractServiceTest;
 import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.dao.TeamDao;
+import com.pcalouche.spat.restservices.api.team.repository.TeamRepository;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
 import com.pcalouche.spat.restservices.api.team.service.TeamServiceImpl;
 import org.junit.Before;
@@ -20,11 +21,13 @@ import static org.mockito.Mockito.verify;
 public class TeamServiceTest extends AbstractServiceTest {
     @MockBean
     private TeamDao teamDao;
+    @MockBean
+    private TeamRepository teamRepository;
     private TeamService teamService;
 
     @Before
     public void before() {
-        teamService = new TeamServiceImpl(teamDao);
+        teamService = new TeamServiceImpl(teamDao, teamRepository);
     }
 
     @Test
