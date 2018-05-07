@@ -4,6 +4,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -14,6 +15,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
     private boolean accountNonExpired = true;
@@ -107,6 +109,14 @@ public class User implements UserDetails {
 
     @Override
     public List<SimpleGrantedAuthority> getAuthorities() {
+        if (authorities == null) {
+            authorities = new ArrayList<>();
+            if (roles != null) {
+                for (Role role : roles) {
+                    authorities.add(new SimpleGrantedAuthority(role.getName()));
+                }
+            }
+        }
         return authorities;
     }
 

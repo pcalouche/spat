@@ -6,6 +6,7 @@ import com.pcalouche.spat.restservices.api.user.dao.UserDao;
 import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,15 +21,14 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
 
     @Override
     public User getByUsername(String username) {
-        return userDao.getByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     @Override
     public List<User> getUsers() {
-//        List<User> users = new ArrayList<>();
-//        userRepository.findAll().forEach(users::add);
-//        return users;
-        return userDao.getUsers();
+        List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(users::add);
+        return users;
     }
 
     @Override
@@ -41,6 +41,7 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
 
     @Override
     public Boolean deleteUser(Long id) {
-        return userDao.deleteUser(id);
+        userRepository.deleteById(id);
+        return true;
     }
 }

@@ -28,11 +28,12 @@ public class TeamServiceImpl extends AbstractSpatServiceImpl implements TeamServ
 
     @Override
     public Team saveTeam(Team team) {
-        return teamDao.saveTeam(team);
+        return teamRepository.save(team);
     }
 
     @Override
     public Boolean deleteTeam(Long id) {
-        return teamDao.deleteTeam(id);
+        teamRepository.deleteById(id);
+        return true;
     }
 }

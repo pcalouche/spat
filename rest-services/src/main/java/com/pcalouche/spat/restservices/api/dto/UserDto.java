@@ -2,6 +2,7 @@ package com.pcalouche.spat.restservices.api.dto;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class UserDto {
     private Long id;
@@ -10,6 +11,7 @@ public class UserDto {
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
     private boolean enabled = true;
+    private Set<String> roles;
     private List<String> authorities;
 
     public UserDto() {
@@ -67,6 +69,14 @@ public class UserDto {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public List<String> getAuthorities() {

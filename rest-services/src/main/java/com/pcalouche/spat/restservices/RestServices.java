@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 @SpringBootApplication
+@EnableJpaRepositories
 public class RestServices extends SpringBootServletInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
@@ -96,9 +98,9 @@ public class RestServices extends SpringBootServletInitializer implements Comman
         user3.setCredentialsNonExpired(true);
         user3.setAccountNonLocked(true);
         user3.setEnabled(true);
-//        Set<Role> user3Roles = new HashSet<>();
-//        user3Roles.add(new Role("ROLE_USER"));
-//        user1.setRoles(user3Roles);
+        //        Set<Role> user3Roles = new HashSet<>();
+        //        user3Roles.add(new Role("ROLE_USER"));
+        //        user1.setRoles(user3Roles);
         users.add(user3);
 
         User user4 = new User();
