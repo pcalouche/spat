@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.service.UserService;
+import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AjaxLoginAuthenticationProvider implements AuthenticationProvider {
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public AjaxLoginAuthenticationProvider(UserService userService) {
-        this.userService = userService;
+    public AjaxLoginAuthenticationProvider(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class AjaxLoginAuthenticationProvider implements AuthenticationProvider {
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
 
-        User user = userService.getByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             SecurityUtils.validateUserAccountStatus(user);
         } else {

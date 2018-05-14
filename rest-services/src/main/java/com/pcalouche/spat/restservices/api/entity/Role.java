@@ -1,7 +1,5 @@
 package com.pcalouche.spat.restservices.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -15,7 +13,6 @@ public class Role implements Serializable {
     @Column(unique = true)
     private String name;
     @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
     private Set<User> users;
 
     public Role() {

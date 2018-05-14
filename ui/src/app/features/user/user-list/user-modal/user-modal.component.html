@@ -38,10 +38,10 @@
         </div>
       </div>
     </div>
-    <div class="form-group row" formArrayName="authorities">
+    <div class="form-group row" formArrayName="roles">
       <label class="col-form-label col-sm-4 pt-0">Roles</label>
       <div class="col-sm-8">
-        <div class="form-check" *ngFor="let authority of userForm.get('roles')['controls']; let i = index">
+        <div class="form-check" *ngFor="let role of userForm.get('roles')['controls']; let i = index">
           <label class="form-check-label">
             <input class="form-check-input" type="checkbox" [formControlName]="i">{{roleTypes[i].displayName}}
           </label>

@@ -1,13 +1,13 @@
 package com.pcalouche.spat.restservices.api.team.service;
 
-import com.pcalouche.spat.restservices.api.entity.Team;
+import com.pcalouche.spat.restservices.api.dto.TeamDto;
 
 import java.util.List;
 
 public interface TeamService {
-    List<Team> getTeams();
+    List<TeamDto> findAll();
 
-    Team saveTeam(Team team);
+    TeamDto save(TeamDto team);
 
-    Boolean deleteTeam(Long id);
+    Boolean delete(Long id);
 }

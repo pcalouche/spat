@@ -35,11 +35,11 @@ public class UserServiceTest extends AbstractServiceTest {
     //        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
     //        User expectedUser = new User(1L, "pcalouche", authorities);
     //
-    //        given(userDao.getByUsername(expectedUser.getUsername())).willReturn(expectedUser);
+    //        given(userDao.findByUsername(expectedUser.getUsername())).willReturn(expectedUser);
     //
-    //        assertThat(userService.getByUsername(expectedUser.getUsername())).isEqualTo(expectedUser);
+    //        assertThat(userService.findByUsername(expectedUser.getUsername())).isEqualTo(expectedUser);
     //
-    //        verify(userDao, Mockito.times(1)).getByUsername(expectedUser.getUsername());
+    //        verify(userDao, Mockito.times(1)).findByUsername(expectedUser.getUsername());
     //    }
     //
     //    @Test

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { ClientUser } from '@core/model/ClientUser';
-import { AuthResponse } from '@rest-services/api/model/auth-response.model';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {ClientUser} from '@core/model/ClientUser';
+import {AuthResponse} from '@rest-services/api/model/auth-response.model';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class UserSessionService {
@@ -21,9 +21,7 @@ export class UserSessionService {
     if (sessionStorage.getItem(this.spatSessionKey)) {
       this.parseClaims(this.getToken());
       const spatSession = JSON.parse(sessionStorage.getItem(this.spatSessionKey));
-      console.info(spatSession);
       this.loggedInUser.next(new ClientUser(JSON.parse(spatSession[this.loggedInUserKey])));
-      console.info(this.loggedInUser);
     }
   }
 

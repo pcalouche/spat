@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.service.UserService;
+import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationProvider(UserService userService) {
-        this.userService = userService;
+    public JwtAuthenticationProvider(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // with what is in the database to ensure the account is still active.
         List<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if ("refreshToken".equals(authentication.getDetails())) {
-            User user = userService.getByUsername(subject);
+            User user = userRepository.findByUsername(subject);
             simpleGrantedAuthorities = user.getAuthorities();
         } else {
             @SuppressWarnings("unchecked")

@@ -1,18 +1,24 @@
-import { User } from '@rest-services/api/model/user.model';
+import {User} from '@rest-services/api/model/user.model';
 
 export class ClientUser {
   id: number;
   username: string;
-  roles: string[] = [];
+  roles: [{ id: number, name: string }];
 
   constructor(user: User) {
     this.id = user.id;
     this.username = user.username;
-    console.info(user.roles);
-    this.roles = user.roles.map(item => item.name);
+    this.roles = user.roles;
   }
 
   hasRole(role: string): boolean {
-    return this.roles.indexOf(role) !== -1;
+    let hasRole = false;
+    for (let i = 0; i < this.roles.length; i++) {
+      if (this.roles[i].name === role) {
+        hasRole = true;
+        break;
+      }
+    }
+    return hasRole;
   }
 }

@@ -1,15 +1,16 @@
 package com.pcalouche.spat.restservices.api.user.service;
 
-import com.pcalouche.spat.restservices.api.entity.User;
+import com.pcalouche.spat.restservices.api.dto.UserDto;
 
 import java.util.List;
 
 public interface UserService {
-    User getByUsername(String username);
 
-    List<User> getUsers();
+    UserDto findByUsername(String username);
 
-    User saveUser(User user);
+    List<UserDto> findAll();
 
-    Boolean deleteUser(Long id);
+    UserDto save(UserDto userDto);
+
+    Boolean delete(Long id);
 }

@@ -10,26 +10,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ModelMapperConfig {
-    //    private final Converter<Set<String>, Set<Role>> roleConverter = mappingContext -> mappingContext.getSource() == null ? null : mappingContext.getSource()
-    //            .stream()
-    //            .map(Role::new)
-    //            .collect(Collectors.toSet());
-
-    //    private final Converter<List<String>, List<SimpleGrantedAuthority>> authorityConverter = mappingContext -> mappingContext.getSource() == null ? null : mappingContext.getSource()
-    //            .stream()
-    //            .map(SimpleGrantedAuthority::new)
-    //            .collect(Collectors.toList());
 
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.STRICT);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.addMappings(new PropertyMap<UserDto, User>() {
             @Override
             protected void configure() {
-                //                using(roleConverter).map(source.getRoles()).setRoles(null);
-                //                using(authorityConverter).map(source.getAuthorities()).setAuthorities(null);
                 skip().setPassword(null);
             }
         });
