@@ -2,7 +2,6 @@ package com.pcalouche.spat.restservices.api.team.service;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatServiceImpl;
 import com.pcalouche.spat.restservices.api.entity.Team;
-import com.pcalouche.spat.restservices.api.team.dao.TeamDao;
 import com.pcalouche.spat.restservices.api.team.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +10,9 @@ import java.util.List;
 
 @Service
 public class TeamServiceImpl extends AbstractSpatServiceImpl implements TeamService {
-    private final TeamDao teamDao;
     private final TeamRepository teamRepository;
 
-    public TeamServiceImpl(TeamDao teamDao, TeamRepository teamRepository) {
-        this.teamDao = teamDao;
+    public TeamServiceImpl(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
     }
 

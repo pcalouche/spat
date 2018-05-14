@@ -20,7 +20,7 @@ export class UserModalComponent implements OnInit {
   errorMessage: string;
   userForm: FormGroup;
 
-  authorityTypes = [{
+  roleTypes = [{
     displayName: 'User',
     value: 'ROLE_USER'
   }, {
@@ -54,8 +54,8 @@ export class UserModalComponent implements OnInit {
       credentialsExpired: new FormControl(!this.user.credentialsNonExpired),
       enabled: new FormControl(this.user.enabled),
       authorities: new FormArray([
-        new FormControl({value: this.user.authorities.indexOf('ROLE_USER') !== -1, disabled: true}),
-        new FormControl(this.user.authorities.indexOf('ROLE_ADMIN') !== -1)
+        new FormControl({value: this.user.roles.filter(i => i.name === 'ROLE_USER').length !== 0, disabled: true}),
+        new FormControl({value: this.user.roles.filter(i => i.name === 'ROLE_ADMIN').length !== 0})
       ])
     });
   }
@@ -68,11 +68,11 @@ export class UserModalComponent implements OnInit {
       case 'edit':
         this.actionButtonText = 'Saving User';
         this.actionInProgress = true;
-        const authorities: string[] = ['ROLE_USER'];
-        for (let i = 0; i < this.userForm.value.authorities.length; i++) {
-          if (this.userForm.value.authorities[i]) {
+        const roles: [{ id: number, name: string }] = [{id: 1, name: 'ROLE_USER'}];
+        for (let i = 0; i < this.userForm.value.roles.length; i++) {
+          if (this.userForm.value.roles[i]) {
             // Offset is because User checkbox is disabled and that value does not get included in the form
-            authorities.push(this.authorityTypes[i + 1].value);
+            roles.push({id: i + 1, name: this.roleTypes[i + 1].value});
           }
         }
         const userToSave: User = {
@@ -82,7 +82,7 @@ export class UserModalComponent implements OnInit {
           accountNonLocked: !this.userForm.value.accountLocked,
           credentialsNonExpired: !this.userForm.value.credentialsExpired,
           enabled: this.userForm.value.enabled,
-          authorities: authorities
+          roles: roles
         };
 
         this.userService.saveUser(userToSave).subscribe(

@@ -21,7 +21,9 @@ export class UserSessionService {
     if (sessionStorage.getItem(this.spatSessionKey)) {
       this.parseClaims(this.getToken());
       const spatSession = JSON.parse(sessionStorage.getItem(this.spatSessionKey));
+      console.info(spatSession);
       this.loggedInUser.next(new ClientUser(JSON.parse(spatSession[this.loggedInUserKey])));
+      console.info(this.loggedInUser);
     }
   }
 

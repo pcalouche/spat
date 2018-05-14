@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
         // Load the details of the logged in user now
         this.userService.getByUsername(this.loginForm.value.username).subscribe(
           user => {
+            console.info(user);
             this.userSessionService.setLoggedInUser(new ClientUser(user));
             // If coming from a redirect go there, otherwise go to teams page by default
             if (this.activatedRoute.snapshot.params['redirect']) {

@@ -3,8 +3,8 @@ package com.pcalouche.spat.restservices;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.entity.User;
+import com.pcalouche.spat.restservices.api.role.RoleRepository;
 import com.pcalouche.spat.restservices.api.team.repository.TeamRepository;
-import com.pcalouche.spat.restservices.api.user.repository.RoleRepository;
 import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -98,9 +98,10 @@ public class RestServices extends SpringBootServletInitializer implements Comman
         user3.setCredentialsNonExpired(true);
         user3.setAccountNonLocked(true);
         user3.setEnabled(true);
-        //        Set<Role> user3Roles = new HashSet<>();
-        //        user3Roles.add(new Role("ROLE_USER"));
-        //        user1.setRoles(user3Roles);
+        Set<Role> user3Roles = new HashSet<>();
+        user3Roles.add(userRole);
+        user3Roles.add(adminRole);
+        user3.setRoles(user3Roles);
         users.add(user3);
 
         User user4 = new User();
@@ -110,6 +111,9 @@ public class RestServices extends SpringBootServletInitializer implements Comman
         user4.setCredentialsNonExpired(false);
         user4.setAccountNonLocked(true);
         user4.setEnabled(true);
+        Set<Role> user4Roles = new HashSet<>();
+        user4Roles.add(userRole);
+        user4.setRoles(user4Roles);
         users.add(user4);
 
         User user5 = new User();
@@ -119,6 +123,9 @@ public class RestServices extends SpringBootServletInitializer implements Comman
         user5.setCredentialsNonExpired(true);
         user5.setAccountNonLocked(false);
         user5.setEnabled(true);
+        Set<Role> user5Roles = new HashSet<>();
+        user5Roles.add(userRole);
+        user5.setRoles(user5Roles);
         users.add(user5);
 
         User user6 = new User();
@@ -128,6 +135,9 @@ public class RestServices extends SpringBootServletInitializer implements Comman
         user6.setCredentialsNonExpired(true);
         user6.setAccountNonLocked(true);
         user6.setEnabled(false);
+        Set<Role> user6Roles = new HashSet<>();
+        user6Roles.add(userRole);
+        user6.setRoles(user6Roles);
         users.add(user6);
 
         userRepository.saveAll(users);

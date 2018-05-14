@@ -1,17 +1,18 @@
 package com.pcalouche.spat.restservices.api.user.controller;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatController;
+import com.pcalouche.spat.restservices.api.dto.RoleDto;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,17 +47,12 @@ public class UserController extends AbstractSpatController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public UserDto saveUser(@RequestBody UserDto userDto) {
+        if (userDto.getRoles() == null || userDto.getRoles().isEmpty()) {
+            Set<RoleDto> roles = new HashSet<>();
+            // TODO retrieve from database
+            roles.add(new RoleDto(1L, "ROLE_USER"));
+        }
         User user = modelMapper.map(userDto, User.class);
-        // TODO this is improvement opportunity
-        // Set default password if user doesn't have one
-        if (user.getPassword() == null) {
-            user.setPassword("password");
-        }
-        if (user.getAuthorities() == null) {
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            user.setAuthorities(authorities);
-        }
         return modelMapper.map(userService.saveUser(user), UserDto.class);
     }
 

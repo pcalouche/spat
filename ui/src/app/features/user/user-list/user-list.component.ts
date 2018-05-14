@@ -35,7 +35,7 @@ export class UserListComponent implements OnInit {
       accountNonLocked: true,
       credentialsNonExpired: true,
       enabled: true,
-      authorities: ['ROLE_USER']
+      roles: ['ROLE_USER']
     };
     modalRef.result.then(
       (savedUser) => {
@@ -100,7 +100,7 @@ export class UserListComponent implements OnInit {
     return accountStatus.join(', ');
   }
 
-  displayAuthorities(user: User): string {
-    return user.authorities.join(', ');
+  displayRoles(user: User): string {
+    return user.roles.map(item => item.name).join(', ');
   }
 }

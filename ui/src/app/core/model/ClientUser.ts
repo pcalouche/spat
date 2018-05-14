@@ -3,15 +3,16 @@ import { User } from '@rest-services/api/model/user.model';
 export class ClientUser {
   id: number;
   username: string;
-  authorities: string[] = [];
+  roles: string[] = [];
 
   constructor(user: User) {
     this.id = user.id;
     this.username = user.username;
-    this.authorities = user.authorities;
+    console.info(user.roles);
+    this.roles = user.roles.map(item => item.name);
   }
 
-  hasAuthority(authority: string): boolean {
-    return this.authorities.indexOf(authority) !== -1;
+  hasRole(role: string): boolean {
+    return this.roles.indexOf(role) !== -1;
   }
 }
