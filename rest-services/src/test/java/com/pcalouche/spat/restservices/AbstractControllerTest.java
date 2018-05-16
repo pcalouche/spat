@@ -22,14 +22,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @Import({ModelMapperConfig.class, SecurityConfig.class})
-@ComponentScan(basePackages = {"com.pcalouche.spat.restservices.security.provider"})  //TODO is this needed?
+@ComponentScan(basePackages = {"com.pcalouche.spat.restservices.security.provider"})
 public abstract class AbstractControllerTest extends AbstractUnitTest {
     private final static String ENCODED_PASSWORD = "$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi";
     @Autowired
@@ -48,8 +47,6 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     protected UserService userService;
     @MockBean
     protected UserRepository userRepository;
-    @MockBean
-    protected EntityManagerFactory entityManagerFactory;
     private String validUserToken;
     private String validAdminToken;
 
@@ -73,6 +70,7 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
 
     @Before
     public void setup() {
+        // Setup some mocks for the user service can be used by other tests
         Set<Role> userRoles = new HashSet<>();
         Role userRole = new Role("ROLE_USER");
         userRole.setId(1L);
@@ -82,6 +80,44 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
         adminRole.setId(2L);
         Set<Role> adminRoles = new HashSet<>(userRoles);
         adminRoles.add(adminRole);
+
+        //        User activeUser = new User(1L, "activeUser", userRoles);
+        //        activeUser.setPassword(ENCODED_PASSWORD);
+        //        given(userService.loadUserByUsername(activeUser.getUsername())).willReturn(activeUser);
+        //
+        //        User activeAdmin = new User(2L, "activeAdmin", adminRoles);
+        //        activeAdmin.setPassword(ENCODED_PASSWORD);
+        //        given(userService.loadUserByUsername(activeAdmin.getUsername())).willReturn(activeAdmin);
+        //
+        //        User expiredUser = new User(3L, "expiredUser", adminRoles);
+        //        expiredUser.setPassword(ENCODED_PASSWORD);
+        //        expiredUser.setAccountNonExpired(false);
+        //        given(userService.loadUserByUsername(expiredUser.getUsername())).willReturn(expiredUser);
+        //
+        //        User lockedUser = new User(4L, "lockedUser", adminRoles);
+        //        lockedUser.setPassword(ENCODED_PASSWORD);
+        //        lockedUser.setAccountNonLocked(false);
+        //        given(userService.loadUserByUsername(lockedUser.getUsername())).willReturn(lockedUser);
+        //
+        //        User credentialsExpiredUser = new User(5L, "credentialsExpiredUser", adminRoles);
+        //        credentialsExpiredUser.setPassword(ENCODED_PASSWORD);
+        //        credentialsExpiredUser.setCredentialsNonExpired(false);
+        //        given(userService.loadUserByUsername(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
+        //
+        //        User disabledUser = new User(6L, "disabledUser", adminRoles);
+        //        disabledUser.setPassword(ENCODED_PASSWORD);
+        //        disabledUser.setEnabled(false);
+        //        given(userService.loadUserByUsername(disabledUser.getUsername())).willReturn(disabledUser);
+        //        Set<Role> userRoles = new HashSet<>();
+        //        Role userRole = new Role("ROLE_USER");
+        //        userRole.setId(1L);
+        //        userRoles.add(new Role("ROLE_USER"));
+        //
+        //        Role adminRole = new Role("ROLE_ADMIN");
+        //        adminRole.setId(2L);
+        //        Set<Role> adminRoles = new HashSet<>(userRoles);
+        //        adminRoles.add(adminRole);
+
         // Setup some mocks for the user service can be used by other tests
         User activeUser = new User(1L, "activeUser", userRoles);
         activeUser.setPassword(ENCODED_PASSWORD);

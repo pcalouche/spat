@@ -4,10 +4,9 @@ import com.pcalouche.spat.restservices.api.AbstractSpatServiceImpl;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
+import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.Optional;
 public class UserServiceImpl extends AbstractSpatServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
@@ -55,7 +53,7 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
 
         // Set default password if blank still
         if (StringUtils.isEmpty(userToSave.getPassword())) {
-            userToSave.setPassword(passwordEncoder.encode("password"));
+            userToSave.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
         }
 
         return modelMapper.map(userRepository.save(userToSave), UserDto.class);

@@ -11,6 +11,8 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class SecurityUtils {
+    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     public static final String AUTHENTICATED_PATH = String.format("%s/**", BaseEndpoints.API_ROOT);
     public static final String TOKEN_ENDPOINT = String.format("%s/auth/token", BaseEndpoints.API_ROOT);
     public static final String REFRESH_TOKEN_ENDPOINT = String.format("%s/auth/refresh-token", BaseEndpoints.API_ROOT);
@@ -98,7 +101,7 @@ public class SecurityUtils {
         // Add additional information to the JWT claims
         claims.put(CLAIMS_AUTHORITIES_KEY, authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)

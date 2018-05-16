@@ -5,8 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,7 +26,7 @@ public class User implements UserDetails, Serializable {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     @Transient
-    private List<SimpleGrantedAuthority> authorities;
+    private Set<SimpleGrantedAuthority> authorities;
 
     public User() {
     }
@@ -109,9 +108,9 @@ public class User implements UserDetails, Serializable {
     }
 
     @Override
-    public List<SimpleGrantedAuthority> getAuthorities() {
+    public Set<SimpleGrantedAuthority> getAuthorities() {
         if (authorities == null) {
-            authorities = new ArrayList<>();
+            authorities = new HashSet<>();
             if (roles != null) {
                 for (Role role : roles) {
                     authorities.add(new SimpleGrantedAuthority(role.getName()));

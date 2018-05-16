@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 public class UserControllerTest extends AbstractControllerTest {
 
     @Test
-    public void testGetUsers() throws Exception {
+    public void testFindAll() throws Exception {
         //        List<User> expectedUsers = new ArrayList<>();
         //        expectedUsers.add(new User(1L, "pcalouche", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
         //        expectedUsers.add(new User(2L, "jsmith", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
@@ -29,7 +29,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetByUserName() throws Exception {
+    public void testFindByUserName() throws Exception {
         //        User expectedUser = new User(1L, "activeUser", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         //
         //        UserDto expectedUserDto = new UserDto(1L, "activeUser", new HashSet<>(Collections.singletonList("ROLE_USER")));
@@ -45,7 +45,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetByUserNameThrowsResourceNotFoundException() throws Exception {
+    public void testFindByUserNameThrowsResourceNotFoundException() throws Exception {
         //        User expectedUser = new User(1L, "activeUser", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         //
         //        given(userService.findByUsername(expectedUser.getUsername())).willReturn(null);
@@ -59,7 +59,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSaveUser() throws Exception {
+    public void testSave() throws Exception {
         //        User expectedUser = new User(1L, "pcalouche", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         //
         //        UserDto expectedUserDto = new UserDto(1L, "pcalouche", new HashSet<>(Collections.singletonList("ROLE_USER")));
@@ -80,7 +80,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSaveUserRequiresAdminRole() throws Exception {
+    public void testSaveRequiresAdminRole() throws Exception {
         //        User expectedUser = new User(1L, "pcalouche", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         //
         //        UserDto expectedUserDto = new UserDto(1L, "pcalouche", new HashSet<>(Collections.singletonList("ROLE_USER")));
@@ -98,37 +98,37 @@ public class UserControllerTest extends AbstractControllerTest {
         //                .andReturn();
     }
 
-    //    @Test
-    //    public void testDeleteUser() throws Exception {
-    //        given(userService.deleteUser(1L)).willReturn(true);
-    //
-    //        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
-    //                .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
-    //                .andExpect(status().isOk())
-    //                .andExpect(content().string(Boolean.TRUE.toString()));
-    //
-    //        verify(userService, Mockito.times(1)).deleteUser(1L);
-    //    }
-    //
-    //    @Test
-    //    public void testDeleteUserNotFound() throws Exception {
-    //        given(userService.deleteUser(1L)).willReturn(false);
-    //
-    //        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
-    //                .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
-    //                .andExpect(status().isOk())
-    //                .andExpect(content().string(Boolean.FALSE.toString()));
-    //
-    //        verify(userService, Mockito.times(1)).deleteUser(1L);
-    //    }
-    //
-    //    @Test
-    //    public void testDeleteUserRequiresAdminRole() throws Exception {
-    //        given(userService.deleteUser(1L)).willReturn(true);
-    //
-    //        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
-    //                .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
-    //                .andExpect(status().isForbidden())
-    //                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8));
-    //    }
+    @Test
+    public void testDelete() throws Exception {
+        //        given(userService.deleteUser(1L)).willReturn(true);
+        //
+        //        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
+        //                .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
+        //                .andExpect(status().isOk())
+        //                .andExpect(content().string(Boolean.TRUE.toString()));
+        //
+        //        verify(userService, Mockito.times(1)).deleteUser(1L);
+    }
+
+    @Test
+    public void testDeleteOfNotFound() throws Exception {
+        //        given(userService.deleteUser(1L)).willReturn(false);
+        //
+        //        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
+        //                .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
+        //                .andExpect(status().isOk())
+        //                .andExpect(content().string(Boolean.FALSE.toString()));
+        //
+        //        verify(userService, Mockito.times(1)).deleteUser(1L);
+    }
+
+    @Test
+    public void testDeleteRequiresAdminRole() throws Exception {
+        //        given(userService.deleteUser(1L)).willReturn(true);
+        //
+        //        mockMvc.perform(delete(String.format("%s/%d", UserEndpoints.ROOT, 1L))
+        //                .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
+        //                .andExpect(status().isForbidden())
+        //                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8));
+    }
 }
