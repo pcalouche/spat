@@ -32,10 +32,10 @@ public class User implements UserDetails, Serializable {
     public User() {
     }
 
-    public User(Long id, String username, List<SimpleGrantedAuthority> authorities) {
+    public User(Long id, String username, Set<Role> roles) {
         this.id = id;
         this.username = username;
-        this.authorities = authorities;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -119,10 +119,6 @@ public class User implements UserDetails, Serializable {
             }
         }
         return authorities;
-    }
-
-    public void setAuthorities(List<SimpleGrantedAuthority> authorities) {
-        this.authorities = authorities;
     }
 
     @Override
