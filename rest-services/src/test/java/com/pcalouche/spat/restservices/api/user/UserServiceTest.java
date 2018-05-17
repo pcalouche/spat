@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.verify;
@@ -37,7 +38,7 @@ public class UserServiceTest extends AbstractServiceTest {
     @Test
     public void testFindAll() {
         Set<Role> mockRoles = new HashSet<>();
-        mockRoles.add(new Role("ROLE_USER"));
+        mockRoles.add(new Role(1L, "ROLE_USER"));
 
         List<User> mockUsers = new ArrayList<>();
         mockUsers.add(new User(1L, "pcalouche", mockRoles));
@@ -59,7 +60,7 @@ public class UserServiceTest extends AbstractServiceTest {
     @Test
     public void testFindByUsername() {
         Set<Role> mockRoles = new HashSet<>();
-        mockRoles.add(new Role("ROLE_USER"));
+        mockRoles.add(new Role(1L, "ROLE_USER"));
         User mockUser = new User(1L, "pcalouche", mockRoles);
 
         Set<RoleDto> expectedRoles = new HashSet<>();
@@ -76,7 +77,7 @@ public class UserServiceTest extends AbstractServiceTest {
     @Test
     public void testSave() {
         Set<Role> mockRoles = new HashSet<>();
-        mockRoles.add(new Role("ROLE_USER"));
+        mockRoles.add(new Role(1L, "ROLE_USER"));
         User mockUser = new User(1L, "pcalouche", mockRoles);
 
         Set<RoleDto> expectedRoles = new HashSet<>();
@@ -91,9 +92,11 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testDeleteById() {
         willAnswer((Answer<Void>) invocationOnMock -> null).given(userRepository).deleteById(1L);
 
-        assertThat(userService.delete(1L)).isTrue();
+        Throwable throwable = catchThrowable(() -> userService.deleteById(1L));
+
+        assertThat(throwable).isNull();
     }
 }

@@ -12,5 +12,5 @@ public interface UserService {
 
     UserDto save(UserDto userDto);
 
-    Boolean delete(Long id);
+    void deleteById(Long id);
 }

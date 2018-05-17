@@ -45,8 +45,8 @@ public class DatabaseLoader implements CommandLineRunner {
 
         teamRepository.saveAll(teams);
 
-        Role userRole = roleRepository.save(new Role("ROLE_USER"));
-        Role adminRole = roleRepository.save(new Role("ROLE_ADMIN"));
+        Role userRole = roleRepository.save(new Role(1L, "ROLE_USER"));
+        Role adminRole = roleRepository.save(new Role(2L, "ROLE_ADMIN"));
 
         List<User> users = new ArrayList<>();
 

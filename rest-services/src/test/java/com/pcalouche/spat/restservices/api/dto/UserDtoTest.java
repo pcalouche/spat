@@ -15,8 +15,8 @@ public class UserDtoTest extends AbstractModelMapperTest {
     @Test
     public void testUserDtoModelMapper() {
         Set<Role> roles = new HashSet<>();
-        Role role1 = new Role("ROLE_ADMIN");
-        Role role2 = new Role("ROLE_USER");
+        Role role1 = new Role(1L, "ROLE_ADMIN");
+        Role role2 = new Role(1L, "ROLE_USER");
         roles.add(role1);
         roles.add(role2);
 

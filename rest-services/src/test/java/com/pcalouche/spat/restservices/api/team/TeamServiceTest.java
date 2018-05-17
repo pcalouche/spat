@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.verify;
@@ -61,9 +62,11 @@ public class TeamServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testDeleteById() {
         willAnswer((Answer<Void>) invocationOnMock -> null).given(teamRepository).deleteById(1L);
 
-        assertThat(teamService.delete(1L)).isTrue();
+        Throwable throwable = catchThrowable(() -> teamService.deleteById(1L));
+
+        assertThat(throwable).isNull();
     }
 }

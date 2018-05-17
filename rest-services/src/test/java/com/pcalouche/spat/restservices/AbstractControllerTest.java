@@ -72,53 +72,11 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     public void setup() {
         // Setup some mocks for the user service can be used by other tests
         Set<Role> userRoles = new HashSet<>();
-        Role userRole = new Role("ROLE_USER");
-        userRole.setId(1L);
-        userRoles.add(new Role("ROLE_USER"));
+        userRoles.add(new Role(1L, "ROLE_USER"));
 
-        Role adminRole = new Role("ROLE_ADMIN");
-        adminRole.setId(2L);
         Set<Role> adminRoles = new HashSet<>(userRoles);
-        adminRoles.add(adminRole);
+        adminRoles.add(new Role(2L, "ROLE_ADMIN"));
 
-        //        User activeUser = new User(1L, "activeUser", userRoles);
-        //        activeUser.setPassword(ENCODED_PASSWORD);
-        //        given(userService.loadUserByUsername(activeUser.getUsername())).willReturn(activeUser);
-        //
-        //        User activeAdmin = new User(2L, "activeAdmin", adminRoles);
-        //        activeAdmin.setPassword(ENCODED_PASSWORD);
-        //        given(userService.loadUserByUsername(activeAdmin.getUsername())).willReturn(activeAdmin);
-        //
-        //        User expiredUser = new User(3L, "expiredUser", adminRoles);
-        //        expiredUser.setPassword(ENCODED_PASSWORD);
-        //        expiredUser.setAccountNonExpired(false);
-        //        given(userService.loadUserByUsername(expiredUser.getUsername())).willReturn(expiredUser);
-        //
-        //        User lockedUser = new User(4L, "lockedUser", adminRoles);
-        //        lockedUser.setPassword(ENCODED_PASSWORD);
-        //        lockedUser.setAccountNonLocked(false);
-        //        given(userService.loadUserByUsername(lockedUser.getUsername())).willReturn(lockedUser);
-        //
-        //        User credentialsExpiredUser = new User(5L, "credentialsExpiredUser", adminRoles);
-        //        credentialsExpiredUser.setPassword(ENCODED_PASSWORD);
-        //        credentialsExpiredUser.setCredentialsNonExpired(false);
-        //        given(userService.loadUserByUsername(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
-        //
-        //        User disabledUser = new User(6L, "disabledUser", adminRoles);
-        //        disabledUser.setPassword(ENCODED_PASSWORD);
-        //        disabledUser.setEnabled(false);
-        //        given(userService.loadUserByUsername(disabledUser.getUsername())).willReturn(disabledUser);
-        //        Set<Role> userRoles = new HashSet<>();
-        //        Role userRole = new Role("ROLE_USER");
-        //        userRole.setId(1L);
-        //        userRoles.add(new Role("ROLE_USER"));
-        //
-        //        Role adminRole = new Role("ROLE_ADMIN");
-        //        adminRole.setId(2L);
-        //        Set<Role> adminRoles = new HashSet<>(userRoles);
-        //        adminRoles.add(adminRole);
-
-        // Setup some mocks for the user service can be used by other tests
         User activeUser = new User(1L, "activeUser", userRoles);
         activeUser.setPassword(ENCODED_PASSWORD);
         given(userRepository.findByUsername(activeUser.getUsername())).willReturn(activeUser);

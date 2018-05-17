@@ -26,9 +26,9 @@ public class UserTest extends AbstractModelMapperTest {
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo("username");
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("ROLE_USER"));
-        roles.add(new Role("ROLE_ADMIN"));
-        assertThat(user.getRoles()).contains(new Role("ROLE_USER"), new Role("ROLE_ADMIN"));
+        roles.add(new Role(1L, "ROLE_USER"));
+        roles.add(new Role(2L, "ROLE_ADMIN"));
+        assertThat(user.getRoles()).contains(new Role(1L, "ROLE_USER"), new Role(2L, "ROLE_ADMIN"));
         assertThat(user.getAuthorities()).contains(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
         assertThat(user.isAccountNonExpired()).isFalse();
         assertThat(user.isAccountNonLocked()).isTrue();

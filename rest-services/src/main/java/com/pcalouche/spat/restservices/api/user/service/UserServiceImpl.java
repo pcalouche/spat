@@ -60,8 +60,7 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public void deleteById(Long id) {
         userRepository.deleteById(id);
-        return true;
     }
 }

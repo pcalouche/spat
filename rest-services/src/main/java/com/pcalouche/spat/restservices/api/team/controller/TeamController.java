@@ -30,7 +30,7 @@ public class TeamController extends AbstractSpatController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
-    public boolean delete(@PathVariable Long id) {
-        return teamService.delete(id);
+    public void deleteById(@PathVariable Long id) {
+        teamService.deleteById(id);
     }
 }

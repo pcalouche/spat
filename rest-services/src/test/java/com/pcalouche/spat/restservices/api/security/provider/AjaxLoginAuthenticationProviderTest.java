@@ -34,7 +34,7 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
         Mockito.reset(userRepository);
 
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("ROLE_USER"));
+        roles.add(new Role(1L, "ROLE_USER"));
         User activeUser = new User(1L, "activeUser", roles);
         activeUser.setPassword("$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi");
 

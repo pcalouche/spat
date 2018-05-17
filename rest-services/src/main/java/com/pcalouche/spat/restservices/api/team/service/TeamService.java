@@ -9,5 +9,5 @@ public interface TeamService {
 
     TeamDto save(TeamDto team);
 
-    Boolean delete(Long id);
+    void deleteById(Long id);
 }

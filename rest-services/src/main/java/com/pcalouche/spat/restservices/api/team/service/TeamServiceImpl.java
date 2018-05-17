@@ -34,8 +34,7 @@ public class TeamServiceImpl extends AbstractSpatServiceImpl implements TeamServ
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public void deleteById(Long id) {
         teamRepository.deleteById(id);
-        return true;
     }
 }

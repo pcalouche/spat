@@ -47,7 +47,7 @@ public class UserController extends AbstractSpatController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
-    public boolean delete(@PathVariable Long id) {
-        return userService.delete(id);
+    public void deleteById(@PathVariable Long id) {
+        userService.deleteById(id);
     }
 }

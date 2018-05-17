@@ -50,8 +50,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     public void testGetTokenFromRequest() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==");
-        assertThat(SecurityUtils.getTokenFromRequest(request))
-                .isNotEmpty();
+        assertThat(SecurityUtils.getTokenFromRequest(request)).isNotEmpty();
     }
 
     @Test
@@ -65,8 +64,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
         assertThat(claims.getIssuedAt()).isNotNull();
         assertThat(claims.getExpiration()).isNotNull();
         List<String> tokenAuthorities = (List<String>) claims.get("authorities", List.class);
-        assertThat(tokenAuthorities)
-                .hasSize(2);
+        assertThat(tokenAuthorities).hasSize(2);
         assertThat(tokenAuthorities.get(0)).isEqualTo("ROLE_USER");
         assertThat(tokenAuthorities.get(1)).isEqualTo("ROLE_ADMIN");
     }
@@ -74,7 +72,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusAccountExpiredException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("ROLE_USER"));
+        roles.add(new Role(1L, "ROLE_USER"));
         User user = new User(1L, "expiredUser", roles);
         user.setAccountNonExpired(false);
 
@@ -86,7 +84,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusAccountLockedException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("ROLE_USER"));
+        roles.add(new Role(1L, "ROLE_USER"));
         User user = new User(1L, "lockedUser", roles);
         user.setAccountNonLocked(false);
 
@@ -98,7 +96,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusCredentialsException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("ROLE_USER"));
+        roles.add(new Role(1L, "ROLE_USER"));
         User user = new User(1L, "credentialsExpiredUser", roles);
         user.setCredentialsNonExpired(false);
 
@@ -110,7 +108,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusDisabledException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("ROLE_USER"));
+        roles.add(new Role(1L, "ROLE_USER"));
         User user = new User(1L, "disabledUser", roles);
         user.setEnabled(false);
 
