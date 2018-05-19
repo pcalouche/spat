@@ -41,6 +41,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if ("refreshToken".equals(authentication.getDetails())) {
             User user = userRepository.findByUsername(subject);
+            if (user != null) {
+                SecurityUtils.validateUserAccountStatus(user);
+            } else {
+                throw new BadCredentialsException(String.format("Bad credentials for username: %s", subject));
+            }
+
             simpleGrantedAuthorities = user.getAuthorities();
         } else {
             @SuppressWarnings("unchecked")

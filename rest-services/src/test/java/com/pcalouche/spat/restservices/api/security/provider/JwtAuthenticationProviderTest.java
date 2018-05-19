@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,13 +33,14 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     @MockBean
     private UserRepository userRepository;
     private String validJwtToken;
+    private User activeUser;
 
     @Before
     public void before() {
         Mockito.reset(userRepository);
         Set<Role> roles = new HashSet<>();
         roles.add(new Role(1L, "ROLE_USER"));
-        User activeUser = new User(1L, "activeUser", roles);
+        activeUser = new User(1L, "activeUser", roles);
 
         activeUser.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
 
@@ -83,7 +85,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testAuthenticateThrowsHandlesRefreshToken() {
+    public void testAuthenticateHandlesRefreshToken() {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validJwtToken);
         authenticationToken.setDetails("refreshToken");
 
@@ -95,6 +97,39 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
                 .isNull();
         assertThat(authentication.getAuthorities())
                 .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+
+        // User service should be hit for non refresh token
+        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
+    }
+
+    @Test
+    public void testAuthenticateRefreshTokenHandlesDisabledUserAccount() {
+        // Disable the active user.  They should not be given a refresh token
+        activeUser.setEnabled(false);
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validJwtToken);
+        authenticationToken.setDetails("refreshToken");
+
+        // All other cases are tested in SecurityUtilsTest.  This just checks that the conditional is hit
+        assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(authenticationToken))
+                .isInstanceOf(DisabledException.class)
+                .hasMessage("Disabled account for username: activeUser");
+
+        // User service should be hit for non refresh token
+        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
+
+    }
+
+    @Test
+    public void testAuthenticateRefreshTokenHandlesDeletedUserAccount() {
+        // Simulate that the user was deleted from the database since they last received a token
+        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(null);
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validJwtToken);
+        authenticationToken.setDetails("refreshToken");
+
+        // All other cases are tested in SecurityUtilsTest.  This just checks that the conditional is hit
+        assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(authenticationToken))
+                .isInstanceOf(BadCredentialsException.class)
+                .hasMessage("Bad credentials for username: activeUser");
 
         // User service should be hit for non refresh token
         verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
