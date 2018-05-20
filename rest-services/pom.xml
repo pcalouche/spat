@@ -12,7 +12,7 @@
     <parent>
         <artifactId>spat</artifactId>
         <groupId>com.pcalouche</groupId>
-        <version>3.0</version>
+        <version>3.1</version>
     </parent>
 
     <properties>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.0</version>
+            <version>3.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.0</version>
+            <version>3.1</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.dto;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class UserDto {
     private Long id;
@@ -10,15 +10,15 @@ public class UserDto {
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
     private boolean enabled = true;
-    private List<String> authorities;
+    private Set<RoleDto> roles;
 
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, List<String> authorities) {
+    public UserDto(Long id, String username, Set<RoleDto> roles) {
         this.id = id;
         this.username = username;
-        this.authorities = authorities;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -69,12 +69,12 @@ public class UserDto {
         this.enabled = enabled;
     }
 
-    public List<String> getAuthorities() {
-        return authorities;
+    public Set<RoleDto> getRoles() {
+        return roles;
     }
 
-    public void setAuthorities(List<String> authorities) {
-        this.authorities = authorities;
+    public void setRoles(Set<RoleDto> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -91,11 +91,11 @@ public class UserDto {
                 credentialsNonExpired == userDto.credentialsNonExpired &&
                 enabled == userDto.enabled &&
                 Objects.equals(username, userDto.username) &&
-                Objects.equals(authorities, userDto.authorities);
+                Objects.equals(roles, userDto.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, authorities);
+        return Objects.hash(username, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, roles);
     }
 }

@@ -1,6 +1,6 @@
 = Single Page App Template (SPAT)
 Doc Writer <philip.calouche@outlook.com>
-v1.0, 2018-02-24
+v2.0, 2018-05-17
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -15,7 +15,9 @@ endif::[]
 == Background
 The purpose of this project was to demonstrate a REST service built on Spring Boot 2 that works with an Angular
 5 front end.  It consists of a login page, a teams page, and a users page.  If logged in as the adminUser the
-teams and users pages will show controls for adding, editing, and deleting teams and users respectively.
+teams and users pages will show controls for adding, editing, and deleting teams and users respectively. This is
+to demonstrate permissions.  Backend security prevents adding, editing, and deleting in the event a request is
+made to do either of those things as a non-admin user.
 
 Some of my goals in this project were to:
 
@@ -24,28 +26,28 @@ Some of my goals in this project were to:
 . Have a clear build path to production
 . Has web security consisting of a form login, JSON Web Token, and user roles
 . Has front end code that warns user if their session is about to expire
-. Back end unit testing with the ability to separate unit tests from longer running integration tests during the build process.
-. Demonstrates multiple types of HTTP requests (GET, POST, DELETE).
-. Demonstrates multiple types of database operations (SELECT, UPDATE, DELETE).
-. Front end unit testing (In progress)
+. Back end unit testing with the ability to separate unit tests from longer running integration tests during the build process
+. Demonstrates multiple types of HTTP requests (GET, POST, DELETE)
+. Demonstrates multiple types of database operations (SELECT, UPDATE, DELETE)
+. Front end unit testing (Still a work in progress)
 
 == Required Software
 * Java 8 (latest JDK was used)
 * Maven 3+ (version 3.5.3 was used)
-* Node.js (version 8.9.4 was used)
+* Node.js (version 9.11.1 was used)
 * Angular CLI (version 1.7.3 was used)
 * Parent POM https://github.com/pcalouche/spring-boot-project-pom[spring-boot-project-pom] project (I use this as a base for multiple spring boot projects)
 
 == Technologies and Frameworks
-* Java 8
-* Maven 3
-* Spring Boot 2.0
+* Java 8 (latest JDK was used)
+* Maven 3.5.3
+* Spring Boot 2.0.2
 * Spring Security making use of JSON Web Tokens (Learn more at https://jwt.io/[jwt.io])
+* H2 in memory database (This can easily be swapped out for another datasource)
+* Spring Data JPA (This can easily be swapped out for another database access method (e.g. JDBC, JOOQ, etc.))
+* JUnit 4 (I have plans to upgrade the tests to use JUnit 5)
 * Angular 5/Angular CLI 1.7.3
 * Bootstrap 4.0 for UI styling
-* JUnit 4 (I have plans to upgrade the tests to use JUnit 5)
-* H2 in memory database (This can easily be swapped out for another datasource)
-* Spring JDBC (This can easily be swapped out for another database access method (e.g. JPA, JOOQ, etc.))
 * Node.js for Angular CLI and front end dependency management
 
 == Project Structure
@@ -120,11 +122,11 @@ and UI code on the fly when changes are made.
 Periodically I will check that the UI is served correctly from the UI Spring application by doing an Maven build as mentioned in the *How to Run* section.
 
 == H2 In Memory Database
-The application uses the H2 in memory database.  On startup the database is always recreated using spat/rest-services/resources/schema.sql and
-spat/rest-services/resources/data.sql.  These are the default files Spring Boot looks for when working with an H2 database.
+The application uses the H2 in memory database.  On startup the database is always recreated by DatabaseLoader.java that implements Spring Boot's command
+line interface.
 
 There is a web console to the database that can be accessed by going to http://localhost:10000/spat/rest-services/h2-console and changing the
-JDBC URL to *jdbc:h2:mem:spat*.
+JDBC URL to *jdbc:h2:mem:spatdb*.
 
 .H2 Console Login
 image::readmeImages/h2-console-login.jpg[]

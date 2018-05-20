@@ -1,7 +1,9 @@
 package com.pcalouche.spat.restservices;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
+import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import com.pcalouche.spat.restservices.config.ModelMapperConfig;
 import com.pcalouche.spat.restservices.config.SecurityConfig;
@@ -20,9 +22,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -45,6 +45,8 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     protected JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
     protected UserService userService;
+    @MockBean
+    protected UserRepository userRepository;
     private String validUserToken;
     private String validAdminToken;
 
@@ -69,33 +71,39 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     @Before
     public void setup() {
         // Setup some mocks for the user service can be used by other tests
-        User activeUser = new User(1L, "activeUser", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(new Role(1L, "ROLE_USER"));
+
+        Set<Role> adminRoles = new HashSet<>(userRoles);
+        adminRoles.add(new Role(2L, "ROLE_ADMIN"));
+
+        User activeUser = new User(1L, "activeUser", userRoles);
         activeUser.setPassword(ENCODED_PASSWORD);
-        given(userService.getByUsername(activeUser.getUsername())).willReturn(activeUser);
+        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(activeUser);
 
-        User activeAdmin = new User(2L, "activeAdmin", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
+        User activeAdmin = new User(2L, "activeAdmin", adminRoles);
         activeAdmin.setPassword(ENCODED_PASSWORD);
-        given(userService.getByUsername(activeAdmin.getUsername())).willReturn(activeAdmin);
+        given(userRepository.findByUsername(activeAdmin.getUsername())).willReturn(activeAdmin);
 
-        User expiredUser = new User(3L, "expiredUser", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
+        User expiredUser = new User(3L, "expiredUser", adminRoles);
         expiredUser.setPassword(ENCODED_PASSWORD);
         expiredUser.setAccountNonExpired(false);
-        given(userService.getByUsername(expiredUser.getUsername())).willReturn(expiredUser);
+        given(userRepository.findByUsername(expiredUser.getUsername())).willReturn(expiredUser);
 
-        User lockedUser = new User(4L, "lockedUser", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
+        User lockedUser = new User(4L, "lockedUser", adminRoles);
         lockedUser.setPassword(ENCODED_PASSWORD);
         lockedUser.setAccountNonLocked(false);
-        given(userService.getByUsername(lockedUser.getUsername())).willReturn(lockedUser);
+        given(userRepository.findByUsername(lockedUser.getUsername())).willReturn(lockedUser);
 
-        User credentialsExpiredUser = new User(5L, "credentialsExpiredUser", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
+        User credentialsExpiredUser = new User(5L, "credentialsExpiredUser", adminRoles);
         credentialsExpiredUser.setPassword(ENCODED_PASSWORD);
         credentialsExpiredUser.setCredentialsNonExpired(false);
-        given(userService.getByUsername(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
+        given(userRepository.findByUsername(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
 
-        User disabledUser = new User(6L, "disabledUser", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
+        User disabledUser = new User(6L, "disabledUser", adminRoles);
         disabledUser.setPassword(ENCODED_PASSWORD);
         disabledUser.setEnabled(false);
-        given(userService.getByUsername(disabledUser.getUsername())).willReturn(disabledUser);
+        given(userRepository.findByUsername(disabledUser.getUsername())).willReturn(disabledUser);
 
         // Mock the logger interceptor
         given(loggerInterceptor.preHandle(any(), any(), any())).willReturn(true);

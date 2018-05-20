@@ -1,22 +1,16 @@
-package com.pcalouche.spat.restservices.api.entity;
+package com.pcalouche.spat.restservices.api.dto;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name = "teams")
-public class Team implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RoleDto {
     private Long id;
     private String name;
 
-    public Team() {
+    public RoleDto() {
+
     }
 
-    public Team(Long id, String name) {
+    public RoleDto(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -45,8 +39,8 @@ public class Team implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Team team = (Team) o;
-        return Objects.equals(name, team.name);
+        RoleDto roleDto = (RoleDto) o;
+        return Objects.equals(name, roleDto.name);
     }
 
     @Override

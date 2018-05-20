@@ -3,26 +3,38 @@ package com.pcalouche.spat.restservices.api.entity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.List;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-public class User implements UserDetails {
+@Entity
+@Table(name = "users")
+public class User implements UserDetails, Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
     private boolean enabled = true;
-    private List<SimpleGrantedAuthority> authorities;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+    @Transient
+    private Set<SimpleGrantedAuthority> authorities;
 
     public User() {
     }
 
-    public User(Long id, String username, List<SimpleGrantedAuthority> authorities) {
+    public User(Long id, String username, Set<Role> roles) {
         this.id = id;
         this.username = username;
-        this.authorities = authorities;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -87,13 +99,25 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
-    @Override
-    public List<SimpleGrantedAuthority> getAuthorities() {
-        return authorities;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setAuthorities(List<SimpleGrantedAuthority> authorities) {
-        this.authorities = authorities;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public Set<SimpleGrantedAuthority> getAuthorities() {
+        if (authorities == null) {
+            authorities = new HashSet<>();
+            if (roles != null) {
+                for (Role role : roles) {
+                    authorities.add(new SimpleGrantedAuthority(role.getName()));
+                }
+            }
+        }
+        return authorities;
     }
 
     @Override

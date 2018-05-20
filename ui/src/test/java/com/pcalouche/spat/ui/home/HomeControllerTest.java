@@ -15,14 +15,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = HomeController.class)
 public class HomeControllerTest extends AbstractControllerTest {
 
-  @Test
-  public void homeDefaultPathTest() throws Exception {
-    MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(HomeEndpoints.ROOT);
-    MvcResult mvcResult = mockMvc.perform(request)
-      .andExpect(status().isOk())
-      .andReturn();
+    @Test
+    public void homeDefaultPathTest() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(HomeEndpoints.ROOT);
+        MvcResult mvcResult = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
 
-    ModelAndView mv = mvcResult.getModelAndView();
-    assertThat(mv.getViewName()).isEqualTo("forward:index.html");
-  }
+        ModelAndView mv = mvcResult.getModelAndView();
+        assertThat(mv.getViewName()).isEqualTo("forward:index.html");
+    }
 }

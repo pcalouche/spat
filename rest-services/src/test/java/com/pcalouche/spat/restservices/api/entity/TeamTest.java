@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TeamTest extends AbstractModelMapperTest {
 
     @Test
-    public void testTeamDtoModelMapper() {
+    public void testTeamModelMapper() {
         TeamDto teamDto = new TeamDto(1L, "team1");
         Team team = modelMapper.map(teamDto, Team.class);
 

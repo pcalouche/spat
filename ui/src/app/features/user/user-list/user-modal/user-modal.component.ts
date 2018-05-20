@@ -1,9 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { User } from '@rest-services/api/model/user.model';
-import { UserService } from '@rest-services/api/user/user.service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {User} from '@rest-services/api/model/user.model';
+import {UserService} from '@rest-services/api/user/user.service';
 
 @Component({
   selector: 'app-user-modal',
@@ -20,7 +20,7 @@ export class UserModalComponent implements OnInit {
   errorMessage: string;
   userForm: FormGroup;
 
-  authorityTypes = [{
+  roleTypes = [{
     displayName: 'User',
     value: 'ROLE_USER'
   }, {
@@ -47,15 +47,19 @@ export class UserModalComponent implements OnInit {
         this.actionButtonText = 'Delete User';
         break;
     }
+
     this.userForm = new FormGroup({
       username: new FormControl(this.user.username, [Validators.required]),
       accountExpired: new FormControl(!this.user.accountNonExpired),
       accountLocked: new FormControl(!this.user.accountNonLocked),
       credentialsExpired: new FormControl(!this.user.credentialsNonExpired),
       enabled: new FormControl(this.user.enabled),
-      authorities: new FormArray([
-        new FormControl({value: this.user.authorities.indexOf('ROLE_USER') !== -1, disabled: true}),
-        new FormControl(this.user.authorities.indexOf('ROLE_ADMIN') !== -1)
+      roles: new FormArray([
+        new FormControl({
+          value: this.user.roles.filter(role => role.name === 'ROLE_USER').length === 1,
+          disabled: true
+        }),
+        new FormControl(this.user.roles.filter(role => role.name === 'ROLE_ADMIN').length === 1)
       ])
     });
   }
@@ -68,13 +72,12 @@ export class UserModalComponent implements OnInit {
       case 'edit':
         this.actionButtonText = 'Saving User';
         this.actionInProgress = true;
-        const authorities: string[] = ['ROLE_USER'];
-        for (let i = 0; i < this.userForm.value.authorities.length; i++) {
-          if (this.userForm.value.authorities[i]) {
-            // Offset is because User checkbox is disabled and that value does not get included in the form
-            authorities.push(this.authorityTypes[i + 1].value);
-          }
+        const roles: [{ id: number, name: string }] = [{id: 1, name: 'ROLE_USER'}];
+        // Offset starts at 0 because User checkbox is disabled and that value does not get included in the form
+        if (this.userForm.value.roles[0]) {
+          roles.push({id: 2, name: 'ROLE_ADMIN'});
         }
+
         const userToSave: User = {
           id: this.user.id,
           username: this.userForm.value.username,
@@ -82,7 +85,7 @@ export class UserModalComponent implements OnInit {
           accountNonLocked: !this.userForm.value.accountLocked,
           credentialsNonExpired: !this.userForm.value.credentialsExpired,
           enabled: this.userForm.value.enabled,
-          authorities: authorities
+          roles: roles
         };
 
         this.userService.saveUser(userToSave).subscribe(
@@ -90,7 +93,6 @@ export class UserModalComponent implements OnInit {
             this.activeModal.close(savedUser);
           },
           (response: HttpErrorResponse) => {
-            console.log(response);
             this.actionButtonText = 'Save User';
             this.actionInProgress = false;
             this.hideErrorMessage = false;

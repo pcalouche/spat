@@ -33,7 +33,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
         // Remove timestamp for easier comparision
         expectedObjectNode.remove("timestamp");
 
-        given(userController.getUsers()).willThrow(runtimeException);
+        given(userController.findAll()).willThrow(runtimeException);
 
         MvcResult mvcResult = mockMvc.perform(get(UserEndpoints.ROOT)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))

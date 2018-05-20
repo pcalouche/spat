@@ -1,78 +1,102 @@
 package com.pcalouche.spat.restservices.api.user;
 
 import com.pcalouche.spat.restservices.AbstractServiceTest;
+import com.pcalouche.spat.restservices.api.dto.RoleDto;
+import com.pcalouche.spat.restservices.api.dto.UserDto;
+import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.dao.UserDao;
+import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
 import com.pcalouche.spat.restservices.api.user.service.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.verify;
 
 public class UserServiceTest extends AbstractServiceTest {
     @MockBean
-    private UserDao userDao;
+    private UserRepository userRepository;
     private UserService userService;
 
     @Before
     public void before() {
-        userService = new UserServiceImpl(userDao);
+        userService = new UserServiceImpl(userRepository, modelMapper);
     }
 
     @Test
-    public void testGetUsers() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        List<User> expectedUsers = new ArrayList<>();
-        expectedUsers.add(new User(1L, "pcalouche", authorities));
-        expectedUsers.add(new User(2L, "jsmith", authorities));
+    public void testFindAll() {
+        Set<Role> mockRoles = new HashSet<>();
+        mockRoles.add(new Role(1L, "ROLE_USER"));
 
-        given(userDao.getUsers()).willReturn(expectedUsers);
+        List<User> mockUsers = new ArrayList<>();
+        mockUsers.add(new User(1L, "pcalouche", mockRoles));
+        mockUsers.add(new User(2L, "jsmith", mockRoles));
 
-        assertThat(userService.getUsers()).isEqualTo(expectedUsers);
+        Set<RoleDto> expectedRoles = new HashSet<>();
+        expectedRoles.add(new RoleDto(1L, "ROLE_USER"));
+        List<UserDto> expectedUserDtos = new ArrayList<>();
+        expectedUserDtos.add(new UserDto(1L, "pcalouche", expectedRoles));
+        expectedUserDtos.add(new UserDto(2L, "jsmith", expectedRoles));
 
-        verify(userDao, Mockito.times(1)).getUsers();
+        given(userRepository.findAll()).willReturn(mockUsers);
+
+        assertThat(userService.findAll()).isEqualTo(expectedUserDtos);
+
+        verify(userRepository, Mockito.times(1)).findAll();
     }
 
     @Test
-    public void testGetByUsername() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        User expectedUser = new User(1L, "pcalouche", authorities);
+    public void testFindByUsername() {
+        Set<Role> mockRoles = new HashSet<>();
+        mockRoles.add(new Role(1L, "ROLE_USER"));
+        User mockUser = new User(1L, "pcalouche", mockRoles);
 
-        given(userDao.getByUsername(expectedUser.getUsername())).willReturn(expectedUser);
+        Set<RoleDto> expectedRoles = new HashSet<>();
+        expectedRoles.add(new RoleDto(1L, "ROLE_USER"));
+        UserDto expectedUserDto = new UserDto(1L, "pcalouche", expectedRoles);
 
-        assertThat(userService.getByUsername(expectedUser.getUsername())).isEqualTo(expectedUser);
+        given(userRepository.findByUsername(mockUser.getUsername())).willReturn(mockUser);
 
-        verify(userDao, Mockito.times(1)).getByUsername(expectedUser.getUsername());
+        assertThat(userService.findByUsername(expectedUserDto.getUsername())).isEqualTo(expectedUserDto);
+
+        verify(userRepository, Mockito.times(1)).findByUsername(mockUser.getUsername());
     }
 
     @Test
-    public void testSaveUser() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        User expectedUser = new User(1L, "pcalouche", authorities);
+    public void testSave() {
+        Set<Role> mockRoles = new HashSet<>();
+        mockRoles.add(new Role(1L, "ROLE_USER"));
+        User mockUser = new User(1L, "pcalouche", mockRoles);
 
-        given(userDao.saveUser(expectedUser)).willReturn(expectedUser);
+        Set<RoleDto> expectedRoles = new HashSet<>();
+        expectedRoles.add(new RoleDto(1L, "ROLE_USER"));
+        UserDto expectedUserDto = new UserDto(1L, "pcalouche", expectedRoles);
 
-        assertThat(userService.saveUser(expectedUser)).isEqualTo(expectedUser);
+        given(userRepository.save(mockUser)).willReturn(mockUser);
 
-        verify(userDao, Mockito.times(1)).saveUser(expectedUser);
+        assertThat(userService.save(expectedUserDto)).isEqualTo(expectedUserDto);
+
+        verify(userRepository, Mockito.times(1)).save(mockUser);
     }
 
     @Test
-    public void testDeleteUser() {
-        given(userDao.deleteUser(1L)).willReturn(true);
+    public void testDeleteById() {
+        willAnswer((Answer<Void>) invocationOnMock -> null).given(userRepository).deleteById(1L);
 
-        assertThat(userService.deleteUser(1L)).isTrue();
+        Throwable throwable = catchThrowable(() -> userService.deleteById(1L));
+
+        assertThat(throwable).isNull();
     }
 }

@@ -3,20 +3,23 @@ package com.pcalouche.spat.restservices.api.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "teams")
-public class Team implements Serializable {
-
+@Table(name = "roles")
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String name;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
-    public Team() {
+    public Role() {
     }
 
-    public Team(Long id, String name) {
+    public Role(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -37,6 +40,19 @@ public class Team implements Serializable {
         this.name = name;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -45,8 +61,8 @@ public class Team implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Team team = (Team) o;
-        return Objects.equals(name, team.name);
+        Role role = (Role) o;
+        return Objects.equals(name, role.name);
     }
 
     @Override

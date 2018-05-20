@@ -7,7 +7,7 @@
     <parent>
         <artifactId>spat</artifactId>
         <groupId>com.pcalouche</groupId>
-        <version>3.0</version>
+        <version>3.1</version>
     </parent>
 
     <groupId>com.pcalouche.spat</groupId>

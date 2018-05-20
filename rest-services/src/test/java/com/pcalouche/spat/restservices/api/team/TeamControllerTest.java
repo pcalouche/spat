@@ -2,12 +2,12 @@ package com.pcalouche.spat.restservices.api.team;
 
 import com.pcalouche.spat.restservices.AbstractControllerTest;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
-import com.pcalouche.spat.restservices.api.entity.Team;
 import com.pcalouche.spat.restservices.api.team.controller.TeamController;
 import com.pcalouche.spat.restservices.api.team.controller.TeamEndpoints;
 import com.pcalouche.spat.restservices.api.team.service.TeamService;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -29,31 +30,26 @@ public class TeamControllerTest extends AbstractControllerTest {
     private TeamService teamService;
 
     @Test
-    public void testGetTeams() throws Exception {
-        List<Team> expectedTeams = new ArrayList<>();
-        expectedTeams.add(new Team(1L, "Team1"));
-        expectedTeams.add(new Team(2L, "Team2"));
-
+    public void testFindAll() throws Exception {
         List<TeamDto> expectedTeamDtos = new ArrayList<>();
         expectedTeamDtos.add(new TeamDto(1L, "Team1"));
         expectedTeamDtos.add(new TeamDto(2L, "Team2"));
 
-        given(teamService.getTeams()).willReturn(expectedTeams);
+        given(teamService.findAll()).willReturn(expectedTeamDtos);
 
         mockMvc.perform(get(TeamEndpoints.ROOT)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedTeamDtos)));
 
-        verify(teamService, Mockito.times(1)).getTeams();
+        verify(teamService, Mockito.times(1)).findAll();
     }
 
     @Test
-    public void testSaveTeam() throws Exception {
-        Team expectedTeam = new Team(1L, "Team1");
+    public void testSave() throws Exception {
         TeamDto expectedTeamDto = new TeamDto(1L, "Team1");
 
-        given(teamService.saveTeam(expectedTeam)).willReturn(expectedTeam);
+        given(teamService.save(expectedTeamDto)).willReturn(expectedTeamDto);
 
         MockHttpServletRequestBuilder request = post(TeamEndpoints.ROOT)
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
@@ -64,15 +60,14 @@ public class TeamControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedTeamDto)));
 
-        verify(teamService, Mockito.times(1)).saveTeam(expectedTeam);
+        verify(teamService, Mockito.times(1)).save(expectedTeamDto);
     }
 
     @Test
-    public void testSaveTeamRequiresAdminRole() throws Exception {
-        Team expectedTeam = new Team(1L, "Team1");
+    public void testSaveRequiresAdminRole() throws Exception {
         TeamDto expectedTeamDto = new TeamDto(1L, "Team1");
 
-        given(teamService.saveTeam(expectedTeam)).willReturn(expectedTeam);
+        given(teamService.save(expectedTeamDto)).willReturn(expectedTeamDto);
 
         MockHttpServletRequestBuilder request = post(TeamEndpoints.ROOT)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
@@ -85,32 +80,32 @@ public class TeamControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testDeleteTeam() throws Exception {
-        given(teamService.deleteTeam(1L)).willReturn(true);
+    public void testDelete() throws Exception {
+        willAnswer((Answer<Void>) invocationOnMock -> null).given(teamService).deleteById(1L);
 
         mockMvc.perform(delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(Boolean.TRUE.toString()));
+                .andExpect(content().string(""));
 
-        verify(teamService, Mockito.times(1)).deleteTeam(1L);
+        verify(teamService, Mockito.times(1)).deleteById(1L);
     }
 
     @Test
-    public void testDeleteTeamNotFound() throws Exception {
-        given(teamService.deleteTeam(1L)).willReturn(false);
+    public void testDeleteByIdNotFound() throws Exception {
+        willAnswer((Answer<Void>) invocationOnMock -> null).given(teamService).deleteById(1L);
 
         mockMvc.perform(delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(Boolean.FALSE.toString()));
+                .andExpect(content().string(""));
 
-        verify(teamService, Mockito.times(1)).deleteTeam(1L);
+        verify(teamService, Mockito.times(1)).deleteById(1L);
     }
 
     @Test
-    public void testDeleteTeamRequireAdminRole() throws Exception {
-        given(teamService.deleteTeam(1L)).willReturn(true);
+    public void testDeleteByIdRequiresAdminRole() throws Exception {
+        willAnswer((Answer<Void>) invocationOnMock -> null).given(teamService).deleteById(1L);
 
         mockMvc.perform(delete(String.format("%s/%d", TeamEndpoints.ROOT, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))

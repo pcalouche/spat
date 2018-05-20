@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.service.UserService;
+import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
@@ -12,15 +12,17 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationProvider(UserService userService) {
-        this.userService = userService;
+    public JwtAuthenticationProvider(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -36,16 +38,22 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         // When a refresh token happens double check the account status and the authorities
         // with what is in the database to ensure the account is still active.
-        List<SimpleGrantedAuthority> simpleGrantedAuthorities;
+        Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if ("refreshToken".equals(authentication.getDetails())) {
-            User user = userService.getByUsername(subject);
+            User user = userRepository.findByUsername(subject);
+            if (user != null) {
+                SecurityUtils.validateUserAccountStatus(user);
+            } else {
+                throw new BadCredentialsException(String.format("Bad credentials for username: %s", subject));
+            }
+
             simpleGrantedAuthorities = user.getAuthorities();
         } else {
             @SuppressWarnings("unchecked")
-            List<String> authorities = claims.get(SecurityUtils.CLAIMS_AUTHORITIES_KEY, List.class);
+            Set<String> authorities = new HashSet<>(claims.get(SecurityUtils.CLAIMS_AUTHORITIES_KEY, List.class));
             simpleGrantedAuthorities = authorities.stream()
                     .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
         }
 
         // Authentication was good, so return a good authentication without credentials so the request can continue
