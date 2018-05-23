@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
  * {
  * 	"formType": "formA",
  * 	"formData": {
- * 		"field1": "field1Value",
- * 		"comments": [
- *                        {
- * 				"id": 1,
- * 				"text": "comment 1 text"
- *            },
- *            {
- * 				"id": 2,
- * 				"text": "comment 2 text"
- *            }
- * 		]
- *    }
+ * 	  "field1": "field1Value",
+ * 	  "comments": [
+ *      {
+ * 		  "id": 1,
+ * 		  "text": "comment 1 text"
+ *      },
+ *      {
+ * 		  "id": 2,
+ * 		  "text": "comment 2 text"
+ *      }
+ * 	  ]
+ *   }
  * }
  */
 @RestController
