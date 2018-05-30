@@ -1,11 +1,10 @@
-package com.pcalouche.spat.restservices.api.security.provider;
+package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
-import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
@@ -136,13 +135,13 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testSupportValidationAuthenticationClass() {
+    public void testSupportValidAuthenticationClass() {
         assertThat(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class))
                 .isTrue();
     }
 
     @Test
-    public void testSupportInValidationAuthenticationClass() {
+    public void testSupportInvalidAuthenticationClass() {
         assertThat(jwtAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class))
                 .isFalse();
     }

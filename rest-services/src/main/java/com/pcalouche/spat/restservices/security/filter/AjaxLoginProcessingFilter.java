@@ -45,7 +45,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
             throws IOException {
         AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authResult);
         response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getWriter(), authResponseDto);
     }
 

@@ -5,7 +5,6 @@ import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
 import com.pcalouche.spat.restservices.api.user.service.UserService;
-import com.pcalouche.spat.restservices.config.ModelMapperConfig;
 import com.pcalouche.spat.restservices.config.SecurityConfig;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
@@ -14,7 +13,6 @@ import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvid
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,16 +25,14 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@Import({ModelMapperConfig.class, SecurityConfig.class})
-@ComponentScan(basePackages = {"com.pcalouche.spat.restservices.security.provider"})
+@Import({SecurityConfig.class})
+@ComponentScan(basePackages = {"com.pcalouche.spat.restservices.security"})
 public abstract class AbstractControllerTest extends AbstractUnitTest {
     private final static String ENCODED_PASSWORD = "$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi";
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired
     protected MockMvc mockMvc;
-    @Autowired
-    protected ModelMapper modelMapper;
     @MockBean
     protected LoggerInterceptor loggerInterceptor;
     @Autowired

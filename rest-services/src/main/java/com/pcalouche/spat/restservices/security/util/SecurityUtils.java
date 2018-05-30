@@ -49,7 +49,11 @@ public class SecurityUtils {
     }
 
     public static String getTokenFromRequest(HttpServletRequest request) {
-        return getTokenFromHeaderValue(request.getHeader(HttpHeaders.AUTHORIZATION));
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (token != null && token.startsWith(AUTH_HEADER_BEARER_PREFIX)) {
+            token = token.replace(AUTH_HEADER_BEARER_PREFIX, "");
+        }
+        return token;
     }
 
     public static Claims getClaimsFromToken(String token) {
@@ -71,7 +75,6 @@ public class SecurityUtils {
         }
     }
 
-
     public static AuthResponseDto createAuthResponse(Authentication authentication) {
         Date now = new Date();
         String tokenId = UUID.randomUUID().toString();
@@ -84,16 +87,9 @@ public class SecurityUtils {
         );
     }
 
-    private static String getTokenFromHeaderValue(String headerValue) {
-        String token = null;
-        if (headerValue != null && headerValue.startsWith(AUTH_HEADER_BEARER_PREFIX)) {
-            token = headerValue.replace(AUTH_HEADER_BEARER_PREFIX, "");
-        }
-        return token;
-    }
-
     private static String createToken(Authentication authentication, String tokenId, Date now, Date expiration) {
         Claims claims = Jwts.claims();
+        claims.setIssuer("com.pcalouche.spat");
         claims.setId(tokenId);
         claims.setSubject(authentication.getName());
         claims.setIssuedAt(now);

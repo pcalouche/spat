@@ -1,9 +1,8 @@
-package com.pcalouche.spat.restservices.api.security.util;
+package com.pcalouche.spat.restservices.security.util;
 
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
@@ -115,7 +114,6 @@ public class SecurityUtilsTest extends AbstractUnitTest {
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))
                 .isInstanceOf(DisabledException.class)
                 .hasMessage(String.format("Disabled account for username: %s", user.getUsername()));
-
     }
 
     @Test
