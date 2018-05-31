@@ -137,5 +137,8 @@ image::readmeImages/h2-console-login.jpg[]
 image::readmeImages/h2-console-main.jpg[]
 
 == Swagger Documentation
-Swagger documentation can be viewed with the rest-services application is running
+Swagger documentation can be viewed when the rest-services application is running by going to http://localhost:10000/spat/rest-services/swagger-ui.html
+
+.Swager UI
+image::readmeImages/swagger-ui.jpg[]
 
