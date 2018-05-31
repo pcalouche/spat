@@ -45,7 +45,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
         assertThat(actualObjectNode.get("timestamp"))
                 .isNotNull();
 
-        // Remove timestamp for easier comparision
+        // Remove timestamp for easier comparision since it will be dynamic anyways
         actualObjectNode.remove("timestamp");
 
         assertThat(actualObjectNode).isEqualTo(expectedObjectNode);

@@ -21,7 +21,7 @@ made to do either of those things as a non-admin user.
 
 Some of my goals in this project were to:
 
-. Create an organized and scalable project structure for Spring Boot application and an Angular CLI application
+. Create an organized and scalable project structure for a Spring Boot application and an Angular CLI application
 . Have a clear developer workflow
 . Have a clear build path to production
 . Has web security consisting of a form login, JSON Web Token, and user roles
@@ -29,6 +29,7 @@ Some of my goals in this project were to:
 . Back end unit testing with the ability to separate unit tests from longer running integration tests during the build process
 . Demonstrates multiple types of HTTP requests (GET, POST, DELETE)
 . Demonstrates multiple types of database operations (SELECT, UPDATE, DELETE)
+. Automatic API documentation (SpringFox Swagger)
 . Front end unit testing (Still a work in progress)
 
 == Required Software
@@ -45,6 +46,7 @@ Some of my goals in this project were to:
 * Spring Security making use of JSON Web Tokens (Learn more at https://jwt.io/[jwt.io])
 * H2 in memory database (This can easily be swapped out for another datasource)
 * Spring Data JPA (This can easily be swapped out for another database access method (e.g. JDBC, JOOQ, etc.))
+* SpringFox Swagger for API documentation
 * JUnit 4 (I have plans to upgrade the tests to use JUnit 5)
 * Angular 5/Angular CLI 1.7.3
 * Bootstrap 4.0 for UI styling
@@ -133,4 +135,10 @@ image::readmeImages/h2-console-login.jpg[]
 
 .H2 Console Main Screen
 image::readmeImages/h2-console-main.jpg[]
+
+== Swagger Documentation
+Swagger documentation can be viewed when the rest-services application is running by going to http://localhost:10000/spat/rest-services/swagger-ui.html
+
+.Swager UI
+image::readmeImages/swagger-ui.jpg[]
 
