@@ -23,6 +23,18 @@ import java.util.stream.Collectors;
 
 public class SecurityUtils {
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+    public static final String[] WHITELISTED_ENDPOINTS = {
+            // swagger endpoints
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            // status endpoint
+            "/status"
+    };
     public static final String AUTHENTICATED_PATH = String.format("%s/**", BaseEndpoints.API_ROOT);
     public static final String TOKEN_ENDPOINT = String.format("%s/auth/token", BaseEndpoints.API_ROOT);
     public static final String REFRESH_TOKEN_ENDPOINT = String.format("%s/auth/refresh-token", BaseEndpoints.API_ROOT);

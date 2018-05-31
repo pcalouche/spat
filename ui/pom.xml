@@ -12,7 +12,7 @@
     <parent>
         <artifactId>spat</artifactId>
         <groupId>com.pcalouche</groupId>
-        <version>3.1</version>
+        <version>3.2</version>
     </parent>
 
     <properties>
@@ -21,10 +21,11 @@
 
     <dependencies>
         <!--Application Dependencies Below-->
+        <!--SPAT Shared Library-->
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.1</version>
+            <version>3.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -32,13 +33,15 @@
         </dependency>
 
         <!--Provided, Runtime, and Optional Dependencies Below-->
+        <!--SPAT Shared Test Library-->
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.1</version>
+            <version>3.2</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <!--Spring Boot Runtime Dependencies-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -51,6 +54,7 @@
         </dependency>
 
         <!--Test Dependencies Below-->
+        <!--Spring Boot Test Dependencies-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

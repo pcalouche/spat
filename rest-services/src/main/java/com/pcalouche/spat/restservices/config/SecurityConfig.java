@@ -56,10 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // Sessions are stateless with JWT based authentication
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                // Setup which endpoints that do not require authentication
+                // Setup which endpoints are authorized and which are not
                 .and()
                 .authorizeRequests()
-                // Setup which endpoints that do require authentication
+                .antMatchers(SecurityUtils.WHITELISTED_ENDPOINTS).permitAll()
                 .antMatchers(SecurityUtils.AUTHENTICATED_PATH).authenticated()
                 // Setup filters for the endpoints
                 .and()

@@ -13,19 +13,33 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;
 
     public JwtAuthenticationProcessingFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
-        super(new AntPathRequestMatcher(SecurityUtils.AUTHENTICATED_PATH));
+        // This matcher includes all authenticated paths that require a JWT token while excluding
+        // whitelisted URLS like Swagger URLs
+        super(new AndRequestMatcher(
+                new AntPathRequestMatcher(SecurityUtils.AUTHENTICATED_PATH),
+                new NegatedRequestMatcher(new OrRequestMatcher(
+                        Arrays.stream(SecurityUtils.WHITELISTED_ENDPOINTS)
+                                .map(AntPathRequestMatcher::new)
+                                .collect(Collectors.toList()))
+                ))
+        );
         setAuthenticationManager(authenticationManager);
         this.objectMapper = objectMapper;
     }
