@@ -12,7 +12,7 @@
     <parent>
         <artifactId>spat</artifactId>
         <groupId>com.pcalouche</groupId>
-        <version>3.2</version>
+        <version>3.3</version>
     </parent>
 
     <properties>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.2</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.2</version>
+            <version>3.3</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

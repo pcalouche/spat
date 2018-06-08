@@ -12,7 +12,7 @@
     <parent>
         <artifactId>spat</artifactId>
         <groupId>com.pcalouche</groupId>
-        <version>3.2</version>
+        <version>3.3</version>
     </parent>
 
     <properties>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.2</version>
+            <version>3.3</version>
         </dependency>
         <!--Spring Boot Dependencies-->
         <dependency>
@@ -87,6 +87,12 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--Lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!--H2 Database-->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -99,7 +105,7 @@
         <dependency>
             <groupId>com.pcalouche.spat</groupId>
             <artifactId>shared</artifactId>
-            <version>3.2</version>
+            <version>3.3</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
