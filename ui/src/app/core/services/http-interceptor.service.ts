@@ -1,8 +1,8 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { UserSessionService } from '@core/services/user-session.service';
-import { RestServiceHelper } from '@rest-services/api/rest-service-helper';
-import { Observable } from 'rxjs/Observable';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable}                                           from '@angular/core';
+import {UserSessionService}                                   from '@core/services/user-session.service';
+import {RestServiceHelper}                                    from '@rest-services/api/rest-service-helper';
+import {Observable}                                           from 'rxjs';
 
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {

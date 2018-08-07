@@ -1,9 +1,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
+    "module": "es2015",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -15,25 +17,24 @@
       "es2017",
       "dom"
     ],
-    "baseUrl": "src",
     "paths": {
       "@environments/*": [
-        "environments/*"
+        "src/environments/*"
       ],
       "@app/*": [
-        "app/*"
+        "src/app/*"
       ],
       "@core/*": [
-        "app/core/*"
+        "src/app/core/*"
       ],
       "@shared/*": [
-        "app/shared/*"
+        "src/app/shared/*"
       ],
       "@features/*": [
-        "app/features/*"
+        "src/app/features/*"
       ],
       "@rest-services/*": [
-        "app/rest-services/*"
+        "src/app/rest-services/*"
       ]
     }
   }

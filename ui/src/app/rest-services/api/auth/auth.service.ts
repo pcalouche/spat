@@ -1,9 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { AuthResponse } from '@rest-services/api/model/auth-response.model';
-import { RestServiceHelper } from '@rest-services/api/rest-service-helper';
-import { Observable } from 'rxjs/Observable';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Injectable}              from '@angular/core';
+import {FormGroup}               from '@angular/forms';
+import {AuthResponse}            from '@rest-services/api/model/auth-response.model';
+import {RestServiceHelper}       from '@rest-services/api/rest-service-helper';
+import {Observable}              from 'rxjs';
 
 @Injectable()
 export class AuthService {

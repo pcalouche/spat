@@ -1,8 +1,7 @@
-import {Injectable} from '@angular/core';
-import {ClientUser} from '@core/model/ClientUser';
-import {AuthResponse} from '@rest-services/api/model/auth-response.model';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import {Injectable}                  from '@angular/core';
+import {ClientUser}                  from '@core/model/ClientUser';
+import {AuthResponse}                from '@rest-services/api/model/auth-response.model';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable()
 export class UserSessionService {

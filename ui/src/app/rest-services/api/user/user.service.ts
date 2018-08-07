@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { User } from '@rest-services/api/model/user.model';
-import { RestServiceHelper } from '@rest-services/api/rest-service-helper';
-import { Observable } from 'rxjs/Observable';
+import {HttpClient}        from '@angular/common/http';
+import {Injectable}        from '@angular/core';
+import {User}              from '@rest-services/api/model/user.model';
+import {RestServiceHelper} from '@rest-services/api/rest-service-helper';
+import {Observable}        from 'rxjs';
 
 @Injectable()
 export class UserService {

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
-import { UserSessionService } from '@core/services/user-session.service';
-import { Observable } from 'rxjs/Observable';
+import {Injectable}                                                                         from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot} from '@angular/router';
+import {UserSessionService}                                                                 from '@core/services/user-session.service';
+import {Observable}                                                                         from 'rxjs';
 
 @Injectable()
 export class RouteGuardService implements CanActivate, CanActivateChild {
