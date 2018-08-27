@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

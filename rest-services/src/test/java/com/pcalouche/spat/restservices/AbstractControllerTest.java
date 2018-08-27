@@ -3,8 +3,8 @@ package com.pcalouche.spat.restservices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
-import com.pcalouche.spat.restservices.api.user.service.UserService;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
+import com.pcalouche.spat.restservices.api.service.UserService;
 import com.pcalouche.spat.restservices.config.SecurityConfig;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
@@ -66,39 +66,72 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
 
     @Before
     public void setup() {
+        // TODO remove user repository linkage
+
         // Setup some mocks for the user service can be used by other tests
         Set<Role> userRoles = new HashSet<>();
-        userRoles.add(new Role(1L, "ROLE_USER"));
+        userRoles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
 
         Set<Role> adminRoles = new HashSet<>(userRoles);
-        adminRoles.add(new Role(2L, "ROLE_ADMIN"));
+        adminRoles.add(Role.builder()
+                .id(2L)
+                .name("ROLE_ADMIN")
+                .build());
 
-        User activeUser = new User(1L, "activeUser", userRoles);
-        activeUser.setPassword(ENCODED_PASSWORD);
+        User activeUser = User.builder()
+                .id(1L)
+                .username("activeUser")
+                .password(ENCODED_PASSWORD)
+                .roles(userRoles)
+                .build();
         given(userRepository.findByUsername(activeUser.getUsername())).willReturn(activeUser);
 
-        User activeAdmin = new User(2L, "activeAdmin", adminRoles);
-        activeAdmin.setPassword(ENCODED_PASSWORD);
+        User activeAdmin = User.builder()
+                .id(2L)
+                .username("activeAdmin")
+                .password(ENCODED_PASSWORD)
+                .roles(adminRoles)
+                .build();
         given(userRepository.findByUsername(activeAdmin.getUsername())).willReturn(activeAdmin);
 
-        User expiredUser = new User(3L, "expiredUser", adminRoles);
-        expiredUser.setPassword(ENCODED_PASSWORD);
-        expiredUser.setAccountNonExpired(false);
+        User expiredUser = User.builder()
+                .id(3L)
+                .username("expiredUser")
+                .password(ENCODED_PASSWORD)
+                .accountNonExpired(false)
+                .roles(adminRoles)
+                .build();
         given(userRepository.findByUsername(expiredUser.getUsername())).willReturn(expiredUser);
 
-        User lockedUser = new User(4L, "lockedUser", adminRoles);
-        lockedUser.setPassword(ENCODED_PASSWORD);
+        User lockedUser = User.builder()
+                .id(4L)
+                .username("lockedUser")
+                .password(ENCODED_PASSWORD)
+                .accountNonLocked(false)
+                .roles(adminRoles)
+                .build();
         lockedUser.setAccountNonLocked(false);
         given(userRepository.findByUsername(lockedUser.getUsername())).willReturn(lockedUser);
 
-        User credentialsExpiredUser = new User(5L, "credentialsExpiredUser", adminRoles);
-        credentialsExpiredUser.setPassword(ENCODED_PASSWORD);
-        credentialsExpiredUser.setCredentialsNonExpired(false);
+        User credentialsExpiredUser = User.builder()
+                .id(5L)
+                .username("credentialsExpiredUser")
+                .password(ENCODED_PASSWORD)
+                .credentialsNonExpired(false)
+                .roles(adminRoles)
+                .build();
         given(userRepository.findByUsername(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
 
-        User disabledUser = new User(6L, "disabledUser", adminRoles);
-        disabledUser.setPassword(ENCODED_PASSWORD);
-        disabledUser.setEnabled(false);
+        User disabledUser = User.builder()
+                .id(6L)
+                .username("disabledUser")
+                .password(ENCODED_PASSWORD)
+                .enabled(false)
+                .roles(adminRoles)
+                .build();
         given(userRepository.findByUsername(disabledUser.getUsername())).willReturn(disabledUser);
 
         // Mock the logger interceptor

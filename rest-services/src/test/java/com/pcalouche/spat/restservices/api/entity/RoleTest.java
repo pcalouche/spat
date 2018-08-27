@@ -10,7 +10,11 @@ public class RoleTest extends AbstractModelMapperTest {
 
     @Test
     public void testRoleModelMapper() {
-        RoleDto roleDto = new RoleDto(1L, "ROLE_USER");
+        RoleDto roleDto = RoleDto.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build();
+
         Role role = modelMapper.map(roleDto, Role.class);
 
         assertThat(role.getId()).isEqualTo(1L);

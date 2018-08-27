@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pcalouche.spat.restservices.api.user.controller.UserEndpoints;
+import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
@@ -29,7 +29,8 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
 
     @Test
     public void testAttemptAuthentication() throws Exception {
-        given(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class)).willReturn(true);
+        given(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class)).willCallRealMethod();
+
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("goodToken");
         given(jwtAuthenticationProvider.authenticate(jwtAuthenticationToken)).willReturn(
                 new JwtAuthenticationToken("activeUser", null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
@@ -38,7 +39,7 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
         AuthenticationManager authenticationManager = new ProviderManager(Collections.singletonList(jwtAuthenticationProvider));
         JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
 
-        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), UserEndpoints.ROOT);
+        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), ApiEndpoints.USER);
         request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodToken");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -56,7 +57,8 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
 
     @Test
     public void testAttemptAuthenticationForRefreshTokenEndpoint() throws Exception {
-        given(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class)).willReturn(true);
+        given(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class)).willCallRealMethod();
+
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("goodToken");
         jwtAuthenticationToken.setDetails("refreshToken");
         given(jwtAuthenticationProvider.authenticate(jwtAuthenticationToken)).willReturn(

@@ -10,7 +10,11 @@ public class TeamTest extends AbstractModelMapperTest {
 
     @Test
     public void testTeamModelMapper() {
-        TeamDto teamDto = new TeamDto(1L, "team1");
+        TeamDto teamDto = TeamDto.builder()
+                .id(1L)
+                .name("team1")
+                .build();
+
         Team team = modelMapper.map(teamDto, Team.class);
 
         assertThat(team.getId()).isEqualTo(1L);

@@ -1,5 +1,6 @@
 # Additional ignores in addition to gitignore creation tool
-ui/src/main/resources/public
+ui-services/src/main/resources/public/angular
+ui-services/src/main/resources/public/react
 # End of additional ignores in addition to gitignore creation tool
 
 # Created by https://www.gitignore.io/api/git,node,linux,macos,eclipse,windows,angular,intellij,visualstudiocode,maven

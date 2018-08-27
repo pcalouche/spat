@@ -29,7 +29,8 @@ public class AjaxLoginProcessingFilterTest extends AbstractUnitTest {
 
     @Test
     public void testAttemptAuthentication() {
-        given(ajaxLoginAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class)).willReturn(true);
+        given(ajaxLoginAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class)).willCallRealMethod();
+
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 "activeUser",
                 "password"

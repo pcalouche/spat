@@ -1,5 +1,6 @@
 package com.pcalouche.spat.restservices.api.entity;
 
+import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +12,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,94 +24,21 @@ public class User implements UserDetails, Serializable {
     @Column(unique = true)
     private String username;
     private String password;
+    @Builder.Default
     private boolean accountNonExpired = true;
+    @Builder.Default
     private boolean accountNonLocked = true;
+    @Builder.Default
     private boolean credentialsNonExpired = true;
+    @Builder.Default
     private boolean enabled = true;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
     @Transient
+    @Setter(AccessLevel.NONE)
     private Set<SimpleGrantedAuthority> authorities;
-
-    public User() {
-    }
-
-    public User(Long id, String username, Set<Role> roles) {
-        this.id = id;
-        this.username = username;
-        this.roles = roles;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public Set<SimpleGrantedAuthority> getAuthorities() {
@@ -125,20 +58,15 @@ public class User implements UserDetails, Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof User)) {
             return false;
         }
-        User user = (User) o;
-        return accountNonExpired == user.accountNonExpired &&
-                accountNonLocked == user.accountNonLocked &&
-                credentialsNonExpired == user.credentialsNonExpired &&
-                enabled == user.enabled &&
-                Objects.equals(username, user.username) &&
-                Objects.equals(authorities, user.authorities);
+        User castedObj = (User) o;
+        return Objects.equals(username, castedObj.getUsername());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, authorities);
+        return Objects.hash(username);
     }
 }

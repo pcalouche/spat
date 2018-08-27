@@ -3,7 +3,7 @@ package com.pcalouche.spat.restservices.security.provider;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.shared.AbstractUnitTest;
@@ -38,8 +38,15 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     public void before() {
         Mockito.reset(userRepository);
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        activeUser = new User(1L, "activeUser", roles);
+        roles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        activeUser = User.builder()
+                .id(1L)
+                .username("activeUser")
+                .roles(roles)
+                .build();
 
         activeUser.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
 

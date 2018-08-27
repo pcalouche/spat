@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.pcalouche.spat</groupId>
+    <artifactId>ui-services</artifactId>
+    <packaging>${packaging}</packaging>
+    <name>SPAT UI Services</name>
+
+    <parent>
+        <artifactId>spat</artifactId>
+        <groupId>com.pcalouche</groupId>
+        <version>3.3</version>
+    </parent>
+
+    <properties>
+        <skipUiBuild>false</skipUiBuild>
+    </properties>
+
+    <dependencies>
+        <!--Application Dependencies Below-->
+        <!--SPAT Shared Library-->
+        <dependency>
+            <groupId>com.pcalouche.spat</groupId>
+            <artifactId>shared</artifactId>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--Provided, Runtime, and Optional Dependencies Below-->
+        <!--SPAT Shared Test Library-->
+        <dependency>
+            <groupId>com.pcalouche.spat</groupId>
+            <artifactId>shared</artifactId>
+            <version>3.3</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <!--Spring Boot Runtime Dependencies-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--Test Dependencies Below-->
+        <!--Spring Boot Test Dependencies-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>ui-services</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <!--Run npm install to ensure dependencies are the latest.  The npm cache will be used if the npm dependency already has been installed.-->
+                    <execution>
+                        <id>exec-npm-install</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <skip>${skipUiBuild}</skip>
+                            <executable>npm</executable>
+                            <workingDirectory>../angular-ui</workingDirectory>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <!--Run build script from package.json.  The Angular CLI output directory is under src/main/resources/static so they can be served by Spring Boot -->
+                    <execution>
+                        <id>exec-npm-build</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipUiBuild}</skip>
+                            <executable>npm</executable>
+                            <workingDirectory>../angular-ui</workingDirectory>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <groups>com.pcalouche.spat.shared.UnitTestCategory</groups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Tests.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/Abstract*.java</exclude>
+                    </excludes>
+                    <groups>com.pcalouche.spat.shared.IntegrationTestCategory</groups>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -71,8 +71,16 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusAccountExpiredException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "expiredUser", roles);
+        roles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .id(1L)
+                .username("expiredUser")
+                .accountNonExpired(false)
+                .roles(roles)
+                .build();
         user.setAccountNonExpired(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))
@@ -83,8 +91,16 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusAccountLockedException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "lockedUser", roles);
+        roles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .id(1L)
+                .username("lockedUser")
+                .accountNonLocked(false)
+                .roles(roles)
+                .build();
         user.setAccountNonLocked(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))
@@ -95,8 +111,16 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusCredentialsException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "credentialsExpiredUser", roles);
+        roles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .id(1L)
+                .username("credentialsExpiredUser")
+                .credentialsNonExpired(false)
+                .roles(roles)
+                .build();
         user.setCredentialsNonExpired(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))
@@ -107,8 +131,16 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusDisabledException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "disabledUser", roles);
+        roles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .id(1L)
+                .username("disabledUser")
+                .enabled(false)
+                .roles(roles)
+                .build();
         user.setEnabled(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))

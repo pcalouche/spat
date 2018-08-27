@@ -2,8 +2,7 @@ package com.pcalouche.spat.restservices.api;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.restservices.AbstractControllerTest;
-import com.pcalouche.spat.restservices.api.user.controller.UserController;
-import com.pcalouche.spat.restservices.api.user.controller.UserEndpoints;
+import com.pcalouche.spat.restservices.api.controller.UserController;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
 import org.junit.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,7 +26,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
     public void testException() throws Exception {
         RuntimeException runtimeException = new RuntimeException("some random runtime exception");
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI(UserEndpoints.ROOT);
+        request.setRequestURI(ApiEndpoints.USER);
 
         ObjectNode expectedObjectNode = (ObjectNode) ExceptionUtils.buildJsonErrorObject(runtimeException, request);
         // Remove timestamp for easier comparision
@@ -35,7 +34,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
 
         given(userController.findAll()).willThrow(runtimeException);
 
-        MvcResult mvcResult = mockMvc.perform(get(UserEndpoints.ROOT)
+        MvcResult mvcResult = mockMvc.perform(get(ApiEndpoints.USER)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()))
                 .andReturn();

@@ -16,27 +16,49 @@ public class UserTest extends AbstractModelMapperTest {
     @Test
     public void testUserDtoModelMapper() {
         Set<RoleDto> roleDtos = new HashSet<>();
-        roleDtos.add(new RoleDto(1L, "ROLE_USER"));
-        roleDtos.add(new RoleDto(1L, "ROLE_ADMIN"));
-        UserDto userDto = new UserDto(1L, "username", roleDtos);
-        userDto.setAccountNonExpired(false);
-        userDto.setEnabled(false);
+        roleDtos.add(RoleDto.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        roleDtos.add(RoleDto.builder()
+                .id(2L)
+                .name("ROLE_ADMIN")
+                .build());
+        UserDto userDto = UserDto.builder()
+                .id(1L)
+                .username("username")
+                .roles(roleDtos)
+                .accountNonExpired(false)
+                .enabled(false)
+                .build();
+
         User user = modelMapper.map(userDto, User.class);
 
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo("username");
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        roles.add(new Role(2L, "ROLE_ADMIN"));
-        assertThat(user.getRoles()).contains(new Role(1L, "ROLE_USER"), new Role(2L, "ROLE_ADMIN"));
+        roles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        roles.add(Role.builder()
+                .id(2L)
+                .name("ROLE_ADMIN")
+                .build());
+        assertThat(user.getRoles()).isEqualTo(roles);
         assertThat(user.getAuthorities()).contains(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
         assertThat(user.isAccountNonExpired()).isFalse();
         assertThat(user.isAccountNonLocked()).isTrue();
         assertThat(user.isCredentialsNonExpired()).isTrue();
         assertThat(user.isEnabled()).isFalse();
 
-        userDto = new UserDto(1L, "username", new HashSet<>());
+        userDto = UserDto.builder()
+                .id(1L)
+                .username("username")
+                .build();
+
         user = modelMapper.map(userDto, User.class);
+
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo("username");
         assertThat(user.getAuthorities()).isEmpty();

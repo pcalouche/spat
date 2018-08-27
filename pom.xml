@@ -16,7 +16,7 @@
     <modules>
         <module>shared</module>
         <module>rest-services</module>
-        <module>ui</module>
+        <module>ui-services</module>
     </modules>
 
     <profiles>

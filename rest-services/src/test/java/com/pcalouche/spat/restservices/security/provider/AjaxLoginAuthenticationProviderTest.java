@@ -2,7 +2,7 @@ package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
@@ -33,9 +33,16 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
         Mockito.reset(userRepository);
 
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User activeUser = new User(1L, "activeUser", roles);
-        activeUser.setPassword("$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi");
+        roles.add(Role.builder()
+                .id(1L)
+                .name("ROLE_USER")
+                .build());
+        User activeUser = User.builder()
+                .id(1L)
+                .username("activeUser")
+                .password("$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi")
+                .roles(roles)
+                .build();
 
         given(userRepository.findByUsername(activeUser.getUsername())).willReturn(activeUser);
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.restservices.api.ClientCode;
+import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class ExceptionUtils {
             List<ObjectError> objectErrors = methodArgumentNotValidException.getBindingResult().getAllErrors();
             HashMap<String, String> errorMap = new HashMap<>();
             objectErrors.forEach(objectError -> errorMap.put(objectError.getCode(), objectError.getDefaultMessage()));
-            errorObjectNode.put("validationMessages", objectMapper.valueToTree(errorMap));
+            errorObjectNode.set("validationMessages", objectMapper.valueToTree(errorMap));
         } else {
             errorObjectNode.put("message", e.getMessage());
         }
@@ -55,7 +56,8 @@ public class ExceptionUtils {
     public static HttpStatus getHttpStatusForException(Exception e) {
         if (e instanceof AuthenticationException || e instanceof JwtException) {
             return HttpStatus.UNAUTHORIZED;
-        } else if (e instanceof AccessDeniedException) {
+        } else if (e instanceof AccessDeniedException ||
+                e instanceof RestResourceForbiddenException) {
             return HttpStatus.FORBIDDEN;
         } else if (e instanceof HttpMessageConversionException ||
                 e instanceof MethodArgumentNotValidException ||
