@@ -6,7 +6,7 @@ import {Observable}        from 'rxjs';
 
 @Injectable()
 export class TeamService {
-  private readonly teamRoot = RestServiceHelper.apiRoot + '/team';
+  private readonly teamRoot = RestServiceHelper.apiRoot + '/teams';
 
   constructor(private http: HttpClient) {
   }

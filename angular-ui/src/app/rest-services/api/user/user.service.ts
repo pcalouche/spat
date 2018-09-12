@@ -6,7 +6,7 @@ import {Observable}        from 'rxjs';
 
 @Injectable()
 export class UserService {
-  private readonly userRoot = RestServiceHelper.apiRoot + '/user';
+  private readonly userRoot = RestServiceHelper.apiRoot + '/users';
 
   constructor(private http: HttpClient) {
   }

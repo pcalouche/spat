@@ -14,7 +14,7 @@ import java.util.List;
 
 @Api(description = "User endpoints")
 @RestController
-@RequestMapping(value = ApiEndpoints.USER)
+@RequestMapping(value = ApiEndpoints.USERS)
 public class UserController extends AbstractSpatController {
     private final UserService userService;
 

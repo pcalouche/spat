@@ -49,7 +49,7 @@ public class UserControllerTest extends AbstractControllerTest {
         given(userService.findAll()).willReturn(expectedUserDtos);
 
 
-        mockMvc.perform(get(ApiEndpoints.USER)
+        mockMvc.perform(get(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedUserDtos)));
@@ -72,7 +72,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         given(userService.findByUsername(expectedUserDto.getUsername())).willReturn(expectedUserDto);
 
-        mockMvc.perform(get(ApiEndpoints.USER + "/" + expectedUserDto.getUsername())
+        mockMvc.perform(get(ApiEndpoints.USERS + "/" + expectedUserDto.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedUserDto)));
@@ -95,7 +95,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         given(userService.findByUsername(expectedUserDto.getUsername())).willReturn(null);
 
-        mockMvc.perform(get(ApiEndpoints.USER + "/" + expectedUserDto.getUsername())
+        mockMvc.perform(get(ApiEndpoints.USERS + "/" + expectedUserDto.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(String.format("User with %s not found", expectedUserDto.getUsername()))));
@@ -118,7 +118,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         given(userService.save(expectedUserDto)).willReturn(expectedUserDto);
 
-        MockHttpServletRequestBuilder request = post(ApiEndpoints.USER)
+        MockHttpServletRequestBuilder request = post(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedUserDto));
@@ -146,7 +146,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         given(userService.save(expectedUserDto)).willReturn(expectedUserDto);
 
-        MockHttpServletRequestBuilder request = post(ApiEndpoints.USER)
+        MockHttpServletRequestBuilder request = post(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expectedUserDto));
@@ -161,7 +161,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDelete() throws Exception {
         willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).deleteById(1L);
 
-        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.USER, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.USERS, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
@@ -173,7 +173,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteByIdNotFound() throws Exception {
         willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).deleteById(1L);
 
-        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.USER, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.USERS, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
@@ -185,7 +185,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteByIdRequiresAdminRole() throws Exception {
         willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).deleteById(1L);
 
-        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.USER, 1L))
+        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.USERS, 1L))
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8));

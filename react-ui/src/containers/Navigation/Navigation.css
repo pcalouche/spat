@@ -1,0 +1,11 @@
+.Navigation ul {
+    list-style: none;
+}
+
+.Navigation a {
+    text-decoration: none;
+}
+
+.Navigation .active-link {
+    font-weight: bold;
+}

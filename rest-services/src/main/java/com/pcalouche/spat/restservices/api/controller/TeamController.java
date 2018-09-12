@@ -13,7 +13,7 @@ import java.util.List;
 
 @Api(description = "Team endpoints")
 @RestController
-@RequestMapping(value = ApiEndpoints.TEAM)
+@RequestMapping(value = ApiEndpoints.TEAMS)
 public class TeamController extends AbstractSpatController {
     private final TeamService teamService;
 

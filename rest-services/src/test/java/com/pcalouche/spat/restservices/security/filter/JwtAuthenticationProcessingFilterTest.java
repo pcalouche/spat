@@ -39,7 +39,7 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
         AuthenticationManager authenticationManager = new ProviderManager(Collections.singletonList(jwtAuthenticationProvider));
         JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
 
-        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), ApiEndpoints.USER);
+        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), ApiEndpoints.USERS);
         request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodToken");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
