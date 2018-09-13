@@ -9,3 +9,7 @@
 .Navigation .active-link {
     font-weight: bold;
 }
+
+.Navigation nav {
+    margin-bottom: 1.5rem;
+}
