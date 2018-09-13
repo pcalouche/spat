@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { NavigationEnd, Router, RoutesRecognized } from '@angular/router';
-import { ClientUser } from '@core/model/ClientUser';
-import { UserSessionService } from '@core/services/user-session.service';
-import { filter, map } from 'rxjs/operators';
+import {Component, OnInit}                       from '@angular/core';
+import {Title}                                   from '@angular/platform-browser';
+import {NavigationEnd, Router, RoutesRecognized} from '@angular/router';
+import {ClientUser}                              from '@core/model/ClientUser';
+import {UserSessionService}                      from '@core/services/user-session.service';
+import {filter, map}                             from 'rxjs/operators';
 
 @Component({
   selector: 'app-nav',
@@ -31,7 +31,7 @@ export class NavComponent implements OnInit {
         return event.state.root.firstChild.data;
       }))
       .subscribe(data => {
-        let fullTitle = 'SPAT';
+        let fullTitle = 'SPAT Angular UI';
         if (data && data.title) {
           fullTitle += ' - ' + data.title;
         }

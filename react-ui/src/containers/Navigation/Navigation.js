@@ -39,7 +39,7 @@ class Navigation extends Component {
           <Route exact path="/login" component={() => <Login/>}/>
           <Route exact path="/users" component={() => <UserList/>}/>
           <Route exact path="/teams" component={() => <TeamList/>}/>
-          <Redirect from="/" exact to="/users"/>
+          <Redirect from="/" exact to="/login"/>
           <Route render={() => <h1>Not found</h1>}/>
         </Switch>
       </div>
