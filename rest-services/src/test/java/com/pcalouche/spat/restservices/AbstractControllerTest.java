@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.repository.UserRepository;
-import com.pcalouche.spat.restservices.api.service.UserService;
 import com.pcalouche.spat.restservices.config.SecurityConfig;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
@@ -40,8 +39,6 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     @Autowired
     protected JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
-    protected UserService userService;
-    @MockBean
     protected UserRepository userRepository;
     private String validUserToken;
     private String validAdminToken;
@@ -66,8 +63,6 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
 
     @Before
     public void setup() {
-        // TODO remove user repository linkage
-
         // Setup some mocks for the user service can be used by other tests
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(Role.builder()

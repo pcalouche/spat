@@ -4,10 +4,12 @@ import com.pcalouche.spat.restservices.AbstractControllerTest;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.dto.RoleDto;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
+import com.pcalouche.spat.restservices.api.service.UserService;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -26,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(value = UserController.class)
 public class UserControllerTest extends AbstractControllerTest {
+    @MockBean
+    protected UserService userService;
 
     @Test
     public void testFindAll() throws Exception {

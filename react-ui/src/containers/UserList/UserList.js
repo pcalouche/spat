@@ -2,7 +2,7 @@ import React, {Component}                  from 'react';
 import {Card, CardBody, CardHeader, Table} from 'reactstrap';
 
 import './UserList.css';
-import {TOKEN}                             from 'util/SecurtyUtils';
+import {TOKEN}                             from '../../util/SecurityUtils';
 
 class UserList extends Component {
   state = {
