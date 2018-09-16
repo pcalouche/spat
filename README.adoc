@@ -70,9 +70,9 @@ From inside Spring Boot Project POM main directory:
 
   ./mvnw clean install
 
-. Install Angular CLI version 6.1.2 globally if it is not
+. Install Angular CLI version 6.2.1 globally if it is not
 +
-  npm install -g @angular/cli@6.1.2
+  npm install -g @angular/cli@6.2.1
 +
 . Install the SPAT project
 From inside SPAT project main directory:
