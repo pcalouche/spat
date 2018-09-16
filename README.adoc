@@ -1,6 +1,6 @@
 = Single Page App Template (SPAT)
 Doc Writer <philip.calouche@outlook.com>
-v3.0, 2018-08-06
+v3.0, 2018-09-14
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
