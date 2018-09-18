@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {CommonModule}                  from '@angular/common';
+import {HttpClientModule}              from '@angular/common/http';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {ReactiveFormsModule}           from '@angular/forms';
+import {FontAwesomeModule}             from '@fortawesome/angular-fontawesome';
+import {NgbModule}                     from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -11,7 +12,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     ReactiveFormsModule,
     // Third party stuff
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
     // Stuff from shared module
   ],
   declarations: [],
@@ -21,7 +23,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     ReactiveFormsModule,
     // Third party stuff
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
     // Stuff from shared module
   ]
 })

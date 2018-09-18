@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {UserSessionService} from '@core/services/user-session.service';
-import {UserModalComponent} from '@features/user/user-list/user-modal/user-modal.component';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {User} from '@rest-services/api/model/user.model';
-import {UserService} from '@rest-services/api/user/user.service';
+import {Component, OnInit}       from '@angular/core';
+import {UserSessionService}      from '@core/services/user-session.service';
+import {UserModalComponent}      from '@features/user/user-list/user-modal/user-modal.component';
+import {faPencilAlt, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import {NgbModal}                from '@ng-bootstrap/ng-bootstrap';
+import {User}                    from '@rest-services/api/model/user.model';
+import {UserService}             from '@rest-services/api/user/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -12,6 +13,8 @@ import {UserService} from '@rest-services/api/user/user.service';
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
+  faPencilAlt = faPencilAlt;
+  faTrashAlt = faTrashAlt;
 
   constructor(public userSessionService: UserSessionService,
               private userService: UserService,

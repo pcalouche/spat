@@ -15,8 +15,16 @@
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
-          <td class="action-column" *ngIf="userSessionService.getLoggedInUser().hasRole('ROLE_ADMIN')"><a (click)="handleEditClick(user)"><i class="fa fa-pencil"></i></a></td>
-          <td class="action-column" *ngIf="userSessionService.getLoggedInUser().hasRole('ROLE_ADMIN')"><a (click)="handleDeleteClick(user)"><i class="fa fa-trash"></i></a></td>
+          <td class="action-column" *ngIf="userSessionService.getLoggedInUser().hasRole('ROLE_ADMIN')">
+            <a (click)="handleEditClick(user)">
+              <fa-icon [icon]="faPencilAlt"></fa-icon>
+            </a>
+          </td>
+          <td class="action-column" *ngIf="userSessionService.getLoggedInUser().hasRole('ROLE_ADMIN')">
+            <a (click)="handleDeleteClick(user)">
+              <fa-icon [icon]="faTrashAlt"></fa-icon>
+            </a>
+          </td>
           <td>{{user.id}}</td>
           <td>{{user.username}}</td>
           <td>{{displayAccountStatus(user)}}</td>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { UserSessionService } from '@core/services/user-session.service';
-import { TeamModalComponent } from '@features/team/team-list/team-modal/team-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Team } from '@rest-services/api/model/team.model.a';
-import { TeamService } from '@rest-services/api/team/team.service';
+import {Component, OnInit}       from '@angular/core';
+import {UserSessionService}      from '@core/services/user-session.service';
+import {TeamModalComponent}      from '@features/team/team-list/team-modal/team-modal.component';
+import {faPencilAlt, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import {NgbModal}                from '@ng-bootstrap/ng-bootstrap';
+import {Team}                    from '@rest-services/api/model/team.model.a';
+import {TeamService}             from '@rest-services/api/team/team.service';
 
 @Component({
   selector: 'app-team-list',
@@ -12,6 +13,8 @@ import { TeamService } from '@rest-services/api/team/team.service';
 })
 export class TeamListComponent implements OnInit {
   teams: Team[] = [];
+  faPencilAlt = faPencilAlt;
+  faTrashAlt = faTrashAlt;
 
   constructor(public userSessionService: UserSessionService,
               private teamService: TeamService,

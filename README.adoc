@@ -49,6 +49,7 @@ Some of my goals in this project were to:
 * JUnit 4 (I have plans to upgrade the tests to use JUnit 5)
 * Angular 6/Angular CLI 6.2.1
 * Bootstrap 4.0 for UI styling
+* Font Awesome 5 for icons
 * Node.js for Angular CLI and front end dependency management
 
 == Project Structure
