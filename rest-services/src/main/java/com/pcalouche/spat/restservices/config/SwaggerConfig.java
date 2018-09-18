@@ -24,7 +24,8 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.pcalouche"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .enableUrlTemplating(true);
     }
 
     private ApiInfo apiInfo() {
