@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Team } from '@rest-services/api/model/team.model.a';
-import { TeamService } from '@rest-services/api/team/team.service';
+import {Component, Input, OnInit}           from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgbActiveModal}                     from '@ng-bootstrap/ng-bootstrap';
+import {Team}                               from '@rest-services/api/model/team.model.a';
+import {TeamService}                        from '@rest-services/api/team/team.service';
 
 @Component({
   selector: 'app-team-modal',

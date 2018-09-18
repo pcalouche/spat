@@ -1,9 +1,9 @@
-import {HttpErrorResponse} from '@angular/common/http';
-import {Component, Input, OnInit} from '@angular/core';
+import {HttpErrorResponse}                             from '@angular/common/http';
+import {Component, Input, OnInit}                      from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {User} from '@rest-services/api/model/user.model';
-import {UserService} from '@rest-services/api/user/user.service';
+import {NgbActiveModal}                                from '@ng-bootstrap/ng-bootstrap';
+import {User}                                          from '@rest-services/api/model/user.model';
+import {UserService}                                   from '@rest-services/api/user/user.service';
 
 @Component({
   selector: 'app-user-modal',
@@ -72,7 +72,7 @@ export class UserModalComponent implements OnInit {
       case 'edit':
         this.actionButtonText = 'Saving User';
         this.actionInProgress = true;
-        const roles: [{ id: number, name: string }] = [{id: 1, name: 'ROLE_USER'}];
+        const roles: [{id: number, name: string}] = [{id: 1, name: 'ROLE_USER'}];
         // Offset starts at 0 because User checkbox is disabled and that value does not get included in the form
         if (this.userForm.value.roles[0]) {
           roles.push({id: 2, name: 'ROLE_ADMIN'});

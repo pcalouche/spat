@@ -3,7 +3,7 @@ import {User} from '@rest-services/api/model/user.model';
 export class ClientUser {
   id: number;
   username: string;
-  roles: [{ id: number, name: string }];
+  roles: [{id: number, name: string}];
 
   constructor(user: User) {
     this.id = user.id;

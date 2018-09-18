@@ -5,5 +5,5 @@ export interface User {
   accountNonLocked: boolean;
   credentialsNonExpired: boolean;
   enabled: boolean;
-  roles: [{ id: number, name: string }];
+  roles: [{id: number, name: string}];
 }

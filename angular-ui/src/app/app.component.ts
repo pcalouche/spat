@@ -1,10 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { BasicModalComponent, BasicModalConfig } from '@core/components/basic-modal/basic-modal.component';
-import { coreModuleMessages } from '@core/core-messages';
-import { UserSessionService } from '@core/services/user-session.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from '@rest-services/api/auth/auth.service';
+import {Component, HostListener, OnInit}       from '@angular/core';
+import {Router}                                from '@angular/router';
+import {BasicModalComponent, BasicModalConfig} from '@core/components/basic-modal/basic-modal.component';
+import {coreModuleMessages}                    from '@core/core-messages';
+import {UserSessionService}                    from '@core/services/user-session.service';
+import {NgbModal, NgbModalRef}                 from '@ng-bootstrap/ng-bootstrap';
+import {AuthService}                           from '@rest-services/api/auth/auth.service';
 
 @Component({
   selector: 'app-root',
