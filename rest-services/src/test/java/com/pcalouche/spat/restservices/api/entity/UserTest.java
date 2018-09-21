@@ -25,7 +25,6 @@ public class UserTest extends AbstractModelMapperTest {
                 .name("ROLE_ADMIN")
                 .build());
         UserDto userDto = UserDto.builder()
-                .id(1L)
                 .username("username")
                 .roles(roleDtos)
                 .accountNonExpired(false)
@@ -34,7 +33,6 @@ public class UserTest extends AbstractModelMapperTest {
 
         User user = modelMapper.map(userDto, User.class);
 
-        assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo("username");
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder()
@@ -53,13 +51,11 @@ public class UserTest extends AbstractModelMapperTest {
         assertThat(user.isEnabled()).isFalse();
 
         userDto = UserDto.builder()
-                .id(1L)
                 .username("username")
                 .build();
 
         user = modelMapper.map(userDto, User.class);
 
-        assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo("username");
         assertThat(user.getAuthorities()).isEmpty();
         assertThat(user.isAccountNonExpired()).isTrue();

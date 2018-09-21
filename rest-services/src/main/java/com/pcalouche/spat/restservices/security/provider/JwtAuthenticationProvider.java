@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,14 +41,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // with what is in the database to ensure the account is still active.
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if ("refreshToken".equals(authentication.getDetails())) {
-            User user = userRepository.findByUsername(subject);
-            if (user != null) {
-                SecurityUtils.validateUserAccountStatus(user);
+            Optional<User> optionalUser = userRepository.findById(subject);
+            if (optionalUser.isPresent()) {
+                SecurityUtils.validateUserAccountStatus(optionalUser.get());
             } else {
                 throw new BadCredentialsException(String.format("Bad credentials for username: %s", subject));
             }
 
-            simpleGrantedAuthorities = user.getAuthorities();
+            simpleGrantedAuthorities = optionalUser.get().getAuthorities();
         } else {
             @SuppressWarnings("unchecked")
             Set<String> authorities = new HashSet<>(claims.get(SecurityUtils.CLAIMS_AUTHORITIES_KEY, List.class));

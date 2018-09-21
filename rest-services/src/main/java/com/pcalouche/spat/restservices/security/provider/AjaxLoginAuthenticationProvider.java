@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class AjaxLoginAuthenticationProvider implements AuthenticationProvider {
     private final UserRepository userRepository;
@@ -23,15 +25,14 @@ public class AjaxLoginAuthenticationProvider implements AuthenticationProvider {
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
 
-        User user = userRepository.findByUsername(username);
-        if (user != null && SecurityUtils.PASSWORD_ENCODER.matches(password, user.getPassword())) {
-            SecurityUtils.validateUserAccountStatus(user);
-        } else {
+        Optional<User> optionalUser = userRepository.findById(username);
+        if (!optionalUser.isPresent() || !SecurityUtils.PASSWORD_ENCODER.matches(password, optionalUser.get().getPassword())) {
             throw new BadCredentialsException(String.format("Bad credentials for username: %s", username));
+        } else {
+            User user = optionalUser.get();
+            SecurityUtils.validateUserAccountStatus(user);
+            return new UsernamePasswordAuthenticationToken(username, null, user.getAuthorities());
         }
-
-        // If we make it here authentication was good, so return a good authentication without credentials for the request to proceed.
-        return new UsernamePasswordAuthenticationToken(username, null, user.getAuthorities());
     }
 
     @Override

@@ -49,7 +49,7 @@ export class UserModalComponent implements OnInit {
     }
 
     this.userForm = new FormGroup({
-      username: new FormControl(this.user.username, [Validators.required]),
+      username: new FormControl({value: this.user.username, disabled: this.mode === 'edit'}, [Validators.required]),
       accountExpired: new FormControl(!this.user.accountNonExpired),
       accountLocked: new FormControl(!this.user.accountNonLocked),
       credentialsExpired: new FormControl(!this.user.credentialsNonExpired),
@@ -68,57 +68,78 @@ export class UserModalComponent implements OnInit {
     this.actionInProgress = true;
     switch (this.mode) {
       case 'add':
-      // fall through is on purpose
-      case 'edit':
-        this.actionButtonText = 'Saving User';
-        this.actionInProgress = true;
-        const roles: [{id: number, name: string}] = [{id: 1, name: 'ROLE_USER'}];
-        // Offset starts at 0 because User checkbox is disabled and that value does not get included in the form
-        if (this.userForm.value.roles[0]) {
-          roles.push({id: 2, name: 'ROLE_ADMIN'});
-        }
-
-        const userToSave: User = {
-          id: this.user.id,
-          username: this.userForm.value.username,
-          accountNonExpired: !this.userForm.value.accountExpired,
-          accountNonLocked: !this.userForm.value.accountLocked,
-          credentialsNonExpired: !this.userForm.value.credentialsExpired,
-          enabled: this.userForm.value.enabled,
-          roles: roles
-        };
-
-        this.userService.saveUser(userToSave).subscribe(
+        this.handleActionStart('Saving User');
+        this.userService.create(this.getFormData()).subscribe(
           (savedUser) => {
             this.activeModal.close(savedUser);
           },
           (response: HttpErrorResponse) => {
-            this.actionButtonText = 'Save User';
-            this.actionInProgress = false;
-            this.hideErrorMessage = false;
-            if (response.status === 0) {
-              this.errorMessage = 'Unable to save ' + this.user.username + '.  Please try again later.';
-            } else {
-              this.errorMessage = response.error.message;
-            }
+            this.handleBadSave(response);
+          }
+        );
+        break;
+      case 'edit':
+        this.handleActionStart('Saving User');
+        this.userService.update(this.getFormData()).subscribe(
+          (savedUser) => {
+            this.activeModal.close(savedUser);
+          },
+          (response: HttpErrorResponse) => {
+            this.handleBadSave(response);
           }
         );
         break;
       case 'delete':
-        this.actionButtonText = 'Deleting User';
-        this.actionInProgress = true;
-        this.userService.deleteUser(user).subscribe(
+        this.handleActionStart('Deleting User');
+        this.userService.delete(user).subscribe(
           () => {
             this.activeModal.close();
           },
           () => {
-            this.actionButtonText = 'Delete User';
-            this.actionInProgress = false;
-            this.hideErrorMessage = false;
-            this.errorMessage = 'Unable to delete ' + user.username + '.  Please try again later.';
+            this.handleRestError('Delete User');
+            this.errorMessage = 'Unable to delete ' + this.userForm.value.username + '.  Please try again later.';
           });
         break;
     }
   }
 
+  private handleActionStart(message: string): void {
+    this.actionButtonText = message;
+    this.actionInProgress = true;
+  };
+
+  private getFormData(): User {
+    const roles: [{id: number, name: string}] = [{id: 1, name: 'ROLE_USER'}];
+    // Offset starts at 0 because User checkbox is disabled and that value does not get included in the form
+    if (this.userForm.value.roles[0]) {
+      roles.push({id: 2, name: 'ROLE_ADMIN'});
+    }
+  
+    return {
+      username: this.mode !== 'edit' ? this.userForm.value.username : this.userForm.controls['username'].value,
+      accountNonExpired: !this.userForm.value.accountExpired,
+      accountNonLocked: !this.userForm.value.accountLocked,
+      credentialsNonExpired: !this.userForm.value.credentialsExpired,
+      enabled: this.userForm.value.enabled,
+      roles: roles
+    };
+  };
+
+  private handleRestError(buttonText: string) {
+    this.actionButtonText = buttonText;
+    this.actionInProgress = false;
+    this.hideErrorMessage = false;
+  }
+
+  private handleBadSave(response: HttpErrorResponse): void {
+    this.handleRestError('Save User');
+    // this.actionButtonText = 'Save User';
+    // this.actionInProgress = false;
+    // this.hideErrorMessage = false;
+    if (response.status === 0) {
+      this.errorMessage = 'Unable to save ' + this.userForm.value.username + '.  Please try again later.';
+    } else {
+      this.errorMessage = response.error.message;
+    }
+  }
 }

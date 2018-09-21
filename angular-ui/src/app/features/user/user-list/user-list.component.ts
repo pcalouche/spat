@@ -56,7 +56,7 @@ export class UserListComponent implements OnInit {
     modalRef.result.then(
       (savedUser) => {
         for (let i = 0; i < this.users.length; i++) {
-          if (this.users[i].id === user.id) {
+          if (this.users[i].username === user.username) {
             this.users[i] = savedUser;
           }
         }
@@ -73,7 +73,7 @@ export class UserListComponent implements OnInit {
     modalRef.result.then(
       () => {
         for (let i = 0; i < this.users.length; i++) {
-          if (this.users[i].id === user.id) {
+          if (this.users[i].username === user.username) {
             this.users.splice(i, 1);
             break;
           }

@@ -2,7 +2,9 @@ package com.pcalouche.spat.restservices.api.controller;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatController;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.EndpointMessages;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
+import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.service.UserService;
 import io.swagger.annotations.Api;
@@ -22,33 +24,51 @@ public class UserController extends AbstractSpatController {
         this.userService = userService;
     }
 
-    @ApiOperation(value = "Use to find all users")
+    @ApiOperation(value = "Find a user by username")
+    @GetMapping(value = "/{username}")
+    public UserDto findById(@PathVariable String username) throws RestResourceNotFoundException {
+        UserDto userDto = userService.findById(username);
+        if (userDto == null) {
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, username));
+        }
+        return userDto;
+    }
+
+    @ApiOperation(value = "Find all users")
     @GetMapping
     public List<UserDto> findAll() {
         return userService.findAll();
     }
 
-    @ApiOperation(value = "Use to find a user by username")
-    @GetMapping(value = "/{username}")
-    public UserDto findByUsername(@PathVariable String username) throws RestResourceNotFoundException {
-        UserDto userDto = userService.findByUsername(username);
-        if (userDto == null) {
-            throw new RestResourceNotFoundException(String.format("User with %s not found", username));
-        }
-        return userDto;
-    }
-
-    @ApiOperation(value = "Use to save a user")
+    @ApiOperation(value = "Create a new user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public UserDto save(@RequestBody UserDto userDto) {
+    public UserDto create(@RequestBody UserDto userDto) {
+        UserDto existingUserDto = userService.findById(userDto.getUsername());
+        if (existingUserDto != null) {
+            throw new RestResourceForbiddenException(String.format(EndpointMessages.USER_ALREADY_EXISTS, userDto.getUsername()));
+        }
         return userService.save(userDto);
     }
 
-    @ApiOperation(value = "Use to delete a user")
+    @ApiOperation(value = "Update an existing user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(value = "/{id}")
-    public void deleteById(@PathVariable Long id) {
-        userService.deleteById(id);
+    @PutMapping
+    public UserDto update(@RequestBody UserDto userDto) {
+        UserDto existingUserDto = userService.findById(userDto.getUsername());
+        if (existingUserDto == null) {
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, userDto.getUsername()));
+        }
+        return userService.save(userDto);
+    }
+
+    @ApiOperation(value = "Delete an existing user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{username}")
+    public void delete(@PathVariable String username) {
+        if (userService.findById(username) == null) {
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, username));
+        }
+        userService.delete(username);
     }
 }

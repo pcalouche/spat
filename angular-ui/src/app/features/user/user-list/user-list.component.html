@@ -7,7 +7,6 @@
         <tr>
           <th class="action-column" *ngIf="userSessionService.getLoggedInUser().hasRole('ROLE_ADMIN')"></th>
           <th class="action-column" *ngIf="userSessionService.getLoggedInUser().hasRole('ROLE_ADMIN')"></th>
-          <th>Id</th>
           <th>Username</th>
           <th>Account Status</th>
           <th>Roles</th>
@@ -25,7 +24,6 @@
               <fa-icon [icon]="faTrashAlt"></fa-icon>
             </a>
           </td>
-          <td>{{user.id}}</td>
           <td>{{user.username}}</td>
           <td>{{displayAccountStatus(user)}}</td>
           <td>{{displayRoles(user)}}</td>

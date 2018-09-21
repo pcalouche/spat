@@ -8,9 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TeamServiceTest extends AbstractServiceTest {
@@ -34,40 +31,55 @@ public class TeamServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testFindAll() {
-        List<TeamDto> expectedTeamDtos = new ArrayList<>();
-        expectedTeamDtos.add(TeamDto.builder()
-                .id(team1.getId())
-                .name("Team1")
-                .build());
-        expectedTeamDtos.add(TeamDto.builder()
-                .id(team2.getId())
-                .name("Team2")
-                .build());
+    public void testFindById() {
+        assertThat(teamService.findById(team1.getId()))
+                .isEqualTo(TeamDto.builder()
+                        .id(team1.getId())
+                        .name("Team1")
+                        .build());
+    }
 
-        assertThat(teamService.findAll()).isEqualTo(expectedTeamDtos);
+    @Test
+    public void testFindAll() {
+        assertThat(teamService.findAll()).containsOnly(
+                TeamDto.builder()
+                        .id(team1.getId())
+                        .name("Team1")
+                        .build(),
+                TeamDto.builder()
+                        .id(team2.getId())
+                        .name("Team2")
+                        .build()
+        );
     }
 
 
     @Test
     public void testSave() {
-        TeamDto expectedTeamDto = TeamDto.builder()
+        TeamDto teamDtoToSave = TeamDto.builder()
                 .id(team1.getId())
                 .name("Team1NewName")
                 .build();
 
-        assertThat(teamService.save(expectedTeamDto)).isEqualTo(expectedTeamDto);
+        assertThat(teamService.save(teamDtoToSave)).isEqualTo(
+                TeamDto.builder()
+                        .id(team1.getId())
+                        .name("Team1NewName")
+                        .build()
+        );
     }
 
     @Test
     public void testDeleteById() {
-        teamService.deleteById(team2.getId());
+        teamService.delete(team2.getId());
 
         assertThat(teamService.findAll()).hasSize(1);
 
-        assertThat(teamService.findAll()).containsOnly(TeamDto.builder()
-                .id(team1.getId())
-                .name("Team1")
-                .build());
+        assertThat(teamService.findAll()).containsOnly(
+                TeamDto.builder()
+                        .id(team1.getId())
+                        .name("Team1")
+                        .build()
+        );
     }
 }

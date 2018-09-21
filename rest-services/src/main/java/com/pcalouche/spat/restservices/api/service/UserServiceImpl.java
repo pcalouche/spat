@@ -28,9 +28,10 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
     }
 
     @Override
-    public UserDto findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        return modelMapper.map(user, UserDto.class);
+    public UserDto findById(String username) {
+        return userRepository.findById(username)
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .orElse(null);
     }
 
     @Override
@@ -42,23 +43,17 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
 
     @Override
     public UserDto save(UserDto userDto) {
-        // Don't allow saves of duplicate usernames.
-        if (userDto.getId() == null && userRepository.findByUsername(userDto.getUsername()) != null) {
-            throw new IllegalArgumentException(String.format("A user with a username of %s already exists", userDto.getUsername()));
-        }
-
         User userToSave = modelMapper.map(userDto, User.class);
-        // Retain password if saving an existing user
-        Optional<User> existingUser;
-        if (userDto.getId() != null) {
-            existingUser = userRepository.findById(userDto.getId());
-            if (existingUser.isPresent()) {
-                existingUser.ifPresent(user1 -> userToSave.setPassword(user1.getPassword()));
-            } else {
-                userToSave.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
-            }
+        Optional<User> existingUser = userRepository.findById(userDto.getUsername());
+        if (existingUser.isPresent()) {
+            // Retain password
+            userToSave.setPassword(existingUser.get().getPassword());
+        } else {
+            // Set default password
+            userToSave.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
         }
 
+        // Save with at least one role
         if (userToSave.getRoles().isEmpty()) {
             userToSave.setRoles(Stream.of(roleRepository.findByName("ROLE_USER"))
                     .collect(Collectors.toSet()));
@@ -68,7 +63,7 @@ public class UserServiceImpl extends AbstractSpatServiceImpl implements UserServ
     }
 
     @Override
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
+    public void delete(String username) {
+        userRepository.deleteById(username);
     }
 }

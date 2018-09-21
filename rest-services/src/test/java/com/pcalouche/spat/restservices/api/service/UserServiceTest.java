@@ -12,8 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,41 +56,36 @@ public class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testFindAll() {
-        List<UserDto> expectedUserDtos = new ArrayList<>();
-        expectedUserDtos.add(UserDto.builder()
-                .id(user1.getId())
-                .username("pcalouche")
-                .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
-                        .collect(Collectors.toSet()))
-                .build());
-        expectedUserDtos.add(UserDto.builder()
-                .id(user2.getId())
-                .username("jsmith")
-                .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
-                        .collect(Collectors.toSet()))
-                .build());
-
-        assertThat(userService.findAll()).isEqualTo(expectedUserDtos);
+    public void testFindById() {
+        assertThat(userService.findById(user1.getUsername())).isEqualTo(
+                UserDto.builder()
+                        .username(user1.getUsername())
+                        .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
+                                .collect(Collectors.toSet()))
+                        .build()
+        );
     }
 
     @Test
-    public void testFindByUsername() {
-        UserDto expectedUserDto = UserDto.builder()
-                .id(user1.getId())
-                .username("pcalouche")
-                .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
-                        .collect(Collectors.toSet()))
-                .build();
-
-        assertThat(userService.findByUsername("pcalouche")).isEqualTo(expectedUserDto);
+    public void testFindAll() {
+        assertThat(userService.findAll()).containsOnly(
+                UserDto.builder()
+                        .username(user1.getUsername())
+                        .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
+                                .collect(Collectors.toSet()))
+                        .build(),
+                UserDto.builder()
+                        .username(user2.getUsername())
+                        .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
+                                .collect(Collectors.toSet()))
+                        .build()
+        );
     }
 
     @Test
     public void testSave() {
-        UserDto expectedUserDto = UserDto.builder()
-                .id(user1.getId())
-                .username("pcalouche")
+        UserDto userDtoToSave = UserDto.builder()
+                .username(user1.getUsername())
                 .roles(Stream.of(
                         modelMapper.map(userRole, RoleDto.class),
                         modelMapper.map(adminRole, RoleDto.class))
@@ -100,20 +93,21 @@ public class UserServiceTest extends AbstractServiceTest {
                 .enabled(false)
                 .build();
 
-        assertThat(userService.save(expectedUserDto)).isEqualTo(expectedUserDto);
+        assertThat(userService.save(userDtoToSave)).isEqualTo(userDtoToSave);
     }
 
     @Test
     public void testDeleteById() {
-        userService.deleteById(user1.getId());
+        userService.delete(user1.getUsername());
 
         assertThat(userService.findAll()).hasSize(1);
 
-        assertThat(userService.findAll()).containsOnly(UserDto.builder()
-                .id(user2.getId())
-                .username("jsmith")
-                .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
-                        .collect(Collectors.toSet()))
-                .build());
+        assertThat(userService.findAll()).containsOnly(
+                UserDto.builder()
+                        .username(user2.getUsername())
+                        .roles(Stream.of(modelMapper.map(userRole, RoleDto.class))
+                                .collect(Collectors.toSet()))
+                        .build()
+        );
     }
 }

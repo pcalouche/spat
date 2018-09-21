@@ -76,7 +76,6 @@ public class SecurityUtilsTest extends AbstractUnitTest {
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()
-                .id(1L)
                 .username("expiredUser")
                 .accountNonExpired(false)
                 .roles(roles)
@@ -96,7 +95,6 @@ public class SecurityUtilsTest extends AbstractUnitTest {
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()
-                .id(1L)
                 .username("lockedUser")
                 .accountNonLocked(false)
                 .roles(roles)
@@ -116,7 +114,6 @@ public class SecurityUtilsTest extends AbstractUnitTest {
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()
-                .id(1L)
                 .username("credentialsExpiredUser")
                 .credentialsNonExpired(false)
                 .roles(roles)
@@ -136,7 +133,6 @@ public class SecurityUtilsTest extends AbstractUnitTest {
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()
-                .id(1L)
                 .username("disabledUser")
                 .enabled(false)
                 .roles(roles)

@@ -77,57 +77,51 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
                 .build());
 
         User activeUser = User.builder()
-                .id(1L)
                 .username("activeUser")
                 .password(ENCODED_PASSWORD)
                 .roles(userRoles)
                 .build();
-        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(activeUser);
+        given(userRepository.getOne(activeUser.getUsername())).willReturn(activeUser);
 
         User activeAdmin = User.builder()
-                .id(2L)
                 .username("activeAdmin")
                 .password(ENCODED_PASSWORD)
                 .roles(adminRoles)
                 .build();
-        given(userRepository.findByUsername(activeAdmin.getUsername())).willReturn(activeAdmin);
+        given(userRepository.getOne(activeAdmin.getUsername())).willReturn(activeAdmin);
 
         User expiredUser = User.builder()
-                .id(3L)
                 .username("expiredUser")
                 .password(ENCODED_PASSWORD)
                 .accountNonExpired(false)
                 .roles(adminRoles)
                 .build();
-        given(userRepository.findByUsername(expiredUser.getUsername())).willReturn(expiredUser);
+        given(userRepository.getOne(expiredUser.getUsername())).willReturn(expiredUser);
 
         User lockedUser = User.builder()
-                .id(4L)
                 .username("lockedUser")
                 .password(ENCODED_PASSWORD)
                 .accountNonLocked(false)
                 .roles(adminRoles)
                 .build();
         lockedUser.setAccountNonLocked(false);
-        given(userRepository.findByUsername(lockedUser.getUsername())).willReturn(lockedUser);
+        given(userRepository.getOne(lockedUser.getUsername())).willReturn(lockedUser);
 
         User credentialsExpiredUser = User.builder()
-                .id(5L)
                 .username("credentialsExpiredUser")
                 .password(ENCODED_PASSWORD)
                 .credentialsNonExpired(false)
                 .roles(adminRoles)
                 .build();
-        given(userRepository.findByUsername(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
+        given(userRepository.getOne(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
 
         User disabledUser = User.builder()
-                .id(6L)
                 .username("disabledUser")
                 .password(ENCODED_PASSWORD)
                 .enabled(false)
                 .roles(adminRoles)
                 .build();
-        given(userRepository.findByUsername(disabledUser.getUsername())).willReturn(disabledUser);
+        given(userRepository.getOne(disabledUser.getUsername())).willReturn(disabledUser);
 
         // Mock the logger interceptor
         given(loggerInterceptor.preHandle(any(), any(), any())).willReturn(true);

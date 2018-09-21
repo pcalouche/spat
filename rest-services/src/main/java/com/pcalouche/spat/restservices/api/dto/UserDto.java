@@ -1,6 +1,9 @@
 package com.pcalouche.spat.restservices.api.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,8 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
-    @EqualsAndHashCode.Exclude
-    private Long id;
     private String username;
     @Builder.Default
     private boolean accountNonExpired = true;

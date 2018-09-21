@@ -1,5 +1,4 @@
 export interface User {
-  id: number;
   username: string;
   accountNonExpired: boolean;
   accountNonLocked: boolean;

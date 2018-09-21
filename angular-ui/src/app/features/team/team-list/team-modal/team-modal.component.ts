@@ -47,40 +47,89 @@ export class TeamModalComponent implements OnInit {
     this.actionInProgress = true;
     switch (this.mode) {
       case 'add':
-      // fall through is on purpose
-      case 'edit':
-        this.actionButtonText = 'Saving Team';
-        this.actionInProgress = true;
-        const teamToSave: Team = {
-          id: this.team.id,
-          name: this.teamForm.value.name
-        };
-        this.teamService.saveTeam(teamToSave).subscribe(
+        // this.actionButtonText = 'Saving Team';
+        // this.actionInProgress = true;
+        // const teamToSave: Team = {
+        //   id: this.team.id,
+        //   name: this.teamForm.value.name
+        // };
+        this.handleActionStart('Saving Team');
+        this.teamService.create(this.getFormData()).subscribe(
           (savedTeam) => {
             this.activeModal.close(savedTeam);
           },
           () => {
-            this.actionButtonText = 'Save Team';
-            this.actionInProgress = false;
-            this.hideErrorMessage = false;
-            this.errorMessage = 'Unable to save ' + team.name + '.  Please try again later.';
+            this.handleBadSave();
+            // this.actionButtonText = 'Save Team';
+            // this.actionInProgress = false;
+            // this.hideErrorMessage = false;
+            // this.errorMessage = 'Unable to save ' + team.name + '.  Please try again later.';
+          }
+        );
+        break;
+      case 'edit':
+        this.handleActionStart('Saving Team');
+        // this.actionButtonText = 'Saving Team';
+        // this.actionInProgress = true;
+        // const teamToSave: Team = {
+        //   id: this.team.id,
+        //   name: this.teamForm.value.name
+        // };
+        this.teamService.create(this.getFormData()).subscribe(
+          (savedTeam) => {
+            this.activeModal.close(savedTeam);
+          },
+          () => {
+            this.handleBadSave();
+            // this.actionButtonText = 'Save Team';
+            // this.actionInProgress = false;
+            // this.hideErrorMessage = false;
+            // this.errorMessage = 'Unable to save ' + team.name + '.  Please try again later.';
           }
         );
         break;
       case 'delete':
-        this.actionButtonText = 'Deleting Team';
-        this.actionInProgress = true;
-        this.teamService.deleteTeam(team).subscribe(
+        this.handleActionStart('Deleting Team');
+        // this.actionButtonText = 'Deleting Team';
+        // this.actionInProgress = true;
+        this.teamService.delete(team).subscribe(
           () => {
             this.activeModal.close();
           },
           () => {
-            this.actionButtonText = 'Delete Team';
-            this.actionInProgress = false;
-            this.hideErrorMessage = false;
+            this.handleRestError('Delete Team');
+            // this.actionButtonText = 'Delete Team';
+            // this.actionInProgress = false;
+            // this.hideErrorMessage = false;
             this.errorMessage = 'Unable to delete ' + team.name + '.  Please try again later.';
           });
         break;
     }
+  }
+
+  private handleActionStart(message: string): void {
+    this.actionButtonText = message;
+    this.actionInProgress = true;
+  }
+
+  private getFormData(): Team {
+    return {
+      id: this.team.id,
+      name: this.teamForm.value.name
+    };
+  }
+
+  private handleRestError(buttonText: string) {
+    this.actionButtonText = buttonText;
+    this.actionInProgress = false;
+    this.hideErrorMessage = false;
+  }
+
+  private handleBadSave(): void {
+    this.handleRestError('Save User');
+    // this.actionButtonText = 'Save User';
+    // this.actionInProgress = false;
+    // this.hideErrorMessage = false;
+    this.errorMessage = 'Unable to delete ' + this.teamForm.value.name + '.  Please try again later.';
   }
 }

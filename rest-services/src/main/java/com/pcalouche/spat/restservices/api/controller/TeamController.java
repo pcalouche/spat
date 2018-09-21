@@ -2,7 +2,9 @@ package com.pcalouche.spat.restservices.api.controller;
 
 import com.pcalouche.spat.restservices.api.AbstractSpatController;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.EndpointMessages;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
+import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.service.TeamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,23 +23,38 @@ public class TeamController extends AbstractSpatController {
         this.teamService = teamService;
     }
 
-    @ApiOperation(value = "Use to find all teams")
+    @ApiOperation(value = "Find all teams")
     @GetMapping
     public List<TeamDto> findAll() {
         return teamService.findAll();
     }
 
-    @ApiOperation(value = "Use to save a team")
+    @ApiOperation(value = "Ccreate a new team")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public TeamDto save(@RequestBody TeamDto teamDto) {
+    public TeamDto create(@RequestBody TeamDto teamDto) {
+        // Ensure id is null, since this should be for creation
+        teamDto.setId(null);
         return teamService.save(teamDto);
     }
 
-    @ApiOperation(value = "Use to delete a team")
+    @ApiOperation(value = "Update an existing team")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping
+    public TeamDto update(@RequestBody TeamDto teamDto) {
+        if (teamService.findById(teamDto.getId()) == null) {
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, teamDto.getId()));
+        }
+        return teamService.save(teamDto);
+    }
+
+    @ApiOperation(value = "Delete an existing team")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
-    public void deleteById(@PathVariable Long id) {
-        teamService.deleteById(id);
+    public void delete(@PathVariable Long id) {
+        if (teamService.findById(id) == null) {
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id));
+        }
+        teamService.delete(id);
     }
 }
