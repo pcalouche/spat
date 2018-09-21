@@ -128,7 +128,7 @@ The application uses the H2 in memory database.  On startup the database is alwa
 line interface.
 
 There is a web console to the database that can be accessed by going to http://localhost:10000/spat/rest-services/h2-console and changing the
-JDBC URL to *jdbc:h2:mem:spatdb*.
+JDBC URL to *jdbc:h2:mem:spat*.
 
 .H2 Console Login
 image::readmeImages/h2-console-login.jpg[]
