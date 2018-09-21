@@ -32,27 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
                                 return new ClassPathResource("/public/react/index.html");
                             }
                         }
-                        //                        else if ()
-                        //                        return requestedResource.exists() && requestedResource.isReadable() ? requestedResource
-                        //                                : new ClassPathResource("/public/index.html");
                     }
                 });
-        //
-        //        registry.addResourceHandler("/angular/**")
-        //                .addResourceLocations("classpath:/public/angular")
-        //                .setCachePeriod(3600)
-        //                .resourceChain(true)
-        //                .addResolver(new PathResourceResolver() {
-        //                    @Override
-        //                    protected Resource getResource(String resourcePath,
-        //                                                   Resource location) throws IOException {
-        //                        Resource requestedResource = location.createRelative(resourcePath);
-        //                        if (requestedResource.exists() && requestedResource.isReadable()) {
-        //                            return requestedResource;
-        //                        } else {
-        //                            return new ClassPathResource("/public/angular/index.html");
-        //                        }
-        //                    }
-        //                });
+
     }
 }

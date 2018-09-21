@@ -2,3 +2,11 @@
     color: rgba(216, 77, 74, 1.0);
     font-weight: bold;
 }
+
+th.action-column, td.action-column {
+    width: 25px;
+}
+
+td.action-column svg[data-prefix='fas'] {
+    cursor: pointer;
+}

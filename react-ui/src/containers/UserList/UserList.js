@@ -1,5 +1,6 @@
 import React, {Component}                  from 'react';
 import {Card, CardBody, CardHeader, Table} from 'reactstrap';
+import {FontAwesomeIcon}                   from '@fortawesome/react-fontawesome';
 
 import './UserList.css';
 import {TOKEN}                             from '../../util/SecurityUtils';
@@ -52,7 +53,8 @@ class UserList extends Component {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>Id</th>
+                <th className="action-column"></th>
+                <th className="action-column"></th>
                 <th>Username</th>
                 <th>Account Status</th>
                 <th>Roles</th>
@@ -61,8 +63,9 @@ class UserList extends Component {
             <tbody>
               {this.state.users.map(user => {
                 return (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
+                  <tr key={user.username}>
+                    <td className="action-column"><FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon></td>
+                    <td className="action-column"><FontAwesomeIcon icon="trash-alt"></FontAwesomeIcon></td>
                     <td>{user.username}</td>
                     <td>{this.displayAccountStatus(user)}</td>
                     <td>{this.displayRoles(user)}</td>

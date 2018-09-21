@@ -22,7 +22,7 @@ class Navigation extends Component {
     return (
       <div className="Navigation">
         <Navbar color="primary" dark expand="md">
-          <NavbarBrand href="/">SPAT</NavbarBrand>
+          <NavbarBrand tag={'span'}>SPAT</NavbarBrand>
           <NavbarToggler onClick={this.toggle}/>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto" navbar>
