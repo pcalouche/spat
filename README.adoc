@@ -94,7 +94,7 @@ This will take a couple of minutes, and the following will happen:
   cd <spat_directory>/ui/target
   java -jar ui.jar
 
-. Verify UI is running at http://localhost:10001/spat/ui and login works.  Valid users are:
+. Verify UIs are running at http://localhost:10001/spat/ui/angular and http://localhost:10001/spat/ui/react.  Verify login works.  Valid users are:
  .. activeUser/password
  .. activeAdmin/password (This user will have edit and delete capabilities)
 +

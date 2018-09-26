@@ -47,7 +47,8 @@ export class LoginComponent implements OnInit {
             this.userSessionService.setLoggedInUser(new ClientUser(user));
             // If coming from a redirect go there, otherwise go to teams page by default
             if (this.activatedRoute.snapshot.params['redirect']) {
-              this.router.navigate([this.activatedRoute.snapshot.paramMap.get('redirect')]);
+              console.info(this.activatedRoute.snapshot.paramMap.get('redirect'));
+              this.router.navigate([this.activatedRoute.snapshot.paramMap.get('redirect').replace('angular', '')]);
             } else {
               this.router.navigate(['/teams']);
             }

@@ -80,9 +80,9 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
-                    <!--Run npm install to ensure dependencies are the latest.  The npm cache will be used if the npm dependency already has been installed.-->
+                    <!--Installs NPM dependencies for the Angular application.-->
                     <execution>
-                        <id>exec-npm-install</id>
+                        <id>exec-npm-install-angular</id>
                         <phase>generate-sources</phase>
                         <configuration>
                             <skip>${skipUiBuild}</skip>
@@ -96,9 +96,9 @@
                             <goal>exec</goal>
                         </goals>
                     </execution>
-                    <!--Run build script from package.json.  The Angular CLI output directory is under src/main/resources/static so they can be served by Spring Boot -->
+                    <!--Runs the Angular build.  The Angular build is configured to output to src/main/resources/public/angular so they can be served by Spring Boot-->
                     <execution>
-                        <id>exec-npm-build</id>
+                        <id>exec-npm-build-angular</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
@@ -107,6 +107,39 @@
                             <skip>${skipUiBuild}</skip>
                             <executable>npm</executable>
                             <workingDirectory>../angular-ui</workingDirectory>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!--Installs NPM dependencies for the React application.-->
+                    <execution>
+                        <id>exec-npm-install-react</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <skip>${skipUiBuild}</skip>
+                            <executable>npm</executable>
+                            <workingDirectory>../react-ui</workingDirectory>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <!--Runs the React build.  The React build is configured to output to src/main/resources/public/react so they can be served by Spring Boot-->
+                    <execution>
+                        <id>exec-npm-build-react</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipUiBuild}</skip>
+                            <executable>npm</executable>
+                            <workingDirectory>../react-ui</workingDirectory>
                             <arguments>
                                 <argument>run</argument>
                                 <argument>build</argument>

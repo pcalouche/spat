@@ -11,7 +11,7 @@ library.add(faPencilAlt, faTrashAlt, faStroopwafel);
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <BrowserRouter basename="/spat/ui/react">
         <div className="App">
           <Navigation/>
         </div>
