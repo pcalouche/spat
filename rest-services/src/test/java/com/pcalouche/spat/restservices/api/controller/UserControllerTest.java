@@ -39,7 +39,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void before() {
         Set<RoleDto> expectedRoleDtos = new HashSet<>();
         expectedRoleDtos.add(RoleDto.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         testUserDto1 = UserDto.builder()
@@ -126,7 +126,7 @@ public class UserControllerTest extends AbstractControllerTest {
         given(userService.findById(testUserDto1.getUsername())).willReturn(testUserDto1);
         given(userService.save(testUserDto1)).willReturn(testUserDto1);
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS)
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUserDto1));
@@ -142,7 +142,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testUpdateWhenUserNotFound() throws Exception {
         given(userService.findById(testUserDto1.getUsername())).willReturn(null);
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS)
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUserDto1));
@@ -156,7 +156,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdateRequiresAdminRole() throws Exception {
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS)
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUserDto1));

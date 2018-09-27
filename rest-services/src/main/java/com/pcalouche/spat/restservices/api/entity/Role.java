@@ -17,16 +17,11 @@ import java.util.Set;
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @Column(unique = true)
     private String name;
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
-
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     @Override
     public boolean equals(Object o) {

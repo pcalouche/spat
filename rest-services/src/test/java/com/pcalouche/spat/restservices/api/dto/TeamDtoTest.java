@@ -11,7 +11,7 @@ public class TeamDtoTest extends AbstractModelMapperTest {
     @Test
     public void testTeamDtoModelMapper() {
         Team team = Team.builder()
-                .id(1L)
+                .id(1)
                 .name("team1")
                 .build();
 

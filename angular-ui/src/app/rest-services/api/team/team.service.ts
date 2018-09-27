@@ -20,7 +20,7 @@ export class TeamService {
   }
 
   update(team: Team): Observable<Team> {
-    return this.http.put<Team>(this.teamRoot, team);
+    return this.http.put<Team>(this.teamRoot + '/' + team.id, team);
   }
 
   delete(team: Team): Observable<boolean> {

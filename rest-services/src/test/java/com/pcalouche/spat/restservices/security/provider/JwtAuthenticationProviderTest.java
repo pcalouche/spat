@@ -36,7 +36,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
         Mockito.reset(userRepository);
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         activeUser = User.builder()

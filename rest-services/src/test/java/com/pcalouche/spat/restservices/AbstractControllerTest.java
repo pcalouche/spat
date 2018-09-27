@@ -66,13 +66,13 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
         // Setup some mocks for the user service can be used by other tests
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
 
         Set<Role> adminRoles = new HashSet<>(userRoles);
         adminRoles.add(Role.builder()
-                .id(2L)
+                .id(2)
                 .name("ROLE_ADMIN")
                 .build());
 

@@ -35,11 +35,11 @@ public class TeamControllerTest extends AbstractControllerTest {
     @Before
     public void before() {
         testTeamDto1 = TeamDto.builder()
-                .id(1L)
+                .id(1)
                 .name("Team1")
                 .build();
         testTeamDto2 = TeamDto.builder()
-                .id(2L)
+                .id(2)
                 .name("Team2")
                 .build();
     }
@@ -100,64 +100,64 @@ public class TeamControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        TeamDto teamDtoToSave = TeamDto.builder()
-                .id(1L)
+        TeamDto teamDtoToUpdate = TeamDto.builder()
+                .id(1)
                 .name("Team1 Change")
                 .build();
 
         given(teamService.findById(testTeamDto1.getId())).willReturn(testTeamDto1);
-        given(teamService.save(teamDtoToSave)).willReturn(teamDtoToSave);
+        given(teamService.save(teamDtoToUpdate)).willReturn(teamDtoToUpdate);
 
-        MockHttpServletRequestBuilder request = post(ApiEndpoints.TEAMS)
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS + "/" + teamDtoToUpdate.getId())
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(teamDtoToSave));
+                .content(objectMapper.writeValueAsString(teamDtoToUpdate));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(teamDtoToSave)));
+                .andExpect(content().json(objectMapper.writeValueAsString(teamDtoToUpdate)));
 
-        verify(teamService, Mockito.times(1)).save(teamDtoToSave);
+        verify(teamService, Mockito.times(1)).save(teamDtoToUpdate);
     }
 
     @Test
     public void testUpdateWhenTeamNotFound() throws Exception {
-        TeamDto teamDtoToSave = TeamDto.builder()
-                .id(1L)
+        TeamDto teamDtoToUpdate = TeamDto.builder()
+                .id(1)
                 .name("Team1 Change")
                 .build();
 
         given(teamService.findById(testTeamDto1.getId())).willReturn(null);
-        given(teamService.save(testTeamDto1)).willReturn(teamDtoToSave);
+        given(teamService.save(testTeamDto1)).willReturn(teamDtoToUpdate);
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS)
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS + "/" + teamDtoToUpdate.getId())
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(teamDtoToSave));
+                .content(objectMapper.writeValueAsString(teamDtoToUpdate));
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_TEAM_FOUND, testTeamDto1.getId()))));
 
-        verify(teamService, Mockito.times(0)).save(teamDtoToSave);
+        verify(teamService, Mockito.times(0)).save(teamDtoToUpdate);
     }
 
     @Test
     public void testUpdateRequiresAdminRole() throws Exception {
-        TeamDto teamDtoToSave = TeamDto.builder()
-                .id(1L)
+        TeamDto teamDtoToUpdate = TeamDto.builder()
+                .id(1)
                 .name("Team1 Change")
                 .build();
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS)
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS + "/" + teamDtoToUpdate.getId())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(teamDtoToSave));
+                .content(objectMapper.writeValueAsString(teamDtoToUpdate));
 
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
 
-        verify(teamService, Mockito.times(0)).save(teamDtoToSave);
+        verify(teamService, Mockito.times(0)).save(teamDtoToUpdate);
     }
 
     @Test

@@ -40,18 +40,20 @@ public class TeamController extends AbstractSpatController {
 
     @ApiOperation(value = "Update an existing team")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping
-    public TeamDto update(@RequestBody TeamDto teamDto) {
-        if (teamService.findById(teamDto.getId()) == null) {
-            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, teamDto.getId()));
+    @PutMapping(value = "/{id}")
+    public TeamDto update(@PathVariable Integer id, @RequestBody TeamDto teamDto) {
+        if (teamService.findById(id) == null) {
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id));
         }
+        // Make sure id was not changed in payload and the wrong record gets updates
+        teamDto.setId(id);
         return teamService.save(teamDto);
     }
 
     @ApiOperation(value = "Delete an existing team")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Integer id) {
         if (teamService.findById(id) == null) {
             throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id));
         }

@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 public class TeamDto {
     @EqualsAndHashCode.Exclude
-    private Long id;
+    private Integer id;
     private String name;
 }

@@ -16,11 +16,11 @@ public class UserDtoTest extends AbstractModelMapperTest {
     public void testUserDtoModelMapper() {
         Set<Role> roles = new HashSet<>();
         Role role1 = Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_ADMIN")
                 .build();
         Role role2 = Role.builder()
-                .id(2L)
+                .id(2)
                 .name("ROLE_USER")
                 .build();
         roles.add(role1);

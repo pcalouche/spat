@@ -53,12 +53,14 @@ public class UserController extends AbstractSpatController {
 
     @ApiOperation(value = "Update an existing user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping
-    public UserDto update(@RequestBody UserDto userDto) {
-        UserDto existingUserDto = userService.findById(userDto.getUsername());
+    @PutMapping(value = "/{username}")
+    public UserDto update(@PathVariable String username, @RequestBody UserDto userDto) {
+        UserDto existingUserDto = userService.findById(username);
         if (existingUserDto == null) {
-            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, userDto.getUsername()));
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, username));
         }
+        // Make sure username was not changed in payload and the wrong record gets updates
+        userDto.setUsername(username);
         return userService.save(userDto);
     }
 

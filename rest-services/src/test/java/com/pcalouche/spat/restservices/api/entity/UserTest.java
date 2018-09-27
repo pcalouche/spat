@@ -17,11 +17,11 @@ public class UserTest extends AbstractModelMapperTest {
     public void testUserDtoModelMapper() {
         Set<RoleDto> roleDtos = new HashSet<>();
         roleDtos.add(RoleDto.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         roleDtos.add(RoleDto.builder()
-                .id(2L)
+                .id(2)
                 .name("ROLE_ADMIN")
                 .build());
         UserDto userDto = UserDto.builder()
@@ -36,11 +36,11 @@ public class UserTest extends AbstractModelMapperTest {
         assertThat(user.getUsername()).isEqualTo("username");
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         roles.add(Role.builder()
-                .id(2L)
+                .id(2)
                 .name("ROLE_ADMIN")
                 .build());
         assertThat(user.getRoles()).isEqualTo(roles);

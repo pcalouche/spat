@@ -16,7 +16,7 @@ import java.util.Objects;
 public class Team implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String name;
 
     @Override

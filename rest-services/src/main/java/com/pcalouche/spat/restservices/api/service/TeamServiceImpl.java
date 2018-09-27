@@ -21,7 +21,7 @@ public class TeamServiceImpl extends AbstractSpatServiceImpl implements TeamServ
     }
 
     @Override
-    public TeamDto findById(Long id) {
+    public TeamDto findById(Integer id) {
         return teamRepository.findById(id)
                 .map(team -> modelMapper.map(team, TeamDto.class))
                 .orElse(null);
@@ -41,7 +41,7 @@ public class TeamServiceImpl extends AbstractSpatServiceImpl implements TeamServ
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         teamRepository.deleteById(id);
     }
 }

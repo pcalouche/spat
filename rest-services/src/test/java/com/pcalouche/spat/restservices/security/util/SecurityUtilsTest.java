@@ -72,7 +72,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     public void testValidateUserAccountStatusAccountExpiredException() {
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()
@@ -91,7 +91,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     public void testValidateUserAccountStatusAccountLockedException() {
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()
@@ -110,7 +110,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     public void testValidateUserAccountStatusCredentialsException() {
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()
@@ -129,7 +129,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     public void testValidateUserAccountStatusDisabledException() {
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build());
         User user = User.builder()

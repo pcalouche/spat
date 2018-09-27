@@ -11,7 +11,7 @@ public class RoleTest extends AbstractModelMapperTest {
     @Test
     public void testRoleModelMapper() {
         RoleDto roleDto = RoleDto.builder()
-                .id(1L)
+                .id(1)
                 .name("ROLE_USER")
                 .build();
 
