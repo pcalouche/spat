@@ -1,25 +1,26 @@
 import React, {Component}                  from 'react';
+import {connect}                           from 'react-redux';
 import {Card, CardBody, CardHeader, Table} from 'reactstrap';
 
 import './TeamList.css';
-import {TOKEN}                             from '../../util/SecurityUtils';
 import {FontAwesomeIcon}                   from '@fortawesome/react-fontawesome';
+import * as teamActionTypes                from '../../store/teamActions';
 
 class TeamList extends Component {
   state = {
-    teams: []
+    // teams: []
   };
 
   componentDidMount() {
-    fetch('http://localhost:10000/spat/rest-services/api/teams', {
-      headers: {'Authorization': TOKEN}
-    }).then(results => {
-      return results.json();
-    }).then(data => {
-      this.setState({teams: data});
-    }).catch(error => {
-      console.error(error);
-    });
+    // fetch('http://localhost:10000/spat/rest-services/api/teams', {
+    //   headers: {'Authorization': TOKEN}
+    // }).then(results => {
+    //   return results.json();
+    // }).then(data => {
+    //   this.setState({teams: data});
+    // }).catch(error => {
+    //   console.error(error);
+    // });
   }
 
   render() {
@@ -37,7 +38,7 @@ class TeamList extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.teams.map(team => {
+              {this.props.teams.map(team => {
                 return (
                   <tr key={team.id}>
                     <td className="action-column"><FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon></td>
@@ -55,4 +56,17 @@ class TeamList extends Component {
   }
 }
 
-export default TeamList;
+const mapStateToProps = (state) => {
+  return {
+    teams: state.teams.list,
+    selectedTeam: state.teams.selected
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUsersLoaded: (teams) => dispatch({type: teamActionTypes.LOAD_TEAMS, list: teams})
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TeamList);

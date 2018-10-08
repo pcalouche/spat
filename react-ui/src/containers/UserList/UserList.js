@@ -1,9 +1,11 @@
 import React, {Component}                  from 'react';
+import {connect}                           from 'react-redux';
 import {Card, CardBody, CardHeader, Table} from 'reactstrap';
 import {FontAwesomeIcon}                   from '@fortawesome/react-fontawesome';
 
 import './UserList.css';
 import {TOKEN}                             from '../../util/SecurityUtils';
+import * as userActionTypes                from '../../store/userActions';
 
 class UserList extends Component {
   state = {
@@ -80,4 +82,17 @@ class UserList extends Component {
   }
 }
 
-export default UserList;
+const mapStateToProps = (state) => {
+  return {
+    users: state.users.list,
+    selectedUser: state.users.selected
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUsersLoaded: (users) => dispatch({type: userActionTypes.LOAD_USERS, list: users})
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserList);
