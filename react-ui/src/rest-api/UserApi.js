@@ -1,24 +1,24 @@
 import {baseUrl, handleJsonResponse, jsonHeaders} from './Api';
 
 export const fetchUser = async (username) => {
-    const response = await fetch(baseUrl + '/users/' + username, {
-        headers: jsonHeaders()
-    });
+  const response = await fetch(baseUrl + '/users/' + username, {
+    headers: jsonHeaders()
+  });
 
-    return handleJsonResponse(response);
+  return handleJsonResponse(response);
 };
 
-export const fetchUserByToken = async () => {
-    const response = await fetch(baseUrl + '/users/token', {
-        headers: jsonHeaders()
-    });
+export const fetchCurrentUser = async () => {
+  const response = await fetch(baseUrl + '/users/current-user', {
+    headers: jsonHeaders()
+  });
 
-    return handleJsonResponse(response);
+  return handleJsonResponse(response);
 };
 
 export const fetchUsers = async () => {
-    const response = await fetch(baseUrl + '/users', {
-        headers: jsonHeaders()
-    });
-    return handleJsonResponse(response);
+  const response = await fetch(baseUrl + '/users', {
+    headers: jsonHeaders()
+  });
+  return handleJsonResponse(response);
 };

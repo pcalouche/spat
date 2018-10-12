@@ -8,28 +8,28 @@ export const LOGIN_BY_EXISTING_TOKEN = 'LOGIN_BY_EXISTING_TOKEN';
 export const LOGOUT_USER = 'LOGOUT_USER';
 
 export const loginUser = (username, password) => async dispatch => {
-    try {
-        const tokenData = await authApi.fetchToken(username, password);
-        if (tokenData.token) {
-            sessionStorage.setItem(api.storageKey, JSON.stringify(tokenData));
-            const user = await userApi.fetchUser(username);
-            user.roles = user.roles.map(role => role.name);
-            dispatch({type: DO_SUCCESSFUL_LOGIN, tokenData: tokenData, user: user});
-        } else {
-            dispatch({type: DO_BAD_LOGIN, errorMessage: tokenData.message});
-        }
-    } catch (error) {
-        api.logError(error);
-        dispatch({type: DO_BAD_LOGIN, errorMessage: 'Unable to connect at this time.'});
+  try {
+    const tokenData = await authApi.fetchToken(username, password);
+    if (tokenData.token) {
+      sessionStorage.setItem(api.storageKey, JSON.stringify(tokenData));
+      const user = await userApi.fetchUser(username);
+      user.roles = user.roles.map(role => role.name);
+      dispatch({type: DO_SUCCESSFUL_LOGIN, tokenData: tokenData, user: user});
+    } else {
+      dispatch({type: DO_BAD_LOGIN, errorMessage: tokenData.message});
     }
+  } catch (error) {
+    api.logError(error);
+    dispatch({type: DO_BAD_LOGIN, errorMessage: 'Unable to connect at this time.'});
+  }
 };
 
 export const loginUserByExistingToken = () => async dispatch => {
-    const user = await userApi.fetchUserByToken();
-    user.roles = user.roles.map(role => role.name);
-    dispatch({type: LOGIN_BY_EXISTING_TOKEN, user: user});
+  const user = await userApi.fetchCurrentUser();
+  user.roles = user.roles.map(role => role.name);
+  dispatch({type: LOGIN_BY_EXISTING_TOKEN, user: user});
 };
 
 export const logoutUser = () => dispatch => {
-    dispatch({type: LOGOUT_USER});
+  dispatch({type: LOGOUT_USER});
 };

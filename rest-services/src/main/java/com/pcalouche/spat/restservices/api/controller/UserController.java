@@ -26,8 +26,8 @@ public class UserController extends AbstractSpatController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/token")
-    public UserDto findByToken(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
+    @GetMapping(value = "/current-user")
+    public UserDto currentUser(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
         UserDto userDto = userService.findById(jwtAuthenticationToken.getPrincipal().toString());
         if (userDto == null) {
             throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, jwtAuthenticationToken.getPrincipal().toString()));
