@@ -1,4 +1,4 @@
-import * as userActionType from '../actions/userActions';
+import * as actionType from '../actions/userActions';
 
 const initialState = {
     list: [],
@@ -7,10 +7,12 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case userActionType.LOAD_USERS:
-            console.log('in load users');
-            return state;
-        case userActionType.ADD_USER:
+        case actionType.LOAD_USERS:
+            return {
+                ...state,
+                list: action.list
+            };
+        case actionType.ADD_USER:
             return {
                 ...state
             };

@@ -1,4 +1,4 @@
-import * as teamActionType from '../actions/teamActions';
+import * as actionType from '../actions/teamActions';
 
 const initialState = {
     list: [],
@@ -7,12 +7,12 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case teamActionType.LOAD_TEAMS:
+        case actionType.LOAD_TEAMS:
             return {
                 ...state,
                 list: action.list
             };
-        case teamActionType.ADD_TEAM:
+        case actionType.ADD_TEAM:
             return {
                 ...state
             };

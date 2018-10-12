@@ -7,9 +7,11 @@ import com.pcalouche.spat.restservices.api.dto.UserDto;
 import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.service.UserService;
+import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,9 +26,18 @@ public class UserController extends AbstractSpatController {
         this.userService = userService;
     }
 
+    @GetMapping(value = "/token")
+    public UserDto findByToken(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
+        UserDto userDto = userService.findById(jwtAuthenticationToken.getPrincipal().toString());
+        if (userDto == null) {
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, jwtAuthenticationToken.getPrincipal().toString()));
+        }
+        return userDto;
+    }
+
     @ApiOperation(value = "Find a user by username")
     @GetMapping(value = "/{username}")
-    public UserDto findById(@PathVariable String username) throws RestResourceNotFoundException {
+    public UserDto findById(@PathVariable String username) {
         UserDto userDto = userService.findById(username);
         if (userDto == null) {
             throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, username));
