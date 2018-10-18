@@ -7,8 +7,6 @@ import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.config.SecurityConfig;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
-import com.pcalouche.spat.restservices.security.provider.AjaxLoginAuthenticationProvider;
-import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
@@ -34,10 +32,6 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     protected MockMvc mockMvc;
     @MockBean
     protected LoggerInterceptor loggerInterceptor;
-    @Autowired
-    protected AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
-    @Autowired
-    protected JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
     protected UserRepository userRepository;
     private String validUserToken;

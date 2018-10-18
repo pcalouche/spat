@@ -1,12 +1,12 @@
 package com.pcalouche.spat.restservices.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.filter.AjaxLoginProcessingFilter;
 import com.pcalouche.spat.restservices.security.filter.JwtAuthenticationProcessingFilter;
 import com.pcalouche.spat.restservices.security.provider.AjaxLoginAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -23,26 +23,23 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final AjaxLoginProcessingFilter ajaxLoginProcessingFilter;
-    private final JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter;
-    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
-    public SecurityConfig(AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider,
-                          JwtAuthenticationProvider jwtAuthenticationProvider,
+    public SecurityConfig(UserRepository userRepository,
                           ObjectMapper objectMapper) {
-        authenticationManager = new ProviderManager(Arrays.asList(ajaxLoginAuthenticationProvider, jwtAuthenticationProvider));
-        ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager, objectMapper);
-        jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() {
-        return authenticationManager;
+        this.userRepository = userRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider = new AjaxLoginAuthenticationProvider(userRepository);
+        JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
+        AuthenticationManager authenticationManager = new ProviderManager(Arrays.asList(ajaxLoginAuthenticationProvider, jwtAuthenticationProvider));
+        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager, objectMapper);
+        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
+
         http
                 // Disable basic security since we won't be using that
                 .httpBasic().disable()
