@@ -9,8 +9,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -25,7 +28,9 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
     @Test
     public void testException() throws Exception {
         RuntimeException runtimeException = new RuntimeException("some random runtime exception");
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .contentType(MediaType.APPLICATION_JSON)
+                .buildRequest(new MockServletContext());
         request.setRequestURI(ApiEndpoints.USERS);
 
         ObjectNode expectedObjectNode = (ObjectNode) ExceptionUtils.buildJsonErrorObject(runtimeException, request);

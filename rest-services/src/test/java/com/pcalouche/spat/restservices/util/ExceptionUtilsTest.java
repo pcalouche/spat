@@ -13,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -93,8 +95,9 @@ public class ExceptionUtilsTest extends AbstractUnitTest {
     public void testWriteExceptionToResponse() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/request-path");
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .buildRequest(new MockServletContext());
+
         AuthenticationException authenticationException = new BadCredentialsException("bad credentials");
 
         ObjectNode expectedObjectNode = (ObjectNode) objectMapper.readTree(ExceptionUtils.buildJsonErrorObject(authenticationException, request).toString());

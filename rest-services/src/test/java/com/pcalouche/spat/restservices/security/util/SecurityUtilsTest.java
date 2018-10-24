@@ -8,8 +8,10 @@ import io.jsonwebtoken.Claims;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
@@ -20,8 +22,9 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==");
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==")
+                .buildRequest(new MockServletContext());
         String[] decodedParts = SecurityUtils.getDecodedBasicAuthFromRequest(request);
         assertThat(decodedParts).hasSize(2);
         assertThat(decodedParts[0]).isEqualTo("activeUser");
@@ -30,7 +33,8 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequestBadDecodeThrowsException() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .buildRequest(new MockServletContext());
         assertThatThrownBy(() -> SecurityUtils.getDecodedBasicAuthFromRequest(request))
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Basic Authentication header is invalid");
@@ -38,8 +42,10 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequestBadHeaderPrefixThrowsException() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("invalidHeader".getBytes()));
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("invalidHeader".getBytes()))
+                .buildRequest(new MockServletContext());
+
         assertThatThrownBy(() -> SecurityUtils.getDecodedBasicAuthFromRequest(request))
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Basic Authentication header is invalid");
@@ -47,7 +53,10 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetTokenFromRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==")
+                .buildRequest(new MockServletContext());
+
         request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==");
         assertThat(SecurityUtils.getTokenFromRequest(request)).isNotEmpty();
     }
