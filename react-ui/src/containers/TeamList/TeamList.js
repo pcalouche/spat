@@ -5,9 +5,21 @@ import {Card, CardBody, CardHeader, Table} from 'reactstrap';
 import './TeamList.css';
 import {FontAwesomeIcon}                   from '@fortawesome/react-fontawesome';
 import * as teamActions                    from '../../store/actions/teamActions';
+import TeamModal                           from '../../components/TeamModal';
 
 class TeamList extends Component {
-    state = {};
+    state = {
+        modalIsOpen: false,
+        modalTitle: ''
+    };
+
+    openModal = (modalTitle) => {
+        this.setState({modalIsOpen: !this.state.modalIsOpen, modalTitle: modalTitle ? modalTitle : ''});
+    };
+
+    closeModal = () => {
+        this.setState({modalIsOpen: !this.state.modalIsOpen});
+    };
 
     componentDidMount() {
         this.props.loadTeams();
@@ -21,8 +33,8 @@ class TeamList extends Component {
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th className="action-column"></th>
-                                <th className="action-column"></th>
+                                <th className="action-column"/>
+                                <th className="action-column"/>
                                 <th>Id</th>
                                 <th>Name</th>
                             </tr>
@@ -31,8 +43,8 @@ class TeamList extends Component {
                             {this.props.teams.map(team => {
                                 return (
                                     <tr key={team.id}>
-                                        <td className="action-column"><FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon></td>
-                                        <td className="action-column"><FontAwesomeIcon icon="trash-alt"></FontAwesomeIcon></td>
+                                        <td className="action-column"><FontAwesomeIcon icon="pencil-alt" onClick={() => this.openModal('Edit Team')}/></td>
+                                        <td className="action-column"><FontAwesomeIcon icon="trash-alt" onClick={() => this.openModal('Delete Team')}/></td>
                                         <td>{team.id}</td>
                                         <td>{team.name}</td>
                                     </tr>
@@ -40,6 +52,11 @@ class TeamList extends Component {
                             })}
                         </tbody>
                     </Table>
+                    <TeamModal
+                        open={this.state.modalIsOpen}
+                        title={this.state.modalTitle}
+                        cancelModal={this.closeModal}
+                    />
                 </CardBody>
             </Card>
         );

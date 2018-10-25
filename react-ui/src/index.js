@@ -4,9 +4,10 @@ import {Provider}            from 'react-redux';
 import {BrowserRouter}       from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import 'react-app-polyfill/ie11';
-import 'bootstrap/dist/css/bootstrap.css';
 
 import './index.css';
+// import 'bootstrap-material-design/dist/css/bootstrap-material-design.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import store                 from './store/store';
 import App                   from './App';
 
