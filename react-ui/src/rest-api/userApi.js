@@ -1,8 +1,8 @@
-import {baseUrl, handleJsonResponse, jsonHeaders} from './Api';
+import {baseUrl, handleJsonResponse, jwtHeaders} from './apiUtils';
 
 export const fetchUser = async (username) => {
   const response = await fetch(baseUrl + '/users/' + username, {
-    headers: jsonHeaders()
+    headers: jwtHeaders()
   });
 
   return handleJsonResponse(response);
@@ -10,7 +10,7 @@ export const fetchUser = async (username) => {
 
 export const fetchCurrentUser = async () => {
   const response = await fetch(baseUrl + '/users/current-user', {
-    headers: jsonHeaders()
+    headers: jwtHeaders()
   });
 
   return handleJsonResponse(response);
@@ -18,7 +18,7 @@ export const fetchCurrentUser = async () => {
 
 export const fetchUsers = async () => {
   const response = await fetch(baseUrl + '/users', {
-    headers: jsonHeaders()
+    headers: jwtHeaders()
   });
   return handleJsonResponse(response);
 };
