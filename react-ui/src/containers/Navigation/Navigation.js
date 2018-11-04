@@ -26,9 +26,12 @@ class Navigation extends Component {
         await this.props.loginUserByExistingToken();
         this.setState({isLoading: false});
       } catch (error) {
+        console.info(error);
         this.props.logoutUser();
         this.setState({isLoading: false});
       }
+    } else {
+      this.setState({isLoading: false});
     }
   }
 

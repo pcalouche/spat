@@ -60,3 +60,16 @@ const logHttpResponseError = async response => {
     console.error('status: ' + response.status + ' message: ' + response.message);
   }
 };
+
+// const isErrorJwtInvalid = async error => {
+//   const contentType = response.headers.get('content-type');
+//   if (contentType && contentType.indexOf('application/json') !== -1) {
+//     try {
+//       const json = await response.json();
+//       console.error('status: ' + json.status + ' message: ' + json.message);
+//     } catch (error) {
+//       console.error('status: ' + response.status + ' message: ' + response.message);
+//     }
+//   }
+//   return false;
+// };

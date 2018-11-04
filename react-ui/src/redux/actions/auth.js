@@ -23,9 +23,13 @@ export const loginUser = (username, password) => async dispatch => {
 };
 
 export const loginUserByExistingToken = () => async dispatch => {
-  const user = await userApi.fetchCurrentUser();
-  user.roles = user.roles.map(role => role.name);
-  dispatch({type: LOGIN_BY_EXISTING_TOKEN, user: user});
+  try {
+    const user = await userApi.fetchCurrentUser();
+    user.roles = user.roles.map(role => role.name);
+    dispatch({type: LOGIN_BY_EXISTING_TOKEN, user: user});
+  } catch (error) {
+    
+  }
 };
 
 export const logoutUser = () => dispatch => {

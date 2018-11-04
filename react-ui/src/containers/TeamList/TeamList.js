@@ -9,6 +9,8 @@ import TeamModal                           from '../../components/TeamModal';
 
 class TeamList extends Component {
   state = {
+    isLoading: true,
+    errorLoading: false,
     modalIsOpen: false,
     modalTitle: ''
   };
@@ -21,15 +23,24 @@ class TeamList extends Component {
     this.setState({modalIsOpen: !this.state.modalIsOpen});
   };
 
-  componentDidMount() {
-    this.props.loadTeams();
+  async componentDidMount() {
+    try {
+      await this.props.loadTeams();
+      this.setState({isLoading: false});
+    } catch (error) {
+      this.setState({isLoading: false, errorLoading: true});
+    }
   }
 
   render() {
-    return (
-      <Card className="TeamList m-2">
-        <CardHeader>Teams</CardHeader>
-        <CardBody>
+    let content;
+    if (this.state.isLoading) {
+      content = (<React.Fragment>Loading</React.Fragment>);
+    } else if (this.state.errorLoading) {
+      content = (<React.Fragment>Error Loading Teams</React.Fragment>);
+    } else {
+      content = (
+        <React.Fragment>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -59,6 +70,15 @@ class TeamList extends Component {
             title={this.state.modalTitle}
             cancelModal={this.closeModal}
           />
+        </React.Fragment>
+      );
+    }
+
+    return (
+      <Card className="TeamList m-2">
+        <CardHeader>Teams</CardHeader>
+        <CardBody>
+          {content}
         </CardBody>
       </Card>
     );
