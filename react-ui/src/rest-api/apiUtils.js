@@ -47,12 +47,19 @@ const getRefreshToken = () => {
   return refreshToken;
 };
 
+export const clearToken = () => {
+  sessionStorage.removeItem(storageKey);
+};
+
 const logHttpResponseError = async response => {
   const contentType = response.headers.get('content-type');
   if (contentType && contentType.indexOf('application/json') !== -1) {
     try {
       const json = await response.json();
       console.error('status: ' + json.status + ' message: ' + json.message);
+      if (json.status = 401 && json.message.indexOf('JWT expired') !== -1) {
+        clearToken();
+      }
     } catch (error) {
       console.error('status: ' + response.status + ' message: ' + response.message);
     }
@@ -60,16 +67,3 @@ const logHttpResponseError = async response => {
     console.error('status: ' + response.status + ' message: ' + response.message);
   }
 };
-
-// const isErrorJwtInvalid = async error => {
-//   const contentType = response.headers.get('content-type');
-//   if (contentType && contentType.indexOf('application/json') !== -1) {
-//     try {
-//       const json = await response.json();
-//       console.error('status: ' + json.status + ' message: ' + json.message);
-//     } catch (error) {
-//       console.error('status: ' + response.status + ' message: ' + response.message);
-//     }
-//   }
-//   return false;
-// };

@@ -114,7 +114,7 @@ export class UserModalComponent implements OnInit {
     if (this.userForm.value.roles[0]) {
       roles.push({id: 2, name: 'ROLE_ADMIN'});
     }
-  
+
     return {
       username: this.mode !== 'edit' ? this.userForm.value.username : this.userForm.controls['username'].value,
       accountNonExpired: !this.userForm.value.accountExpired,
@@ -133,9 +133,6 @@ export class UserModalComponent implements OnInit {
 
   private handleBadSave(response: HttpErrorResponse): void {
     this.handleRestError('Save User');
-    // this.actionButtonText = 'Save User';
-    // this.actionInProgress = false;
-    // this.hideErrorMessage = false;
     if (response.status === 0) {
       this.errorMessage = 'Unable to save ' + this.userForm.value.username + '.  Please try again later.';
     } else {

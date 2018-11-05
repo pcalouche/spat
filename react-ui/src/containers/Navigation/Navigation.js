@@ -11,32 +11,47 @@ import {authActions}                                                     from '.
 import UserList from '../UserList/UserList';
 
 class Navigation extends Component {
+  baseTitle = 'SPAT React UI';
+
   state = {
-    isOpen: false,
-    isLoading: true
+    isOpen: false
   };
 
   toggle = () => {
     this.setState({isOpen: !this.state.isOpen});
   };
 
-  async componentDidMount() {
-    if (this.props.token) {
-      try {
-        await this.props.loginUserByExistingToken();
-        this.setState({isLoading: false});
-      } catch (error) {
-        console.info(error);
-        this.props.logoutUser();
-        this.setState({isLoading: false});
-      }
-    } else {
-      this.setState({isLoading: false});
+  setDocumentTitle = () => {
+    switch (this.props.location.pathname) {
+      case '/login':
+        document.title = this.baseTitle + ' - Login';
+        break;
+      case '/teams':
+        document.title = this.baseTitle + ' - Teams';
+        break;
+      case '/users':
+        document.title = this.baseTitle + ' - Users';
+        break;
+      default :
+        document.title = this.baseTitle;
+        break;
     }
-  }
+  };
+
+  componentDidMount = () => {
+    if (this.props.token) {
+      this.props.loginUserByExistingToken();
+    }
+    this.setDocumentTitle();
+  };
+
+  componentDidUpdate = () => {
+    this.setDocumentTitle();
+  };
 
   render() {
-    if (this.state.isLoading) {
+    // Wait for existing token to be evaluated
+    if (this.props.token && !this.props.loggedInUser) {
       return null;
     }
     return (

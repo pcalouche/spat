@@ -7,6 +7,19 @@ import './UserList.css';
 import * as userActions                    from '../../redux/actions/user';
 
 class UserList extends Component {
+  state = {
+    modalIsOpen: false
+  };
+
+  openModal = () => {
+    this.setState({
+      modalIsOpen: !this.state.modalIsOpen
+    });
+  };
+
+  closeModal = () => {
+    this.setState({modalIsOpen: !this.state.modalIsOpen});
+  };
 
   displayAccountStatus = (user) => {
     const accountStatus = [];
@@ -31,15 +44,19 @@ class UserList extends Component {
     return user.roles.map(item => item.name).join(', ');
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.loadUsers();
-  }
+  };
 
   render() {
-    return (
-      <Card className="UserList m-2">
-        <CardHeader>Users</CardHeader>
-        <CardBody>
+    let content;
+    if (this.props.loading) {
+      content = (<h1>Loading...</h1>);
+    } else if (this.props.showError) {
+      content = (<h1>Error Loading Users</h1>);
+    } else {
+      content = (
+        <React.Fragment>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -64,6 +81,20 @@ class UserList extends Component {
               })}
             </tbody>
           </Table>
+          {/*<UserModal*/}
+          {/*open={this.state.modalIsOpen}*/}
+          {/*title={this.state.modalTitle}*/}
+          {/*cancelModal={this.closeModal}*/}
+          {/*/>*/}
+        </React.Fragment>
+      );
+    }
+
+    return (
+      <Card className="UserList m-2">
+        <CardHeader>Users</CardHeader>
+        <CardBody>
+          {content}
         </CardBody>
       </Card>
     );
@@ -73,8 +104,9 @@ class UserList extends Component {
 const mapStateToProps = (state) => {
   return {
     loggedInUser: state.auth.loggedInUser,
-    users: state.users.list,
-    selectedUser: state.users.selected
+    loading: state.users.loading,
+    showError: state.users.showError,
+    users: state.users.list
   };
 };
 

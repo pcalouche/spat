@@ -1,5 +1,5 @@
-import {authActions} from '../actions';
-import {storageKey}  from '../../rest-api/apiUtils';
+import {authActions}            from '../actions';
+import {clearToken, storageKey} from '../../rest-api/apiUtils';
 
 let spatTokenData = null;
 if (sessionStorage.getItem(storageKey)) {
@@ -34,7 +34,8 @@ const reducer = (state = initialState, action) => {
         loggedInUser: action.user
       };
     case  authActions.LOGOUT_USER:
-      sessionStorage.removeItem(storageKey);
+      console.log('authActions.LOGOUT_USER');
+      clearToken();
       return {
         ...state,
         token: null,

@@ -28,7 +28,7 @@ export const loginUserByExistingToken = () => async dispatch => {
     user.roles = user.roles.map(role => role.name);
     dispatch({type: LOGIN_BY_EXISTING_TOKEN, user: user});
   } catch (error) {
-    
+    logoutUser();
   }
 };
 
