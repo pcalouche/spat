@@ -9,7 +9,6 @@ import {Field, Formik}                                                    from '
 import * as Yup                                                           from 'yup';
 
 class Login extends Component {
-
   handleSubmit = async (values, actions) => {
     await this.props.loginUser(values.username, values.password);
     actions.setSubmitting(false);
@@ -37,12 +36,12 @@ class Login extends Component {
               password: Yup.string().required()
             })}
             onSubmit={this.handleSubmit}
-            render={props => (
-              <Form onSubmit={props.handleSubmit}>
+            render={formikProps => (
+              <Form onSubmit={formikProps.handleSubmit}>
                 {errorInfo}
                 <FormGroup>
                   <Label>Username</Label>
-                  {/*<Input name="username" placeholder="Username" onChange={props.handleChange} onBlur={props.handleBlur}/>*/}
+                  {/*<Input name="username" placeholder="Username" onChange={formikProps.handleChange} onBlur={formikProps.handleBlur}/>*/}
                   <Field
                     name="username"
                     render={(props) => <Input {...props.field} placeholder="Username"/>}
@@ -50,38 +49,23 @@ class Login extends Component {
                 </FormGroup>
                 <FormGroup>
                   <Label>Password</Label>
-                  {/*<Input type="password" name="password" placeholder="Password" onChange={props.handleChange} onBlur={props.handleBlur}/>*/}
+                  {/*<Input type="password" name="password" placeholder="Password" onChange={formikProps.handleChange} onBlur={formikProps.handleBlur}/>*/}
                   <Field
                     name="password"
                     render={(props) => <Input type="password" {...props.field} placeholder="Password"/>}
                   />
-                  {/*<p>Test {props.errors.password}</p>*/}
+                  {/*<p>Test {formikProps.errors.password}</p>*/}
                   {/*<Field type="password" name="password" placeholder="Password"/>*/}
                 </FormGroup>
                 <FormGroup>
-                  <Button type="submit" color="primary" block disabled={!props.isValid || props.isSubmitting}>Login</Button>
+                  <Button type="submit" color="primary" block disabled={!formikProps.isValid || formikProps.isSubmitting}>Login</Button>
                 </FormGroup>
                 <div>
-                  {JSON.stringify(props, null, 2)}
+                  {JSON.stringify(formikProps, null, 2)}
                 </div>
               </Form>
             )}
           />
-
-          {/*<Form onSubmit={(e) => this.handleSubmit(e)}>*/}
-          {/*{errorInfo}*/}
-          {/*<FormGroup>*/}
-          {/*<Label>Username</Label>*/}
-          {/*<Input name="username" value={this.state.username} placeholder="Username" onChange={(e) => this.handleChangeOrig(e)}/>*/}
-          {/*</FormGroup>*/}
-          {/*<FormGroup>*/}
-          {/*<Label>Password</Label>*/}
-          {/*<Input type="password" name="password" value={this.state.password} placeholder="Password" onChange={(e) => this.handleChangeOrig(e)}/>*/}
-          {/*</FormGroup>*/}
-          {/*<FormGroup>*/}
-          {/*<Button type="submit" color="primary" block disabled={!(this.state.username && this.state.password)}>Login</Button>*/}
-          {/*</FormGroup>*/}
-          {/*</Form>*/}
         </CardBody>
       </Card>
     );

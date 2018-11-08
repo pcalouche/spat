@@ -10,17 +10,17 @@ export const fetchTeams = async () => {
 export const addTeam = async (team) => {
   const response = await fetch(baseUrl + '/teams', {
     method: 'POST',
-    body: JSON.stringify(team),
-    headers: jwtHeaders()
+    headers: jwtHeaders(),
+    body: JSON.stringify(team)
   });
   return handleJsonResponse(response);
 };
 
 export const editTeam = async (team) => {
   const response = await fetch(baseUrl + '/teams/' + team.id, {
-    method: 'UPDATE',
-    body: JSON.stringify(team),
-    headers: jwtHeaders()
+    method: 'PUT',
+    headers: jwtHeaders(),
+    body: JSON.stringify(team)
   });
   return handleJsonResponse(response);
 };

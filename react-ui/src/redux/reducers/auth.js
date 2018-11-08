@@ -34,7 +34,6 @@ const reducer = (state = initialState, action) => {
         loggedInUser: action.user
       };
     case  authActions.LOGOUT_USER:
-      console.log('authActions.LOGOUT_USER');
       clearToken();
       return {
         ...state,

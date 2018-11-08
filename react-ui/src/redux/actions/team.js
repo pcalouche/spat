@@ -21,20 +21,38 @@ export const loadTeams = () => async dispatch => {
   }
 };
 
-export const showTeamModal = (mode, team, callback) => dispatch => {
-  dispatch({type: SHOW_TEAM_MODAL, mode: mode, team: team, callback: callback});
+export const showTeamModal = (mode, team, submitCallback) => dispatch => {
+  dispatch({type: SHOW_TEAM_MODAL, mode: mode, team: team, submitCallback: submitCallback});
 };
 
-export const hideTeamModal = (mode, team) => dispatch => {
+export const hideTeamModal = () => dispatch => {
   dispatch({type: HIDE_TEAM_MODAL});
 };
 
 export const addTeam = (team) => async dispatch => {
-
+  try {
+    team = await teamApi.addTeam(team);
+    dispatch({type: ADD_TEAM, team: team});
+  } catch (error) {
+    apiUtils.logError(error);
+    dispatch({
+      type: SHOW_TEAM_MODAL_ERROR,
+      message: `Unable to add ${team.name}.  Please try again later.`
+    });
+  }
 };
 
 export const editTeam = (team) => async dispatch => {
-
+  try {
+    team = await teamApi.editTeam(team);
+    dispatch({type: EDIT_TEAM, team: team});
+  } catch (error) {
+    apiUtils.logError(error);
+    dispatch({
+      type: SHOW_TEAM_MODAL_ERROR,
+      message: `Unable to edit ${team.name}.  Please try again later.`
+    });
+  }
 };
 
 export const deleteTeam = (team) => async dispatch => {

@@ -102,6 +102,6 @@ export class TeamModalComponent implements OnInit {
 
   private handleBadSave(): void {
     this.handleRestError('Save User');
-    this.errorMessage = 'Unable to delete ' + this.teamForm.value.name + '.  Please try again later.';
+    this.errorMessage = 'Unable to save ' + this.teamForm.value.name + '.  Please try again later.';
   }
 }

@@ -56,14 +56,14 @@ const logHttpResponseError = async response => {
   if (contentType && contentType.indexOf('application/json') !== -1) {
     try {
       const json = await response.json();
-      console.error('status: ' + json.status + ' message: ' + json.message);
-      if (json.status = 401 && json.message.indexOf('JWT expired') !== -1) {
+      console.error(`status: ${json.status} message: ${json.message}`);
+      if (json.status === 401 && json.message.indexOf('JWT expired') !== -1) {
         clearToken();
       }
     } catch (error) {
-      console.error('status: ' + response.status + ' message: ' + response.message);
+      console.error(`status: ${response.status} message: ${response.message}`);
     }
   } else {
-    console.error('status: ' + response.status + ' message: ' + response.message);
+    console.error(`status: ${response.status} message: ${response.message}`);
   }
 };

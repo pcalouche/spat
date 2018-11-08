@@ -4,8 +4,7 @@ import {Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, Mo
 import {Field, Formik}                                                                     from 'formik';
 import * as Yup                                                                            from 'yup';
 
-const TeamModal = (props) => {
-  console.info(props);
+const TeamModal = props => {
   let modalTitle = '';
   let buttonText = '';
 
@@ -22,45 +21,75 @@ const TeamModal = (props) => {
       modalTitle = 'Delete Team';
       buttonText = 'Delete Team';
       break;
+    default:
+      break;
   }
 
   return (
-    <Modal isOpen={props.open} toggle={props.cancelModal}>
-      <ModalHeader>{modalTitle}</ModalHeader>
-      <ModalBody>
-        <Formik
-          initialValues={{name: props.team.name}}
-          validationSchema={Yup.object().shape({
-            name: Yup.string().required()
-          })}
-          render={() => (
-            <Form>
-              {props.errorMessage !== '' && <Label>Error: {props.errorMessage}</Label>}
+    <Formik
+      initialValues={{name: props.team.name ? props.team.name : ''}}
+      enableReinitialize={true}
+      validationSchema={Yup.object().shape({
+        name: Yup.string().required()
+      })}
+      isInitialValid={(formikBag) => {
+        return formikBag.validationSchema.isValidSync(formikBag.initialValues);
+      }}
+      onSubmit={async (values, actions) => {
+        await props.submitCallback({...props.team, ...values});
+        actions.setSubmitting(false);
+      }}
+      render={(formikProps) => (
+        <Modal isOpen={props.open} toggle={props.cancelModal}>
+          <ModalHeader>{modalTitle}</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={e => e.preventDefault()}>
+              {props.errorMessage && <Label className="error-text">Error: {props.errorMessage}</Label>}
+              <div>
+                {JSON.stringify(formikProps, null, 2)}
+              </div>
+              <br/>
+              <div>
+                {JSON.stringify(props, null, 2)}
+              </div>
+              <div>
+                {JSON.stringify({...props.team, ...formikProps.values}, null, 2)}
+              </div>
               <FormGroup>
                 <Label>Name</Label>
                 <Field
                   name="name"
-                  render={(props) => <Input type="name" {...props.field} placeholder="Team Name"/>}
+                  render={(props) => <Input {...props.field} placeholder="Team Name"/>}
                 />
               </FormGroup>
             </Form>
-          )}
-        />
-      </ModalBody>
-      <ModalFooter>
-        <Button color="primary" onClick={() => props.callback(props.team)}>{buttonText}</Button>
-        <Button color="primary" onClick={props.cancelModal}>Cancel</Button>
-      </ModalFooter>
-    </Modal>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              type="submit"
+              color="primary"
+              onClick={() => props.submitCallback({...props.team, ...formikProps.values})}
+              disabled={!formikProps.isValid || formikProps.isSubmitting}>
+              {buttonText}</Button>
+            <Button
+              color="primary"
+              onClick={props.cancelCallback}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Modal>
+      )}
+    />
   );
 };
 
 TeamModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  mode: PropTypes.string.isRequired,
+  mode: PropTypes.oneOf(['Add', 'Edit', 'Delete']).isRequired,
   team: PropTypes.object.isRequired,
   errorMessage: PropTypes.string,
-  callback: PropTypes.func.isRequired
+  submitCallback: PropTypes.func.isRequired,
+  cancelCallback: PropTypes.func.isRequired
 };
 
 export default TeamModal;

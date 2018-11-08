@@ -25,7 +25,7 @@ class TeamList extends Component {
           <Button
             color="secondary"
             className="mb-2"
-            onClick={() => this.props.showModal('Add', {}, this.props.addTeam)}>
+            onClick={() => this.props.showModal('Add', {name: ''}, this.props.addTeam)}>
             Add Team</Button>
           <Table striped bordered hover>
             <thead>
@@ -62,8 +62,8 @@ class TeamList extends Component {
             mode={this.props.modalMode}
             team={this.props.selectedTeam}
             errorMessage={this.props.modalError}
-            callback={this.props.modalCallback}
-            cancelModal={() => this.props.hideModal()}
+            submitCallback={this.props.modalSubmitCallback}
+            cancelCallback={this.props.hideModal}
           />
         </React.Fragment>
       );
@@ -90,14 +90,14 @@ const mapStateToProps = (state) => {
     modalIsOpen: state.teams.modalIsOpen,
     modalMode: state.teams.modalMode,
     modalError: state.teams.modalError,
-    modalCallback: state.teams.modalCallback
+    modalSubmitCallback: state.teams.modalSubmitCallback
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     loadTeams: () => dispatch(teamActions.loadTeams()),
-    showModal: (mode, team, callback) => dispatch(teamActions.showTeamModal(mode, team, callback)),
+    showModal: (mode, team, submitCallback) => dispatch(teamActions.showTeamModal(mode, team, submitCallback)),
     hideModal: () => dispatch(teamActions.hideTeamModal()),
     addTeam: (team) => dispatch(teamActions.addTeam(team)),
     editTeam: (team) => dispatch(teamActions.editTeam(team)),

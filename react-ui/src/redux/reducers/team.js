@@ -8,7 +8,7 @@ const initialState = {
   modalIsOpen: false,
   modalMode: 'Add',
   modalError: null,
-  modalCallback: () => {
+  modalSubmitCallback: () => {
   }
 };
 
@@ -34,14 +34,13 @@ const reducer = (state = initialState, action) => {
         showError: true
       };
     case teamActions.SHOW_TEAM_MODAL: {
-      console.info(action);
       return {
         ...state,
         modalIsOpen: true,
         modalError: null,
         modalMode: action.mode,
         selectedTeam: action.team,
-        modalCallback: action.callback
+        modalSubmitCallback: action.submitCallback
       };
     }
     case teamActions.SHOW_TEAM_MODAL_ERROR: {
@@ -57,8 +56,19 @@ const reducer = (state = initialState, action) => {
       };
     }
     case teamActions.ADD_TEAM:
+
       return {
-        ...state
+        ...state,
+        list: [...state.list, action.team],
+        modalIsOpen: false
+      };
+    case teamActions.EDIT_TEAM:
+      let newList = [...state.list];
+      newList[newList.findIndex(el => el.id === action.team.id)] = action.team;
+      return {
+        ...state,
+        list: newList,
+        modalIsOpen: false
       };
     case teamActions.DELETE_TEAM: {
       return {
