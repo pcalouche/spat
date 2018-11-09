@@ -37,7 +37,7 @@ public class DatabaseLoader implements CommandLineRunner {
                         .name("Team 2")
                         .build(),
                 Team.builder()
-                        .name("Team 2")
+                        .name("Team 3")
                         .build());
 
         teamRepository.saveAll(teams);

@@ -42,19 +42,11 @@ const TeamModal = props => {
       render={(formikProps) => (
         <Modal isOpen={props.open} toggle={props.cancelModal}>
           <ModalHeader>{modalTitle}</ModalHeader>
-          <ModalBody>
-            <Form onSubmit={e => e.preventDefault()}>
+          <Form onSubmit={e => e.preventDefault()}>
+            <ModalBody>
               {props.errorMessage && <Label className="error-text">Error: {props.errorMessage}</Label>}
-              <div>
-                {JSON.stringify(formikProps, null, 2)}
-              </div>
-              <br/>
-              <div>
-                {JSON.stringify(props, null, 2)}
-              </div>
-              <div>
-                {JSON.stringify({...props.team, ...formikProps.values}, null, 2)}
-              </div>
+              <p>Are you sure you want to delete {props.team.name}?</p>
+              {props.mode !== 'Delete' &&
               <FormGroup>
                 <Label>Name</Label>
                 <Field
@@ -62,21 +54,21 @@ const TeamModal = props => {
                   render={(props) => <Input {...props.field} placeholder="Team Name"/>}
                 />
               </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              type="submit"
-              color="primary"
-              onClick={() => props.submitCallback({...props.team, ...formikProps.values})}
-              disabled={!formikProps.isValid || formikProps.isSubmitting}>
-              {buttonText}</Button>
-            <Button
-              color="primary"
-              onClick={props.cancelCallback}>
-              Cancel
-            </Button>
-          </ModalFooter>
+              }
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                color="primary"
+                onClick={formikProps.handleSubmit}
+                disabled={!formikProps.isValid || formikProps.isSubmitting}>
+                {buttonText}</Button>
+              <Button
+                color="primary"
+                onClick={props.cancelCallback}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Form>
         </Modal>
       )}
     />

@@ -41,7 +41,6 @@ class Login extends Component {
                 {errorInfo}
                 <FormGroup>
                   <Label>Username</Label>
-                  {/*<Input name="username" placeholder="Username" onChange={formikProps.handleChange} onBlur={formikProps.handleBlur}/>*/}
                   <Field
                     name="username"
                     render={(props) => <Input {...props.field} placeholder="Username"/>}
@@ -49,20 +48,14 @@ class Login extends Component {
                 </FormGroup>
                 <FormGroup>
                   <Label>Password</Label>
-                  {/*<Input type="password" name="password" placeholder="Password" onChange={formikProps.handleChange} onBlur={formikProps.handleBlur}/>*/}
                   <Field
                     name="password"
                     render={(props) => <Input type="password" {...props.field} placeholder="Password"/>}
                   />
-                  {/*<p>Test {formikProps.errors.password}</p>*/}
-                  {/*<Field type="password" name="password" placeholder="Password"/>*/}
                 </FormGroup>
                 <FormGroup>
                   <Button type="submit" color="primary" block disabled={!formikProps.isValid || formikProps.isSubmitting}>Login</Button>
                 </FormGroup>
-                <div>
-                  {JSON.stringify(formikProps, null, 2)}
-                </div>
               </Form>
             )}
           />

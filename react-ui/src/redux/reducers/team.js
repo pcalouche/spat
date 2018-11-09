@@ -56,14 +56,13 @@ const reducer = (state = initialState, action) => {
       };
     }
     case teamActions.ADD_TEAM:
-
       return {
         ...state,
         list: [...state.list, action.team],
         modalIsOpen: false
       };
     case teamActions.EDIT_TEAM:
-      let newList = [...state.list];
+      const newList = [...state.list];
       newList[newList.findIndex(el => el.id === action.team.id)] = action.team;
       return {
         ...state,
