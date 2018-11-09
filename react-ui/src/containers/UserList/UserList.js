@@ -1,25 +1,13 @@
-import React, {Component}                  from 'react';
-import {connect}                           from 'react-redux';
-import {Card, CardBody, CardHeader, Table} from 'reactstrap';
-import {FontAwesomeIcon}                   from '@fortawesome/react-fontawesome';
+import React, {Component}                          from 'react';
+import {connect}                                   from 'react-redux';
+import {Button, Card, CardBody, CardHeader, Table} from 'reactstrap';
+import {FontAwesomeIcon}                           from '@fortawesome/react-fontawesome';
 
 import './UserList.css';
-import * as userActions                    from '../../redux/actions/user';
+import * as userActions                            from '../../redux/actions/user';
+import UserModal                                   from '../../components/UserModal';
 
 class UserList extends Component {
-  state = {
-    modalIsOpen: false
-  };
-
-  openModal = () => {
-    this.setState({
-      modalIsOpen: !this.state.modalIsOpen
-    });
-  };
-
-  closeModal = () => {
-    this.setState({modalIsOpen: !this.state.modalIsOpen});
-  };
 
   displayAccountStatus = (user) => {
     const accountStatus = [];
@@ -57,6 +45,12 @@ class UserList extends Component {
     } else {
       content = (
         <React.Fragment>
+          <Button
+            color="secondary"
+            className="mb-2"
+            onClick={() => this.props.showModal('Add', {username: ''}, this.props.addUser)}>
+            Add User
+          </Button>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -71,8 +65,16 @@ class UserList extends Component {
               {this.props.users.map(user => {
                 return (
                   <tr key={user.username}>
-                    <td className="action-column"><FontAwesomeIcon icon="pencil-alt"/></td>
-                    <td className="action-column"><FontAwesomeIcon icon="trash-alt"/></td>
+                    <td className="action-column">
+                      <FontAwesomeIcon
+                        icon="pencil-alt"
+                        onClick={() => this.props.showModal('Edit', user, this.props.editUser)}/>
+                    </td>
+                    <td className="action-column">
+                      <FontAwesomeIcon
+                        icon="trash-alt"
+                        onClick={() => this.props.showModal('Delete', user, this.props.deleteUser)}/>
+                    </td>
                     <td>{user.username}</td>
                     <td>{this.displayAccountStatus(user)}</td>
                     <td>{this.displayRoles(user)}</td>
@@ -81,11 +83,14 @@ class UserList extends Component {
               })}
             </tbody>
           </Table>
-          {/*<UserModal*/}
-          {/*open={this.state.modalIsOpen}*/}
-          {/*title={this.state.modalTitle}*/}
-          {/*cancelModal={this.closeModal}*/}
-          {/*/>*/}
+          <UserModal
+            open={this.props.modalIsOpen}
+            mode={this.props.modalMode}
+            user={this.props.selectedUser}
+            errorMessage={this.props.modalError}
+            submitCallback={this.props.modalSubmitCallback}
+            cancelCallback={this.props.hideModal}
+          />
         </React.Fragment>
       );
     }
@@ -106,13 +111,23 @@ const mapStateToProps = (state) => {
     loggedInUser: state.auth.loggedInUser,
     loading: state.users.loading,
     showError: state.users.showError,
-    users: state.users.list
+    users: state.users.list,
+    selectedUser: state.users.selectedUser,
+    modalIsOpen: state.users.modalIsOpen,
+    modalMode: state.users.modalMode,
+    modalError: state.users.modalError,
+    modalSubmitCallback: state.users.modalSubmitCallback
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadUsers: () => dispatch(userActions.loadUsers())
+    loadUsers: () => dispatch(userActions.loadUsers()),
+    showModal: (mode, team, submitCallback) => dispatch(userActions.showUserModal(mode, team, submitCallback)),
+    hideModal: () => dispatch(userActions.hideUserModal()),
+    addUser: (user) => dispatch(userActions.addUser(user)),
+    editUser: (user) => dispatch(userActions.editUser(user)),
+    deleteUser: (user) => dispatch(userActions.deleteUser(user))
   };
 };
 

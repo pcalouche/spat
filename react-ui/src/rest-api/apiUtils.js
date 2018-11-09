@@ -16,6 +16,13 @@ export const basicAuthHeaders = (username, password) => {
   };
 };
 
+export const handleEmptyResponse = async response => {
+  if (!response.ok) {
+    await logHttpResponseError(response);
+    throw new Error('HTTP response error');
+  }
+};
+
 export const handleJsonResponse = async response => {
   if (!response.ok) {
     await logHttpResponseError(response);

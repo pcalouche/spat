@@ -31,13 +31,19 @@ public class DatabaseLoader implements CommandLineRunner {
     public void run(String... args) {
         List<Team> teams = Arrays.asList(
                 Team.builder()
-                        .name("Team 1")
+                        .name("NC State Wolfpack")
                         .build(),
                 Team.builder()
-                        .name("Team 2")
+                        .name("Carolina Panthers")
                         .build(),
                 Team.builder()
-                        .name("Team 3")
+                        .name("Charlotte Hornets")
+                        .build(),
+                Team.builder()
+                        .name("Carolina Hurricanes")
+                        .build(),
+                Team.builder()
+                        .name("Charlotte Knights")
                         .build());
 
         teamRepository.saveAll(teams);

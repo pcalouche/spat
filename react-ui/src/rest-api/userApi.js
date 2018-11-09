@@ -1,4 +1,4 @@
-import {baseUrl, handleJsonResponse, jwtHeaders} from './apiUtils';
+import {baseUrl, handleEmptyResponse, handleJsonResponse, jwtHeaders} from './apiUtils';
 
 export const fetchUser = async (username) => {
   const response = await fetch(baseUrl + '/users/' + username, {
@@ -21,4 +21,32 @@ export const fetchUsers = async () => {
     headers: jwtHeaders()
   });
   return handleJsonResponse(response);
+};
+
+export const addUser = async (user) => {
+  const response = await fetch(baseUrl + '/users', {
+    method: 'POST',
+    headers: jwtHeaders(),
+    body: JSON.stringify(user)
+  });
+
+  return handleJsonResponse(response);
+};
+
+export const editUser = async (user) => {
+  const response = await fetch(baseUrl + '/user/' + user.username, {
+    method: 'PUT',
+    headers: jwtHeaders(),
+    body: JSON.stringify(user)
+  });
+  return handleJsonResponse(response);
+};
+
+export const deleteUser = async (user) => {
+  console.info(user);
+  const response = await fetch(baseUrl + '/users/' + user.username, {
+    method: 'DELETE',
+    headers: jwtHeaders()
+  });
+  return handleEmptyResponse(response);
 };

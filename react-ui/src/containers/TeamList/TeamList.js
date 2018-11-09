@@ -26,7 +26,8 @@ class TeamList extends Component {
             color="secondary"
             className="mb-2"
             onClick={() => this.props.showModal('Add', {name: ''}, this.props.addTeam)}>
-            Add Team</Button>
+            Add Team
+          </Button>
           <Table striped bordered hover>
             <thead>
               <tr>

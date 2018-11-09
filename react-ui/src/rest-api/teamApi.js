@@ -1,4 +1,4 @@
-import {baseUrl, handleJsonResponse, jwtHeaders} from './apiUtils';
+import {baseUrl, handleEmptyResponse, handleJsonResponse, jwtHeaders} from './apiUtils';
 
 export const fetchTeams = async () => {
   const response = await fetch(baseUrl + '/teams', {
@@ -26,8 +26,10 @@ export const editTeam = async (team) => {
 };
 
 export const deleteTeam = async (team) => {
-  return await fetch(baseUrl + '/teams/' + team.id, {
+  const response = await fetch(baseUrl + '/teams/' + team.id, {
     method: 'DELETE',
     headers: jwtHeaders()
   });
+  console.info(response);
+  return handleEmptyResponse(response);
 };
