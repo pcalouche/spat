@@ -45,17 +45,18 @@ class UserList extends Component {
     } else {
       content = (
         <React.Fragment>
-          <Button
+          {this.props.isAdmin && <Button
             color="secondary"
             className="mb-2"
             onClick={() => this.props.showModal('Add', {username: ''}, this.props.addUser)}>
             Add User
           </Button>
+          }
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th className="action-column"/>
-                <th className="action-column"/>
+                {this.props.isAdmin && <th className="action-column"/>}
+                {this.props.isAdmin && <th className="action-column"/>}
                 <th>Username</th>
                 <th>Account Status</th>
                 <th>Roles</th>
@@ -65,16 +66,20 @@ class UserList extends Component {
               {this.props.users.map(user => {
                 return (
                   <tr key={user.username}>
+                    {this.props.isAdmin &&
                     <td className="action-column">
                       <FontAwesomeIcon
                         icon="pencil-alt"
                         onClick={() => this.props.showModal('Edit', user, this.props.editUser)}/>
                     </td>
+                    }
+                    {this.props.isAdmin &&
                     <td className="action-column">
                       <FontAwesomeIcon
                         icon="trash-alt"
                         onClick={() => this.props.showModal('Delete', user, this.props.deleteUser)}/>
                     </td>
+                    }
                     <td>{user.username}</td>
                     <td>{this.displayAccountStatus(user)}</td>
                     <td>{this.displayRoles(user)}</td>
@@ -108,7 +113,7 @@ class UserList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    loggedInUser: state.auth.loggedInUser,
+    isAdmin: state.auth.loggedInUser && state.auth.loggedInUser.roles.indexOf('ROLE_ADMIN') !== -1,
     loading: state.users.loading,
     showError: state.users.showError,
     users: state.users.list,

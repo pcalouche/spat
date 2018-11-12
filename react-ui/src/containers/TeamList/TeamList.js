@@ -22,17 +22,19 @@ class TeamList extends Component {
     } else {
       content = (
         <React.Fragment>
+          {this.props.isAdmin &&
           <Button
             color="secondary"
             className="mb-2"
             onClick={() => this.props.showModal('Add', {name: ''}, this.props.addTeam)}>
             Add Team
           </Button>
+          }
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th className="action-column"/>
-                <th className="action-column"/>
+                {this.props.isAdmin && <th className="action-column"/>}
+                {this.props.isAdmin && <th className="action-column"/>}
                 <th>Id</th>
                 <th>Name</th>
               </tr>
@@ -41,16 +43,20 @@ class TeamList extends Component {
               {this.props.teams.map(team => {
                 return (
                   <tr key={team.id}>
+                    {this.props.isAdmi &&
                     <td className="action-column">
                       <FontAwesomeIcon
                         icon="pencil-alt"
                         onClick={() => this.props.showModal('Edit', team, this.props.editTeam)}/>
                     </td>
+                    }
+                    {this.props.isAdmin &&
                     <td className="action-column">
                       <FontAwesomeIcon
                         icon="trash-alt"
                         onClick={() => this.props.showModal('Delete', team, this.props.deleteTeam)}/>
                     </td>
+                    }
                     <td>{team.id}</td>
                     <td>{team.name}</td>
                   </tr>
@@ -83,7 +89,7 @@ class TeamList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    loggedInUser: state.auth.loggedInUser,
+    isAdmin: state.auth.loggedInUser && state.auth.loggedInUser.roles.indexOf('ROLE_ADMIN') !== -1,
     loading: state.teams.loading,
     showError: state.teams.showError,
     teams: state.teams.list,
