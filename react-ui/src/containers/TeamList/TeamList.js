@@ -43,7 +43,7 @@ class TeamList extends Component {
               {this.props.teams.map(team => {
                 return (
                   <tr key={team.id}>
-                    {this.props.isAdmi &&
+                    {this.props.isAdmin &&
                     <td className="action-column">
                       <FontAwesomeIcon
                         icon="pencil-alt"
@@ -89,7 +89,7 @@ class TeamList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isAdmin: state.auth.loggedInUser && state.auth.loggedInUser.roles.indexOf('ROLE_ADMIN') !== -1,
+    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('ROLE_ADMIN') !== -1,
     loading: state.teams.loading,
     showError: state.teams.showError,
     teams: state.teams.list,

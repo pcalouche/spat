@@ -113,7 +113,7 @@ class UserList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isAdmin: state.auth.loggedInUser && state.auth.loggedInUser.roles.indexOf('ROLE_ADMIN') !== -1,
+    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('ROLE_ADMIN') !== -1,
     loading: state.users.loading,
     showError: state.users.showError,
     users: state.users.list,

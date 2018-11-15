@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
         this.refreshToken();
       }
 
-      // If there is less than 60 seconds left before the token expires or if the user has been for the token's
+      // If there is less than 60 seconds left before the token expires or if the user has been inactive for the token's
       // duration minus 60 seconds then show a modal letting the user know their session is about to expire.
       if (!this.modalRef && inactiveTime >= this.userSessionService.getTokenDuration() - 60) {
         // Store this in case the user decides to dismiss the modal versus confirming the want to stay logged in

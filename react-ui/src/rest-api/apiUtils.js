@@ -1,10 +1,17 @@
 export const baseUrl = 'http://localhost:10000/spat/rest-services/api';
 
-export const storageKey = 'spatTokenData';
+const storageKey = 'spatTokenData';
 
 export const jwtHeaders = () => {
   return {
     'Authorization': 'Bearer ' + getToken(),
+    'Content-Type': 'application/json;'
+  };
+};
+
+export const jwtRefreshHeaders = () => {
+  return {
+    'Authorization': 'Bearer ' + getRefreshToken(),
     'Content-Type': 'application/json;'
   };
 };
@@ -38,12 +45,24 @@ export const logError = (error) => {
   }
 };
 
-const getToken = () => {
+export const getTokenData = () => {
+  let tokenData = null;
+  if (sessionStorage.getItem(storageKey)) {
+    tokenData = JSON.parse(sessionStorage.getItem(storageKey));
+  }
+  return tokenData;
+};
+
+export const getToken = () => {
   let token = null;
   if (sessionStorage.getItem(storageKey)) {
     token = JSON.parse(sessionStorage.getItem(storageKey))['token'];
   }
   return token;
+};
+
+export const setToken = (tokenData) => {
+  sessionStorage.setItem(storageKey, JSON.stringify(tokenData));
 };
 
 const getRefreshToken = () => {
@@ -52,6 +71,17 @@ const getRefreshToken = () => {
     refreshToken = JSON.parse(sessionStorage.getItem(storageKey))['refreshToken'];
   }
   return refreshToken;
+};
+
+export const getClaims = () => {
+  const claims = {};
+  const token = getToken();
+  if (token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace('-', '+').replace('_', '/');
+    return JSON.parse(atob(base64));
+  }
+  return claims;
 };
 
 export const clearToken = () => {

@@ -12,7 +12,6 @@ export const fetchCurrentUser = async () => {
   const response = await fetch(baseUrl + '/users/current-user', {
     headers: jwtHeaders()
   });
-
   return handleJsonResponse(response);
 };
 
@@ -43,7 +42,6 @@ export const editUser = async (user) => {
 };
 
 export const deleteUser = async (user) => {
-  console.info(user);
   const response = await fetch(baseUrl + '/users/' + user.username, {
     method: 'DELETE',
     headers: jwtHeaders()

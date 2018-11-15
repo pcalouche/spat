@@ -30,6 +30,5 @@ export const deleteTeam = async (team) => {
     method: 'DELETE',
     headers: jwtHeaders()
   });
-  console.info(response);
   return handleEmptyResponse(response);
 };
