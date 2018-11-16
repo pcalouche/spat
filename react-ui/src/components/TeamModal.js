@@ -44,7 +44,8 @@ const TeamModal = props => {
           <ModalHeader>{modalTitle}</ModalHeader>
           <Form onSubmit={e => e.preventDefault()}>
             <ModalBody>
-              {props.errorMessage && <Label className="error-text">Error: {props.errorMessage}</Label>}
+              {props.errorMessage &&
+              <Label className="text-danger font-weight-bold">Error: {props.errorMessage}</Label>}
               {props.mode === 'Delete' &&
               <p>Are you sure you want to delete {props.team.name}?</p>
               }

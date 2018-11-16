@@ -2,10 +2,9 @@ import React, {Component}                          from 'react';
 import {connect}                                   from 'react-redux';
 import {Button, Card, CardBody, CardHeader, Table} from 'reactstrap';
 
-import './TeamList.css';
-import {FontAwesomeIcon}                           from '@fortawesome/react-fontawesome';
-import * as teamActions                            from '../../redux/actions/team';
-import TeamModal                                   from '../../components/TeamModal';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import * as teamActions  from '../../redux/actions/team';
+import TeamModal         from '../../components/TeamModal';
 
 class TeamList extends Component {
 

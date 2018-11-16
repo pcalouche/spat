@@ -3,9 +3,8 @@ import {connect}                                   from 'react-redux';
 import {Button, Card, CardBody, CardHeader, Table} from 'reactstrap';
 import {FontAwesomeIcon}                           from '@fortawesome/react-fontawesome';
 
-import './UserList.css';
-import * as userActions                            from '../../redux/actions/user';
-import UserModal                                   from '../../components/UserModal';
+import * as userActions from '../../redux/actions/user';
+import UserModal        from '../../components/UserModal';
 
 class UserList extends Component {
 

@@ -3,7 +3,7 @@ import {connect}                                                          from '
 import {withRouter}                                                       from 'react-router-dom';
 import {Button, Card, CardBody, CardTitle, Form, FormGroup, Input, Label} from 'reactstrap';
 
-import './Login.css';
+import './Login.scss';
 import * as actionCreators                                                from '../../redux/actions/auth';
 import {Field, Formik}                                                    from 'formik';
 import * as Yup                                                           from 'yup';
@@ -20,7 +20,7 @@ class Login extends Component {
     if (this.props.errorMessage) {
       errorInfo = (
         <FormGroup>
-          <Label className="error-text">Error: {this.props.errorMessage}</Label>
+          <Label className="text-danger font-weight-bold">Error: {this.props.errorMessage}</Label>
         </FormGroup>
       );
     }

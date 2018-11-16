@@ -3,7 +3,7 @@ import {connect}                                                         from 'r
 import {Link, NavLink as RRNavLink, Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavLink}      from 'reactstrap';
 
-import './Navigation.css';
+import './Navigation.scss';
 import Login                                                             from '../Login/Login';
 import TeamList                                                          from '../TeamList/TeamList';
 import UserList                                                          from '../UserList/UserList';
