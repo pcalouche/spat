@@ -33,7 +33,7 @@ export const addUser = async (user) => {
 };
 
 export const editUser = async (user) => {
-  const response = await fetch(baseUrl + '/user/' + user.username, {
+  const response = await fetch(baseUrl + '/users/' + user.username, {
     method: 'PUT',
     headers: jwtHeaders(),
     body: JSON.stringify(user)
