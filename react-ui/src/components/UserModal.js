@@ -5,7 +5,6 @@ import {Formik}                                                                 
 import * as Yup                                                                                 from 'yup';
 
 const UserModal = (props) => {
-  console.info(props.user);
   let modalTitle = '';
   let buttonText = '';
 
@@ -33,24 +32,35 @@ const UserModal = (props) => {
             accountExpired: props.user.accountNonExpired !== undefined ? !props.user.accountNonExpired : false,
             accountLocked: props.user.accountNonLocked !== undefined ? !props.user.accountNonLocked : false,
             credentialsExpired: props.user.credentialsNonExpired !== undefined ? !props.user.credentialsNonExpired : false,
-            enabled: props.user.enabled !== undefined ? props.user.enabled : true
+            enabled: props.user.enabled !== undefined ? props.user.enabled : true,
+            isUser: true,
+            isAdmin: props.user.roles ? props.user.roles.filter(role => role.name === 'ROLE_ADMIN').length === 1 : false
           }}
           enableReinitialize={true}
           validationSchema={Yup.object().shape({
-            username: Yup.string().required('Required')
+            username: Yup.string().required('Required'),
+            accountExpired: Yup.bool(),
+            accountLocked: Yup.bool(),
+            credentialsExpired: Yup.bool(),
+            enabled: Yup.bool(),
+            isUser: Yup.bool(),
+            isAdmin: Yup.bool()
           })}
           isInitialValid={(formikBag) => {
             return formikBag.validationSchema.isValidSync(formikBag.initialValues);
           }}
           onSubmit={async (values, actions) => {
-            console.info(values);
-
+            let roles = [{id: 1, name: 'ROLE_USER'}];
+            if (values.isAdmin) {
+              roles.push({id: 2, name: 'ROLE_ADMIN'});
+            }
             await props.submitCallback({
               username: values.username,
               accountNonExpired: !values.accountExpired,
               accountNonLocked: !values.accountLocked,
               credentialsNonExpired: !values.credentialsExpired,
-              enabled: values.enabled
+              enabled: values.enabled,
+              roles: roles
             });
             actions.setSubmitting(false);
           }}
@@ -130,12 +140,23 @@ const UserModal = (props) => {
                       <Col sm={8}>
                         <FormGroup check>
                           <Label check>
-                            <Input type="checkbox" name="user"/>User
+                            <Input
+                                type="checkbox"
+                                name="isUser"
+                                onChange={formikProps.handleChange}
+                                onBlur={formikProps.handleBlur}
+                                disabled={true}
+                                checked={true}/>User
                           </Label>
                         </FormGroup>
                         <FormGroup check>
                           <Label check>
-                            <Input type="checkbox" name="Admin"/>Admin
+                            <Input
+                                type="checkbox"
+                                name="isAdmin"
+                                onChange={formikProps.handleChange}
+                                onBlur={formikProps.handleBlur}
+                                checked={formikProps.values.isAdmin}/>Admin
                           </Label>
                         </FormGroup>
                       </Col>

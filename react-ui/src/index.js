@@ -10,10 +10,10 @@ import store                 from './redux/store';
 import App                   from './App';
 
 ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter basename="/spat/ui/react">
-      <App/>
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('root'));
+    <Provider store={store}>
+      <BrowserRouter basename="/spat/ui/react">
+        <App/>
+      </BrowserRouter>
+    </Provider>,
+    document.getElementById('root'));
 registerServiceWorker();
