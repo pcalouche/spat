@@ -1,6 +1,6 @@
 = Single Page App Template (SPAT)
 Doc Writer <philip.calouche@outlook.com>
-v3.0, 2018-09-14
+v4.0, 2019-02-09
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -14,14 +14,14 @@ endif::[]
 
 == Background
 The purpose of this project was to demonstrate a REST service built on Spring Boot 2 that works with an Angular
-6 front end.  It consists of a login page, a teams page, and a users page.  If logged in as the adminUser the
-teams and users pages will show controls for adding, editing, and deleting teams and users respectively. This is
-to demonstrate permissions.  Backend security prevents adding, editing, and deleting in the event a request is
-made to do either of those things as a non-admin user.
+6 single page app as well as a ReactJS single page app.  It consists of a login page, a teams page, and a users
+page.  If logged in as the adminUser the teams and users pages will show controls for adding, editing, and
+deleting teams and users respectively. This is to demonstrate permissions.  Backend security prevents adding,
+editing, and deleting in the event a request is made to do either of those things as a non-admin user.
 
 Some of my goals in this project were to:
 
-. Create an organized and scalable project structure for a Spring Boot application and an Angular CLI application
+. Create an organized and scalable project structure for a Spring Boot application and an Angular SPA or React JS SPA
 . Have a clear developer workflow
 . Have a clear build path to production
 . Has web security consisting of a form login, JSON Web Token, and user roles
@@ -35,20 +35,19 @@ Some of my goals in this project were to:
 == Required Software
 * Java 8 (latest JDK was used)
 * Node.js (version 10.8.0 was used)
-* Angular CLI (version 6.2.1 was used)
-* Parent POM https://github.com/pcalouche/spring-boot-project-pom[spring-boot-project-pom] project (I use this as a base for multiple spring boot projects)
 
 == Technologies and Frameworks
 * Java 8 (latest JDK was used)
-* Maven 3.5.4
-* Spring Boot 2.0.4
+* Maven 3.6.0
+* Spring Boot 2.1.2
 * Spring Security making use of JSON Web Tokens (Learn more at https://jwt.io/[jwt.io])
 * H2 in memory database (This can easily be swapped out for another datasource)
-* Spring Data JPA (This can be swapped out for another database access method (e.g. JDBC, JOOQ, etc.))
+* Spring Data JPA
 * SpringFox Swagger for API documentation
 * JUnit 4 (I have plans to upgrade the tests to use JUnit 5)
 * Angular 6/Angular CLI 6.2.1
-* Bootstrap 4.0 for UI styling
+* React/Create React App
+* Bootstrap 4.2.1 for UI styling
 * Font Awesome 5 for icons
 * Node.js for Angular CLI and front end dependency management
 
@@ -56,44 +55,31 @@ Some of my goals in this project were to:
 The project is a multi module Maven project.  It consists of three modules:
 
 . *Rest Services* - A Spring Boot REST service
-. *UI* - A Spring Boot web application for hosting the UI
-. *Shared*  - Contains some common code for both the Rest Services and UI
+. *UI* - A Spring Boot web application for hosting the Angular and React SPAs
 
 == How to Run
 [IMPORTANT]
 It is assumed that the required software is installed.
 
-. Download the https://github.com/pcalouche/spring-boot-project-pom[spring-boot-project-pom] project
-. Download the https://github.com/pcalouche/spat[SPAT] project
-. Install the spring-boot-project-pom project
+. From inside Spring Boot Project POM main directory:
 +
-From inside Spring Boot Project POM main directory:
+  ./mvnw clean verify
++
 
-  ./mvnw clean install
-
-. Install Angular CLI version 6.2.1 globally if it is not
+This may take a few minutes on the first run, and the following will happen:
 +
-  npm install -g @angular/cli@6.2.1
-+
-. Install the SPAT project
-From inside SPAT project main directory:
-+
-  ./mvnw clean install
-+
-This will take a couple of minutes, and the following will happen:
-+
-* The rest-services project will be compiled into an executable jar if all unit and integration tests pass.
-* The UI project will into an executable jar if the Angular CLI project and all unit and integration tests pass.
+* The rest-services project will run all test and be built
+* The angular-ui project will be built
+* The react-ui project will be built
+* The ui-services project will run all test and be built
 . Run the REST services executable jar.  This runs at http://localhost:10000/spat/rest-services
 +
-  cd <spat_directory>/rest-services/target
-  java -jar rest-services.jar
+  java -jar ./rest-services/target/rest-services.jar
 
 . Run the UI executable jar
 +
-  cd <spat_directory>/ui/target
-  java -jar ui.jar
-
+  java -jar ./ui-services/target/ui-services.jar
++
 . Verify UIs are running at http://localhost:10001/spat/ui/angular and http://localhost:10001/spat/ui/react.  Verify login works.  Valid users are:
  .. activeUser/password
  .. activeAdmin/password (This user will have edit and delete capabilities)

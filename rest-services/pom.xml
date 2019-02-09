@@ -10,9 +10,10 @@
     <name>SPAT REST Services</name>
 
     <parent>
-        <artifactId>spat</artifactId>
         <groupId>com.pcalouche</groupId>
-        <version>3.3</version>
+        <artifactId>spat</artifactId>
+        <version>4.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
@@ -27,12 +28,6 @@
 
     <dependencies>
         <!--Application Dependencies Below-->
-        <!--SPAT Shared Library-->
-        <dependency>
-            <groupId>com.pcalouche.spat</groupId>
-            <artifactId>shared</artifactId>
-            <version>3.3</version>
-        </dependency>
         <!--Spring Boot Dependencies-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -101,15 +96,7 @@
         </dependency>
 
         <!--Test Dependencies Below-->
-        <!--SPAT Shared Test Library-->
-        <dependency>
-            <groupId>com.pcalouche.spat</groupId>
-            <artifactId>shared</artifactId>
-            <version>3.3</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <!--Spring Boot Test Dependencies-->
+           <!--Spring Boot Test Dependencies-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -140,7 +127,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <groups>com.pcalouche.spat.shared.UnitTestCategory</groups>
+                    <groups>com.pcalouche.spat.restservices.UnitTestCategory</groups>
                 </configuration>
             </plugin>
             <plugin>
@@ -156,7 +143,15 @@
                     <excludes>
                         <exclude>**/Abstract*.java</exclude>
                     </excludes>
-                    <groups>com.pcalouche.spat.shared.IntegrationTestCategory</groups>
+                    <groups>com.pcalouche.spat.restservices.IntegrationTestCategory</groups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>

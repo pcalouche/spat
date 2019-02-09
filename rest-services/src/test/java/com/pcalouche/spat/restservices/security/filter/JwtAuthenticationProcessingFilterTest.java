@@ -1,11 +1,11 @@
 package com.pcalouche.spat.restservices.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcalouche.spat.restservices.AbstractUnitTest;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;

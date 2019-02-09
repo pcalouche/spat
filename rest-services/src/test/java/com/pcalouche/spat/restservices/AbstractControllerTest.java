@@ -8,7 +8,6 @@ import com.pcalouche.spat.restservices.config.SecurityConfig;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;

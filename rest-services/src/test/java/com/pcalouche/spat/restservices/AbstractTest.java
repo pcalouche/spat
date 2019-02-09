@@ -1,4 +1,4 @@
-package com.pcalouche.spat.shared;
+package com.pcalouche.spat.restservices;
 
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

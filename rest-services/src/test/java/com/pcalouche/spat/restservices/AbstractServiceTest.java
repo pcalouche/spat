@@ -1,7 +1,6 @@
 package com.pcalouche.spat.restservices;
 
 import com.pcalouche.spat.restservices.config.ModelMapperConfig;
-import com.pcalouche.spat.shared.AbstractTest;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

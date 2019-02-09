@@ -2,19 +2,26 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.pcalouche</groupId>
     <artifactId>spat</artifactId>
     <packaging>pom</packaging>
-    <version>3.3</version>
+    <version>4.0</version>
     <name>Single Page App Template (SPAT)</name>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <parent>
-        <groupId>com.pcalouche</groupId>
+        <groupId>com.github.pcalouche</groupId>
         <artifactId>spring-boot-project-pom</artifactId>
-        <version>1.0</version>
+        <version>1.3</version>
     </parent>
 
     <modules>
-        <module>shared</module>
         <module>rest-services</module>
         <module>ui-services</module>
     </modules>

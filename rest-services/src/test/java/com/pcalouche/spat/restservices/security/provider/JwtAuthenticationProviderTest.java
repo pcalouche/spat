@@ -1,12 +1,12 @@
 package com.pcalouche.spat.restservices.security.provider;
 
+import com.pcalouche.spat.restservices.AbstractUnitTest;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
 import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

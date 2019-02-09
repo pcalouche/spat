@@ -1,4 +1,4 @@
-package com.pcalouche.spat.shared;
+package com.pcalouche.spat.restservices;
 
 public interface IntegrationTestCategory {
 }

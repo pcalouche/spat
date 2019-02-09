@@ -1,9 +1,9 @@
 package com.pcalouche.spat.restservices.security.util;
 
+import com.pcalouche.spat.restservices.AbstractUnitTest;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
