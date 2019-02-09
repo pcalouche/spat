@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.security.util;
 
-import com.pcalouche.spat.restservices.api.BaseEndpoints;
+import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.api.entity.User;
 import io.jsonwebtoken.Claims;
@@ -35,9 +35,9 @@ public class SecurityUtils {
             // status endpoint
             "/status"
     };
-    public static final String AUTHENTICATED_PATH = String.format("%s/**", BaseEndpoints.API_ROOT);
-    public static final String TOKEN_ENDPOINT = String.format("%s/auth/token", BaseEndpoints.API_ROOT);
-    public static final String REFRESH_TOKEN_ENDPOINT = String.format("%s/auth/refresh-token", BaseEndpoints.API_ROOT);
+    public static final String AUTHENTICATED_PATH = String.format("%s/**", ApiEndpoints.API_ROOT);
+    public static final String TOKEN_ENDPOINT = String.format("%s/auth/token", ApiEndpoints.API_ROOT);
+    public static final String REFRESH_TOKEN_ENDPOINT = String.format("%s/auth/refresh-token", ApiEndpoints.API_ROOT);
     public static final String AUTH_HEADER_BASIC_PREFIX = "Basic ";
     public static final String AUTH_HEADER_BEARER_PREFIX = "Bearer ";
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";

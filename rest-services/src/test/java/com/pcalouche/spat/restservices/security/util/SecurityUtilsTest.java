@@ -1,15 +1,17 @@
 package com.pcalouche.spat.restservices.security.util;
 
+import com.pcalouche.spat.restservices.AbstractUnitTest;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
@@ -20,8 +22,9 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==");
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==")
+                .buildRequest(new MockServletContext());
         String[] decodedParts = SecurityUtils.getDecodedBasicAuthFromRequest(request);
         assertThat(decodedParts).hasSize(2);
         assertThat(decodedParts[0]).isEqualTo("activeUser");
@@ -30,7 +33,8 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequestBadDecodeThrowsException() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .buildRequest(new MockServletContext());
         assertThatThrownBy(() -> SecurityUtils.getDecodedBasicAuthFromRequest(request))
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Basic Authentication header is invalid");
@@ -38,8 +42,10 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequestBadHeaderPrefixThrowsException() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("invalidHeader".getBytes()));
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("invalidHeader".getBytes()))
+                .buildRequest(new MockServletContext());
+
         assertThatThrownBy(() -> SecurityUtils.getDecodedBasicAuthFromRequest(request))
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Basic Authentication header is invalid");
@@ -47,7 +53,10 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetTokenFromRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==")
+                .buildRequest(new MockServletContext());
+
         request.addHeader(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "YWN0aXZlVXNlcjpwYXNzd29yZA==");
         assertThat(SecurityUtils.getTokenFromRequest(request)).isNotEmpty();
     }
@@ -71,8 +80,15 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusAccountExpiredException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "expiredUser", roles);
+        roles.add(Role.builder()
+                .id(1)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .username("expiredUser")
+                .accountNonExpired(false)
+                .roles(roles)
+                .build();
         user.setAccountNonExpired(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))
@@ -83,8 +99,15 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusAccountLockedException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "lockedUser", roles);
+        roles.add(Role.builder()
+                .id(1)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .username("lockedUser")
+                .accountNonLocked(false)
+                .roles(roles)
+                .build();
         user.setAccountNonLocked(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))
@@ -95,8 +118,15 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusCredentialsException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "credentialsExpiredUser", roles);
+        roles.add(Role.builder()
+                .id(1)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .username("credentialsExpiredUser")
+                .credentialsNonExpired(false)
+                .roles(roles)
+                .build();
         user.setCredentialsNonExpired(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))
@@ -107,8 +137,15 @@ public class SecurityUtilsTest extends AbstractUnitTest {
     @Test
     public void testValidateUserAccountStatusDisabledException() {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User user = new User(1L, "disabledUser", roles);
+        roles.add(Role.builder()
+                .id(1)
+                .name("ROLE_USER")
+                .build());
+        User user = User.builder()
+                .username("disabledUser")
+                .enabled(false)
+                .roles(roles)
+                .build();
         user.setEnabled(false);
 
         assertThatThrownBy(() -> SecurityUtils.validateUserAccountStatus(user))

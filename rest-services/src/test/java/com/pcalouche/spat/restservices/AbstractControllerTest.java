@@ -3,15 +3,11 @@ package com.pcalouche.spat.restservices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
-import com.pcalouche.spat.restservices.api.user.service.UserService;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.config.SecurityConfig;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
-import com.pcalouche.spat.restservices.security.provider.AjaxLoginAuthenticationProvider;
-import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,12 +31,6 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     protected MockMvc mockMvc;
     @MockBean
     protected LoggerInterceptor loggerInterceptor;
-    @Autowired
-    protected AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
-    @Autowired
-    protected JwtAuthenticationProvider jwtAuthenticationProvider;
-    @MockBean
-    protected UserService userService;
     @MockBean
     protected UserRepository userRepository;
     private String validUserToken;
@@ -68,38 +58,63 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
     public void setup() {
         // Setup some mocks for the user service can be used by other tests
         Set<Role> userRoles = new HashSet<>();
-        userRoles.add(new Role(1L, "ROLE_USER"));
+        userRoles.add(Role.builder()
+                .id(1)
+                .name("ROLE_USER")
+                .build());
 
         Set<Role> adminRoles = new HashSet<>(userRoles);
-        adminRoles.add(new Role(2L, "ROLE_ADMIN"));
+        adminRoles.add(Role.builder()
+                .id(2)
+                .name("ROLE_ADMIN")
+                .build());
 
-        User activeUser = new User(1L, "activeUser", userRoles);
-        activeUser.setPassword(ENCODED_PASSWORD);
-        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(activeUser);
+        User activeUser = User.builder()
+                .username("activeUser")
+                .password(ENCODED_PASSWORD)
+                .roles(userRoles)
+                .build();
+        given(userRepository.getOne(activeUser.getUsername())).willReturn(activeUser);
 
-        User activeAdmin = new User(2L, "activeAdmin", adminRoles);
-        activeAdmin.setPassword(ENCODED_PASSWORD);
-        given(userRepository.findByUsername(activeAdmin.getUsername())).willReturn(activeAdmin);
+        User activeAdmin = User.builder()
+                .username("activeAdmin")
+                .password(ENCODED_PASSWORD)
+                .roles(adminRoles)
+                .build();
+        given(userRepository.getOne(activeAdmin.getUsername())).willReturn(activeAdmin);
 
-        User expiredUser = new User(3L, "expiredUser", adminRoles);
-        expiredUser.setPassword(ENCODED_PASSWORD);
-        expiredUser.setAccountNonExpired(false);
-        given(userRepository.findByUsername(expiredUser.getUsername())).willReturn(expiredUser);
+        User expiredUser = User.builder()
+                .username("expiredUser")
+                .password(ENCODED_PASSWORD)
+                .accountNonExpired(false)
+                .roles(adminRoles)
+                .build();
+        given(userRepository.getOne(expiredUser.getUsername())).willReturn(expiredUser);
 
-        User lockedUser = new User(4L, "lockedUser", adminRoles);
-        lockedUser.setPassword(ENCODED_PASSWORD);
+        User lockedUser = User.builder()
+                .username("lockedUser")
+                .password(ENCODED_PASSWORD)
+                .accountNonLocked(false)
+                .roles(adminRoles)
+                .build();
         lockedUser.setAccountNonLocked(false);
-        given(userRepository.findByUsername(lockedUser.getUsername())).willReturn(lockedUser);
+        given(userRepository.getOne(lockedUser.getUsername())).willReturn(lockedUser);
 
-        User credentialsExpiredUser = new User(5L, "credentialsExpiredUser", adminRoles);
-        credentialsExpiredUser.setPassword(ENCODED_PASSWORD);
-        credentialsExpiredUser.setCredentialsNonExpired(false);
-        given(userRepository.findByUsername(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
+        User credentialsExpiredUser = User.builder()
+                .username("credentialsExpiredUser")
+                .password(ENCODED_PASSWORD)
+                .credentialsNonExpired(false)
+                .roles(adminRoles)
+                .build();
+        given(userRepository.getOne(credentialsExpiredUser.getUsername())).willReturn(credentialsExpiredUser);
 
-        User disabledUser = new User(6L, "disabledUser", adminRoles);
-        disabledUser.setPassword(ENCODED_PASSWORD);
-        disabledUser.setEnabled(false);
-        given(userRepository.findByUsername(disabledUser.getUsername())).willReturn(disabledUser);
+        User disabledUser = User.builder()
+                .username("disabledUser")
+                .password(ENCODED_PASSWORD)
+                .enabled(false)
+                .roles(adminRoles)
+                .build();
+        given(userRepository.getOne(disabledUser.getUsername())).willReturn(disabledUser);
 
         // Mock the logger interceptor
         given(loggerInterceptor.preHandle(any(), any(), any())).willReturn(true);

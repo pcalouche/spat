@@ -1,6 +1,7 @@
 package com.pcalouche.spat.restservices.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.filter.AjaxLoginProcessingFilter;
 import com.pcalouche.spat.restservices.security.filter.JwtAuthenticationProcessingFilter;
 import com.pcalouche.spat.restservices.security.provider.AjaxLoginAuthenticationProvider;
@@ -23,26 +24,35 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final AjaxLoginProcessingFilter ajaxLoginProcessingFilter;
-    private final JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter;
+    private final ObjectMapper objectMapper;
+    private final AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final AuthenticationManager authenticationManager;
 
-    public SecurityConfig(AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider,
-                          JwtAuthenticationProvider jwtAuthenticationProvider,
+    public SecurityConfig(UserRepository userRepository,
                           ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        ajaxLoginAuthenticationProvider = new AjaxLoginAuthenticationProvider(userRepository);
+        jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
         authenticationManager = new ProviderManager(Arrays.asList(ajaxLoginAuthenticationProvider, jwtAuthenticationProvider));
-        ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager, objectMapper);
-        jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
+    }
+
+    @Override
+    public AuthenticationManager authenticationManager() {
+        return authenticationManager;
     }
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() {
-        return authenticationManager;
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager, objectMapper);
+        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
+
         http
                 // Disable basic security since we won't be using that
                 .httpBasic().disable()
@@ -63,6 +73,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(SecurityUtils.AUTHENTICATED_PATH).authenticated()
                 // Setup filters for the endpoints
                 .and()
+                .authenticationProvider(ajaxLoginAuthenticationProvider)
+                .authenticationProvider(jwtAuthenticationProvider)
                 .addFilterBefore(ajaxLoginProcessingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
     }

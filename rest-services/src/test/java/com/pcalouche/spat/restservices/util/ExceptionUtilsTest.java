@@ -2,9 +2,10 @@ package com.pcalouche.spat.restservices.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.pcalouche.spat.restservices.AbstractUnitTest;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
+import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.Test;
 import org.springframework.core.MethodParameter;
@@ -12,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -77,6 +80,12 @@ public class ExceptionUtilsTest extends AbstractUnitTest {
     }
 
     @Test
+    public void testHttpStatusForRestResourceForbiddenException() {
+        HttpStatus httpStatus = ExceptionUtils.getHttpStatusForException(new RestResourceForbiddenException("message"));
+        assertThat(httpStatus).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
     public void testHttpStatusForAllOtherExceptions() {
         HttpStatus httpStatus = ExceptionUtils.getHttpStatusForException(new RuntimeException("message"));
         assertThat(httpStatus).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,8 +95,9 @@ public class ExceptionUtilsTest extends AbstractUnitTest {
     public void testWriteExceptionToResponse() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/request-path");
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .buildRequest(new MockServletContext());
+
         AuthenticationException authenticationException = new BadCredentialsException("bad credentials");
 
         ObjectNode expectedObjectNode = (ObjectNode) objectMapper.readTree(ExceptionUtils.buildJsonErrorObject(authenticationException, request).toString());

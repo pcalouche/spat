@@ -1,10 +1,10 @@
 package com.pcalouche.spat.restservices.security.provider;
 
+import com.pcalouche.spat.restservices.AbstractUnitTest;
 import com.pcalouche.spat.restservices.api.entity.Role;
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
-import com.pcalouche.spat.shared.AbstractUnitTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,13 +34,19 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
         Mockito.reset(userRepository);
 
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1L, "ROLE_USER"));
-        User activeUser = new User(1L, "activeUser", roles);
-        activeUser.setPassword("$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi");
+        roles.add(Role.builder()
+                .id(1)
+                .name("ROLE_USER")
+                .build());
+        User activeUser = User.builder()
+                .username("activeUser")
+                .password("$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi")
+                .roles(roles)
+                .build();
 
-        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(activeUser);
+        given(userRepository.findById(activeUser.getUsername())).willReturn(Optional.ofNullable(activeUser));
 
-        given(userRepository.findByUsername("bogusUser")).willReturn(null);
+        given(userRepository.findById("bogusUser")).willReturn(Optional.empty());
 
         ajaxLoginAuthenticationProvider = new AjaxLoginAuthenticationProvider(userRepository);
     }
@@ -56,7 +63,7 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
         assertThat(authentication.getAuthorities())
                 .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
-        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
+        verify(userRepository, Mockito.times(1)).findById("activeUser");
     }
 
     @Test
@@ -67,7 +74,7 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Bad credentials for username: bogusUser");
 
-        verify(userRepository, Mockito.times(1)).findByUsername("bogusUser");
+        verify(userRepository, Mockito.times(1)).findById("bogusUser");
     }
 
     @Test
@@ -78,7 +85,7 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Bad credentials for username: activeUser");
 
-        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
+        verify(userRepository, Mockito.times(1)).findById("activeUser");
     }
 
     @Test

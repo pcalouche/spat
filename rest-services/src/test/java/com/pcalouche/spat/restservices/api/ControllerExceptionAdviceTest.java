@@ -2,16 +2,18 @@ package com.pcalouche.spat.restservices.api;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.restservices.AbstractControllerTest;
-import com.pcalouche.spat.restservices.api.user.controller.UserController;
-import com.pcalouche.spat.restservices.api.user.controller.UserEndpoints;
+import com.pcalouche.spat.restservices.api.controller.UserController;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
 import org.junit.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -26,8 +28,10 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
     @Test
     public void testException() throws Exception {
         RuntimeException runtimeException = new RuntimeException("some random runtime exception");
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI(UserEndpoints.ROOT);
+        MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
+                .contentType(MediaType.APPLICATION_JSON)
+                .buildRequest(new MockServletContext());
+        request.setRequestURI(ApiEndpoints.USERS);
 
         ObjectNode expectedObjectNode = (ObjectNode) ExceptionUtils.buildJsonErrorObject(runtimeException, request);
         // Remove timestamp for easier comparision
@@ -35,7 +39,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
 
         given(userController.findAll()).willThrow(runtimeException);
 
-        MvcResult mvcResult = mockMvc.perform(get(UserEndpoints.ROOT)
+        MvcResult mvcResult = mockMvc.perform(get(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()))
                 .andReturn();

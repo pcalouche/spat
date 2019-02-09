@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
 import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.user.repository.UserRepository;
+import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
@@ -10,14 +10,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final UserRepository userRepository;
 
@@ -40,14 +39,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // with what is in the database to ensure the account is still active.
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if ("refreshToken".equals(authentication.getDetails())) {
-            User user = userRepository.findByUsername(subject);
-            if (user != null) {
-                SecurityUtils.validateUserAccountStatus(user);
+            Optional<User> optionalUser = userRepository.findById(subject);
+            if (optionalUser.isPresent()) {
+                SecurityUtils.validateUserAccountStatus(optionalUser.get());
             } else {
                 throw new BadCredentialsException(String.format("Bad credentials for username: %s", subject));
             }
 
-            simpleGrantedAuthorities = user.getAuthorities();
+            simpleGrantedAuthorities = optionalUser.get().getAuthorities();
         } else {
             @SuppressWarnings("unchecked")
             Set<String> authorities = new HashSet<>(claims.get(SecurityUtils.CLAIMS_AUTHORITIES_KEY, List.class));

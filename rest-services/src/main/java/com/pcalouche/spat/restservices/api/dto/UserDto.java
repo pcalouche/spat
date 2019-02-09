@@ -1,26 +1,27 @@
 package com.pcalouche.spat.restservices.api.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
-    @EqualsAndHashCode.Exclude
-    private Long id;
     private String username;
+    @Builder.Default
     private boolean accountNonExpired = true;
+    @Builder.Default
     private boolean accountNonLocked = true;
+    @Builder.Default
     private boolean credentialsNonExpired = true;
+    @Builder.Default
     private boolean enabled = true;
-    private Set<RoleDto> roles;
-
-    public UserDto(Long id, String username, Set<RoleDto> roles) {
-        this.id = id;
-        this.username = username;
-        this.roles = roles;
-    }
+    @Builder.Default
+    private Set<RoleDto> roles = new HashSet<>();
 }
