@@ -29,7 +29,7 @@ public class TeamController extends AbstractSpatController {
         return teamService.findAll();
     }
 
-    @ApiOperation(value = "Ccreate a new team")
+    @ApiOperation(value = "Create a new team")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public TeamDto create(@RequestBody TeamDto teamDto) {

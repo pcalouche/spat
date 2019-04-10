@@ -1,14 +1,14 @@
-import React, {Component}                                                from 'react';
-import {connect}                                                         from 'react-redux';
-import {Link, NavLink as RRNavLink, Redirect, Route, Switch, withRouter} from 'react-router-dom';
-import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavLink}      from 'reactstrap';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link, NavLink as RRNavLink, Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavLink } from 'reactstrap';
 
 import './Navigation.scss';
-import Login                                                             from '../Login/Login';
-import TeamList                                                          from '../TeamList/TeamList';
-import UserList                                                          from '../UserList/UserList';
-import BasicModal                                                        from '../../components/BasicModal';
-import {authActions}                                                     from '../../redux/actions';
+import Login from '../Login/Login';
+import TeamList from '../TeamList/TeamList';
+import UserList from '../UserList/UserList';
+import BasicModal from '../../components/BasicModal';
+import { authActions } from '../../redux/actions';
 
 class Navigation extends Component {
 
@@ -22,11 +22,11 @@ class Navigation extends Component {
 
   handleClick = () => {
     this.props.updateLastActivity();
-    this.setState({lastActivity: new Date()});
+    this.setState({ lastActivity: new Date() });
   };
 
   toggle = () => {
-    this.setState({isOpen: !this.state.isOpen});
+    this.setState({ isOpen: !this.state.isOpen });
   };
 
   monitorUserInactivity = () => {
@@ -81,7 +81,7 @@ class Navigation extends Component {
       case '/users':
         document.title = baseTitle + ' - Users';
         break;
-      default :
+      default:
         document.title = baseTitle;
         break;
     }
@@ -117,11 +117,11 @@ class Navigation extends Component {
       return null;
     }
     return (
-        <div className="Navigation" onClick={this.handleClick}>
-          <Navbar color="primary" dark expand="md">
-            <NavbarBrand tag={'span'}>SPAT</NavbarBrand>
-            <NavbarToggler onClick={this.toggle}/>
-            {this.props.loggedInUser &&
+      <div className="Navigation" onClick={this.handleClick}>
+        <Navbar color="primary" dark expand="md">
+          <NavbarBrand tag={'span'}>SPAT</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          {this.props.loggedInUser &&
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="mr-auto" navbar>
                 <NavLink to="/teams" activeClassName="active" tag={RRNavLink}>Teams</NavLink>
@@ -132,37 +132,37 @@ class Navigation extends Component {
                 <span className="navbar-text"> | {this.props.loggedInUser.username}</span>
               </Nav>
             </Collapse>
-            }
-          </Navbar>
-          {this.props.loggedInUser &&
-          <Switch>
-            <Redirect from='/login' to='/teams'/>
-            <Route exact path="/teams" component={() => <TeamList/>}/>
-            <Route exact path="/users" component={() => <UserList/>}/>
-            <Route render={() => <h1>Not found</h1>}/>
-          </Switch>
           }
-          {!this.props.loggedInUser &&
+        </Navbar>
+        {this.props.loggedInUser &&
           <Switch>
-            <Route component={() => <Login/>}/>
+            <Redirect from='/login' to='/teams' />
+            <Route exact path="/teams" component={() => <TeamList />} />
+            <Route exact path="/users" component={() => <UserList />} />
+            <Route render={() => <h1>Not found</h1>} />
           </Switch>
-          }
-          <BasicModal
-              open={this.props.showExpirationModal}
-              title="Logout Warning"
-              message="You will be logged out shortly from inactivity.  Click OK to stay logged in."
-              submitCallback={async () => {
-                await this.props.refreshToken();
-                this.setState({lastActivity: new Date()});
-              }}
-              cancelCallback={this.props.dismissLogoutWarning}/>
-          <BasicModal
-              open={this.props.showLoggedOutModal}
-              title="Logged Out"
-              message="You were logged out due to inactivity."
-              submitCallback={this.props.acknowledgeLogout}
-              showCancelButton={false}/>
-        </div>
+        }
+        {!this.props.loggedInUser &&
+          <Switch>
+            <Route component={() => <Login />} />
+          </Switch>
+        }
+        <BasicModal
+          open={this.props.showExpirationModal}
+          title="Logout Warning"
+          message="You will be logged out shortly from inactivity.  Click OK to stay logged in."
+          submitCallback={async () => {
+            await this.props.refreshToken();
+            this.setState({ lastActivity: new Date() });
+          }}
+          cancelCallback={this.props.dismissLogoutWarning} />
+        <BasicModal
+          open={this.props.showLoggedOutModal}
+          title="Logged Out"
+          message="You were logged out due to inactivity."
+          submitCallback={this.props.acknowledgeLogout}
+          showCancelButton={false} />
+      </div>
     );
   }
 }

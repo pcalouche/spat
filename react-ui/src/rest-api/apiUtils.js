@@ -1,4 +1,4 @@
-export const baseUrl = 'http://localhost:10000/spat/rest-services/api';
+export const baseUrl = 'http://localhost:10000/api';
 
 const storageKey = 'spatTokenData';
 

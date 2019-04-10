@@ -26,11 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
                         if (requestedResource.exists() && requestedResource.isReadable()) {
                             return requestedResource;
                         } else {
-                            if (resourcePath.contains("angular")) {
-                                return new ClassPathResource("/public/angular/index.html");
-                            } else {
-                                return new ClassPathResource("/public/react/index.html");
-                            }
+                            return new ClassPathResource("/public/index.html");
                         }
                     }
                 });
