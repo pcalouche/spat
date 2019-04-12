@@ -6,14 +6,12 @@ import com.pcalouche.spat.restservices.api.EndpointMessages;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.service.TeamService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(description = "Team endpoints")
 @RestController
 @RequestMapping(value = ApiEndpoints.TEAMS)
 public class TeamController extends AbstractSpatController {

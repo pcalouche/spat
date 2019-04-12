@@ -8,7 +8,6 @@ import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenExcept
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.api.service.UserService;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(description = "User endpoints")
 @RestController
 @RequestMapping(value = ApiEndpoints.USERS)
 public class UserController extends AbstractSpatController {

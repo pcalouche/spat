@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,7 +34,8 @@ public class SecurityUtils {
             "/swagger-ui.html",
             "/webjars/**",
             // status endpoint
-            "/status"
+            "/status",
+            "/api/auth/token"
     };
     public static final String AUTHENTICATED_PATH = String.format("%s/**", ApiEndpoints.API_ROOT);
     public static final String TOKEN_ENDPOINT = String.format("%s/auth/token", ApiEndpoints.API_ROOT);
@@ -90,26 +92,34 @@ public class SecurityUtils {
     public static AuthResponseDto createAuthResponse(Authentication authentication) {
         Date now = new Date();
         String tokenId = UUID.randomUUID().toString();
+        String subject = authentication.getName();
+        Set<String> authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
         Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
         Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
 
         return new AuthResponseDto(
-                createToken(authentication, tokenId, now, tokenExpiration),
-                createToken(authentication, tokenId, now, refreshTokenExpiration)
+                createToken(subject, authorities, tokenId, now, tokenExpiration, false),
+                createToken(subject, authorities, tokenId, now, refreshTokenExpiration, true)
         );
     }
 
-    private static String createToken(Authentication authentication, String tokenId, Date now, Date expiration) {
+    private static String createToken(String subject,
+                                      Set<String> authorities,
+                                      String tokenId,
+                                      Date now,
+                                      Date expiration,
+                                      boolean refreshToken) {
         Claims claims = Jwts.claims();
         claims.setIssuer("com.pcalouche.spat");
         claims.setId(tokenId);
-        claims.setSubject(authentication.getName());
+        claims.setSubject(subject);
         claims.setIssuedAt(now);
         claims.setExpiration(expiration);
+        claims.put("refreshToken", refreshToken);
         // Add additional information to the JWT claims
-        claims.put(CLAIMS_AUTHORITIES_KEY, authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet()));
+        claims.put(CLAIMS_AUTHORITIES_KEY, authorities);
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
-import 'react-app-polyfill/ie11';
 
 import './index.scss';
 import store from './redux/store';
