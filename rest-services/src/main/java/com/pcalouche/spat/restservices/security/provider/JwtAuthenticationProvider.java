@@ -31,6 +31,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         if (jwtAuthenticationToken.getCredentials() == null) {
             throw new BadCredentialsException("JSON web token was empty.");
         }
+        // TODO catch JwtException here and throw Authentication Exception
         String token = jwtAuthenticationToken.getCredentials().toString();
         Claims claims = SecurityUtils.getClaimsFromToken(token);
         String subject = claims.getSubject();

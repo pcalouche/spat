@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.security.provider.AjaxLoginAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.junit.Before;
@@ -33,7 +33,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class AjaxLoginProcessingFilterTest extends AbstractUnitTest {
-    private final ObjectMapper objectMapper = new ObjectMapper();
     @MockBean
     private AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
     @MockBean
@@ -53,12 +52,13 @@ public class AjaxLoginProcessingFilterTest extends AbstractUnitTest {
 
         AuthenticationManager authenticationManager = new ProviderManager(Collections.singletonList(ajaxLoginAuthenticationProvider));
 
-        ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager, objectMapper);
+        ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager);
     }
 
     @Test
     public void testExpectedPathsAreAuthenticated() throws IOException, ServletException {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(SecurityUtils.TOKEN_ENDPOINT)
+        MockHttpServletRequest request = MockMvcRequestBuilders.get(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
+                //        MockHttpServletRequest request = MockMvcRequestBuilders.get(SecurityUtils.TOKEN_ENDPOINT)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("activeUser:password".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
