@@ -1,4 +1,4 @@
-import {authActions}  from '../actions';
+import {authActions} from '../actions';
 import {getTokenData} from '../../rest-api/apiUtils';
 
 const spatTokenData = getTokenData();
@@ -9,7 +9,7 @@ const initialState = {
   loginError: null,
   tokenClaims: null,
   lastActivity: new Date().getTime(),
-  showExpirationModal: false,
+  showLogoutWarningModal: false,
   showLoggedOutModal: false
 };
 
@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
         loggedInUser: action.user,
         lastActivity: new Date(),
         errorMessage: null,
-        showExpirationModal: false
+        showLogoutWarningModal: false
       };
     case authActions.DO_BAD_LOGIN:
       return {
@@ -50,18 +50,17 @@ const reducer = (state = initialState, action) => {
         refreshToken: action.tokenData.refreshToken,
         tokenClaims: action.tokenClaims,
         lastActivity: new Date(),
-        errorMessage: null,
-        showExpirationModal: false
+        errorMessage: null
       };
     case authActions.SHOW_LOGOUT_WARNING:
       return {
         ...state,
-        showExpirationModal: true
+        showLogoutWarningModal: true
       };
     case authActions.DISMISS_LOGOUT_WARNING:
       return {
         ...state,
-        showExpirationModal: false
+        showLogoutWarningModal: false
       };
     case authActions.FORCE_LOGOUT:
       return {

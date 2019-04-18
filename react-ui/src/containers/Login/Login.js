@@ -57,7 +57,7 @@ class Login extends Component {
                     onChange={formikProps.handleChange}
                     onBlur={formikProps.handleBlur}
                     value={formikProps.values.username}
-                    invalid={formikProps.touched.username && formikProps.errors.username}/>
+                    invalid={!!(formikProps.touched.username && formikProps.errors.username)}/>
                   <FormFeedback>{formikProps.errors.username}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
@@ -68,7 +68,7 @@ class Login extends Component {
                     onChange={formikProps.handleChange}
                     onBlur={formikProps.handleBlur}
                     value={formikProps.values.password}
-                    invalid={formikProps.touched.password && formikProps.errors.password}/>
+                    invalid={!!(formikProps.touched.password && formikProps.errors.password)}/>
                   <FormFeedback>{formikProps.errors.password}</FormFeedback>
                 </FormGroup>
                 <FormGroup>

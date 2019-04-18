@@ -1,6 +1,5 @@
 package com.pcalouche.spat.restservices.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.AbstractUnitTest;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
@@ -33,7 +32,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
-    private final ObjectMapper objectMapper = new ObjectMapper();
     @MockBean
     private JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
@@ -57,12 +55,12 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
 
         AuthenticationManager authenticationManager = new ProviderManager(Collections.singletonList(jwtAuthenticationProvider));
 
-        jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
+        jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager);
     }
 
     @Test
     public void testExpectedPathsAreAuthenticated() throws IOException, ServletException {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(ApiEndpoints.USERS)
+        MockHttpServletRequest request = MockMvcRequestBuilders.post(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
@@ -72,30 +70,47 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
         assertThatCode(() -> jwtAuthenticationProcessingFilter.doFilter(request, response, filterChain))
                 .doesNotThrowAnyException();
 
-        // The filter chain should have been called once along with the towerAuthenticationProvider
+        // The filter chain should have been called once along with the jwtAuthenticationProvider
         verify(filterChain, times(1)).doFilter(any(), any());
         verify(jwtAuthenticationProvider, times(1)).authenticate(any());
     }
 
     @Test
-    public void testWhiteListedPathsAreNotAuthenticated() throws IOException, ServletException {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(SecurityUtils.WHITELISTED_ENDPOINTS[2])
+    public void testTokenPathIsNotAuthenticated() throws IOException, ServletException {
+        // Test that the token path is not authenticated because that is handled by the AjaxLoginProcessingFilter
+        MockHttpServletRequest request = MockMvcRequestBuilders.post(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        // Use an endpoint that is white listed for testing
         assertThatCode(() -> jwtAuthenticationProcessingFilter.doFilter(request, response, filterChain))
                 .doesNotThrowAnyException();
 
-        // The filter chain should have been called once, but the towerAuthenticationProvider should have
+        // The filter chain should have been called once, but the jwtAuthenticationProvider should have
         // been called 0 times since authentication should not be done on white listed endpoints
         verify(filterChain, times(1)).doFilter(any(), any());
         verify(jwtAuthenticationProvider, times(0)).authenticate(any());
     }
 
     @Test
-    public void testAttemptAuthentication() throws Exception {
+    public void testWhiteListedPathsAreNotAuthenticated() throws IOException, ServletException {
+        // Test a white listed path
+        MockHttpServletRequest request = MockMvcRequestBuilders.get(SecurityUtils.WHITELISTED_ENDPOINTS[2])
+                .contentType(MediaType.APPLICATION_JSON)
+                .buildRequest(new MockServletContext());
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        assertThatCode(() -> jwtAuthenticationProcessingFilter.doFilter(request, response, filterChain))
+                .doesNotThrowAnyException();
+
+        // The filter chain should have been called once, but the jwtAuthenticationProvider should have
+        // been called 0 times since authentication should not be done on white listed endpoints
+        verify(filterChain, times(1)).doFilter(any(), any());
+        verify(jwtAuthenticationProvider, times(0)).authenticate(any());
+    }
+
+    @Test
+    public void testAttemptAuthentication() {
         MockHttpServletRequest request = MockMvcRequestBuilders.get(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodToken")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -112,26 +127,5 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
                 .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         assertThat(authentication.getDetails())
                 .isNull();
-    }
-
-    @Test
-    public void testAttemptAuthenticationForRefreshTokenEndpoint() throws Exception {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(SecurityUtils.REFRESH_TOKEN_ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodRefreshToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .buildRequest(new MockServletContext());
-
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        Authentication authentication = jwtAuthenticationProcessingFilter.attemptAuthentication(request, response);
-
-        assertThat(authentication.getName())
-                .isEqualTo("activeUser");
-        assertThat(authentication.getCredentials())
-                .isNull();
-        assertThat(authentication.getAuthorities())
-                .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-        assertThat(authentication.getDetails())
-                .isEqualTo("refreshToken");
     }
 }

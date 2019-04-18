@@ -1,4 +1,6 @@
-/target/
+rest-services/target/
+ui-services/target/
+ui-services/src/main/resources/public
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -23,3 +25,5 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+.vscode

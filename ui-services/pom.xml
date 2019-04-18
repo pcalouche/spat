@@ -13,8 +13,7 @@
         <groupId>com.pcalouche</groupId>
         <artifactId>spat</artifactId>
         <version>4.0</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+        </parent>
 
     <properties>
         <skipUiBuild>false</skipUiBuild>
@@ -55,51 +54,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
-                    <!--Installs NPM dependencies for the Angular application.-->
-                    <execution>
-                        <id>exec-npm-install-angular</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <skip>${skipUiBuild}</skip>
-                            <executable>npm</executable>
-                            <workingDirectory>../angular-ui</workingDirectory>
-                            <arguments>
-                                <argument>install</argument>
-                            </arguments>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                    <!--Runs the Angular build.  The Angular build is configured to output to src/main/resources/public/angular so they can be served by Spring Boot-->
-                    <execution>
-                        <id>exec-npm-build-angular</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${skipUiBuild}</skip>
-                            <executable>npm</executable>
-                            <workingDirectory>../angular-ui</workingDirectory>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>build</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
                     <!--Installs NPM dependencies for the React application.-->
                     <execution>
                         <id>exec-npm-install-react</id>
@@ -139,7 +98,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <groups>com.pcalouche.spat.shared.UnitTestCategory</groups>
+                    <groups>com.pcalouche.spat.restservices.UnitTestCategory</groups>
                 </configuration>
             </plugin>
             <plugin>
@@ -153,7 +112,7 @@
                     <excludes>
                         <exclude>**/Abstract*.java</exclude>
                     </excludes>
-                    <groups>com.pcalouche.spat.shared.IntegrationTestCategory</groups>
+                    <groups>com.pcalouche.spat.restservices.IntegrationTestCategory</groups>
                 </configuration>
             </plugin>
         </plugins>

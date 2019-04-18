@@ -5,6 +5,7 @@ import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -32,13 +33,18 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("JSON web token was empty.");
         }
         String token = jwtAuthenticationToken.getCredentials().toString();
-        Claims claims = SecurityUtils.getClaimsFromToken(token);
+        Claims claims;
+        try {
+            claims = SecurityUtils.getClaimsFromToken(token);
+        } catch (JwtException e) {
+            throw new BadCredentialsException("JSON web token was invalid");
+        }
         String subject = claims.getSubject();
 
         // When a refresh token happens double check the account status and the authorities
         // with what is in the database to ensure the account is still active.
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
-        if ("refreshToken".equals(authentication.getDetails())) {
+        if (Boolean.valueOf(claims.get(SecurityUtils.CLAIMS_REFRESH_TOKEN_KEY).toString())) {
             Optional<User> optionalUser = userRepository.findById(subject);
             if (optionalUser.isPresent()) {
                 SecurityUtils.validateUserAccountStatus(optionalUser.get());
