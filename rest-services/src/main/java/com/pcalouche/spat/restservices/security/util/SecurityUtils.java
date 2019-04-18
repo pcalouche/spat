@@ -34,18 +34,16 @@ public class SecurityUtils {
             "/swagger-ui.html",
             "/webjars/**",
             // status endpoint
-            "/status",
-            "/api/auth/token"
+            "/status"
     };
     public static final String AUTHENTICATED_PATH = String.format("%s/**", ApiEndpoints.API_ROOT);
-    public static final String TOKEN_ENDPOINT = String.format("%s/auth/token", ApiEndpoints.API_ROOT);
-    public static final String REFRESH_TOKEN_ENDPOINT = String.format("%s/auth/refresh-token", ApiEndpoints.API_ROOT);
     public static final String AUTH_HEADER_BASIC_PREFIX = "Basic ";
     public static final String AUTH_HEADER_BEARER_PREFIX = "Bearer ";
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";
+    public static final String CLAIMS_REFRESH_TOKEN_KEY = "refreshToken";
     private static final String SIGNING_KEY = "farside597";
     private static final long TOKEN_DURATION_IN_MINUTES = 10L;
-    private static final long REFRESH_TOKEN_DURATION_IN_MINUTES = 15L;
+    private static final long REFRESH_TOKEN_DURATION_IN_MINUTES = 60L;
 
     public static String[] getDecodedBasicAuthFromRequest(HttpServletRequest request) throws AuthenticationException {
         String headerValue = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -89,13 +87,9 @@ public class SecurityUtils {
         }
     }
 
-    public static AuthResponseDto createAuthResponse(Authentication authentication) {
+    public static AuthResponseDto createAuthResponse(String subject, Set<String> authorities) {
         Date now = new Date();
         String tokenId = UUID.randomUUID().toString();
-        String subject = authentication.getName();
-        Set<String> authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet());
         Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
         Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
 
@@ -104,6 +98,42 @@ public class SecurityUtils {
                 createToken(subject, authorities, tokenId, now, refreshTokenExpiration, true)
         );
     }
+
+    public static AuthResponseDto createAuthResponse(Authentication authentication) {
+        Set<String> authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+        return createAuthResponse(authentication.getName(), authorities);
+        //            Date now = new Date();
+        //            String tokenId = UUID.randomUUID().toString();
+        //            String subject = authentication.getName();
+        //            Set<String> authorities = authentication.getAuthorities().stream()
+        //                    .map(GrantedAuthority::getAuthority)
+        //                    .collect(Collectors.toSet());
+        //            Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
+        //            Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
+        //
+        //            return new AuthResponseDto(
+        //                    createToken(subject, authorities, tokenId, now, tokenExpiration, false),
+        //                    createToken(subject, authorities, tokenId, now, refreshTokenExpiration, true)
+        //            );
+    }
+
+    //    public static AuthResponseDto createAuthResponse(Authentication authentication) {
+    //        Date now = new Date();
+    //        String tokenId = UUID.randomUUID().toString();
+    //        String subject = authentication.getName();
+    //        Set<String> authorities = authentication.getAuthorities().stream()
+    //                .map(GrantedAuthority::getAuthority)
+    //                .collect(Collectors.toSet());
+    //        Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
+    //        Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
+    //
+    //        return new AuthResponseDto(
+    //                createToken(subject, authorities, tokenId, now, tokenExpiration, false),
+    //                createToken(subject, authorities, tokenId, now, refreshTokenExpiration, true)
+    //        );
+    //    }
 
     private static String createToken(String subject,
                                       Set<String> authorities,
@@ -117,7 +147,7 @@ public class SecurityUtils {
         claims.setSubject(subject);
         claims.setIssuedAt(now);
         claims.setExpiration(expiration);
-        claims.put("refreshToken", refreshToken);
+        claims.put(CLAIMS_REFRESH_TOKEN_KEY, refreshToken);
         // Add additional information to the JWT claims
         claims.put(CLAIMS_AUTHORITIES_KEY, authorities);
         return Jwts.builder()

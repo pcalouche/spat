@@ -29,6 +29,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     @MockBean
     private UserRepository userRepository;
     private String validJwtToken;
+    private String validRefreshToken;
     private User activeUser;
 
     @Before
@@ -56,8 +57,8 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", authorities);
         AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authenticationToken);
         validJwtToken = authResponseDto.getToken();
+        validRefreshToken = authResponseDto.getRefreshToken();
     }
-
 
     @Test
     public void testAuthenticate() {
@@ -88,7 +89,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
 
     @Test
     public void testAuthenticateHandlesRefreshToken() {
-        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validJwtToken);
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validRefreshToken);
         authenticationToken.setDetails("refreshToken");
 
         Authentication authentication = jwtAuthenticationProvider.authenticate(authenticationToken);
@@ -108,8 +109,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     public void testAuthenticateRefreshTokenHandlesDisabledUserAccount() {
         // Disable the active user.  They should not be given a refresh token
         activeUser.setEnabled(false);
-        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validJwtToken);
-        authenticationToken.setDetails("refreshToken");
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validRefreshToken);
 
         // All other cases are tested in SecurityUtilsTest.  This just checks that the conditional is hit
         assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(authenticationToken))
@@ -125,8 +125,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     public void testAuthenticateRefreshTokenHandlesDeletedUserAccount() {
         // Simulate that the user was deleted from the database since they last received a token
         given(userRepository.findById(activeUser.getUsername())).willReturn(Optional.empty());
-        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validJwtToken);
-        authenticationToken.setDetails("refreshToken");
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validRefreshToken);
 
         // All other cases are tested in SecurityUtilsTest.  This just checks that the conditional is hit
         assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(authenticationToken))

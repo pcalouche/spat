@@ -57,8 +57,7 @@ public class AjaxLoginProcessingFilterTest extends AbstractUnitTest {
 
     @Test
     public void testExpectedPathsAreAuthenticated() throws IOException, ServletException {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
-                //        MockHttpServletRequest request = MockMvcRequestBuilders.get(SecurityUtils.TOKEN_ENDPOINT)
+        MockHttpServletRequest request = MockMvcRequestBuilders.post(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("activeUser:password".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
@@ -68,7 +67,7 @@ public class AjaxLoginProcessingFilterTest extends AbstractUnitTest {
         assertThatCode(() -> ajaxLoginProcessingFilter.doFilter(request, response, filterChain))
                 .doesNotThrowAnyException();
 
-        // The filter chain should have been called once along with the towerAuthenticationProvider
+        // The filter chain should have been called once along with the ajaxLoginAuthenticationProvider
         verify(filterChain, times(1)).doFilter(any(), any());
         verify(ajaxLoginAuthenticationProvider, times(1)).authenticate(any());
     }
@@ -84,7 +83,7 @@ public class AjaxLoginProcessingFilterTest extends AbstractUnitTest {
         assertThatCode(() -> ajaxLoginProcessingFilter.doFilter(request, response, filterChain))
                 .doesNotThrowAnyException();
 
-        // The filter chain should have been called once, but the towerAuthenticationProvider should have
+        // The filter chain should have been called once, but the ajaxLoginAuthenticationProvider should have
         // been called 0 times since authentication should not be done on white listed endpoints
         verify(filterChain, times(1)).doFilter(any(), any());
         verify(ajaxLoginAuthenticationProvider, times(0)).authenticate(any());
@@ -92,7 +91,7 @@ public class AjaxLoginProcessingFilterTest extends AbstractUnitTest {
 
     @Test
     public void testAttemptAuthentication() {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(SecurityUtils.TOKEN_ENDPOINT)
+        MockHttpServletRequest request = MockMvcRequestBuilders.get(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("activeUser:password".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());

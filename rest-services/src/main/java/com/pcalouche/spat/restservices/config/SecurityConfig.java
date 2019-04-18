@@ -1,6 +1,5 @@
 package com.pcalouche.spat.restservices.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.filter.AjaxLoginProcessingFilter;
 import com.pcalouche.spat.restservices.security.filter.JwtAuthenticationProcessingFilter;
@@ -24,14 +23,11 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final ObjectMapper objectMapper;
     private final AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final AuthenticationManager authenticationManager;
 
-    public SecurityConfig(UserRepository userRepository,
-                          ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public SecurityConfig(UserRepository userRepository) {
         ajaxLoginAuthenticationProvider = new AjaxLoginAuthenticationProvider(userRepository);
         jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
         authenticationManager = new ProviderManager(Arrays.asList(ajaxLoginAuthenticationProvider, jwtAuthenticationProvider));
@@ -51,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager);
-        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager, objectMapper);
+        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager);
 
         http
                 // Disable basic security since we won't be using that
