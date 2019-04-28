@@ -50,7 +50,7 @@ public class UserController extends AbstractSpatController {
     }
 
     @ApiOperation(value = "Create a new user")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public UserDto create(@RequestBody UserDto userDto) {
         UserDto existingUserDto = userService.findById(userDto.getUsername());
@@ -61,7 +61,7 @@ public class UserController extends AbstractSpatController {
     }
 
     @ApiOperation(value = "Update an existing user")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(value = "/{username}")
     public UserDto update(@PathVariable String username, @RequestBody UserDto userDto) {
         UserDto existingUserDto = userService.findById(username);
@@ -74,7 +74,7 @@ public class UserController extends AbstractSpatController {
     }
 
     @ApiOperation(value = "Delete an existing user")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = "/{username}")
     public void delete(@PathVariable String username) {
         if (userService.findById(username) == null) {

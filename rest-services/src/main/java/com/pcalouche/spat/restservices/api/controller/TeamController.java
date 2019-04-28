@@ -28,7 +28,7 @@ public class TeamController extends AbstractSpatController {
     }
 
     @ApiOperation(value = "Create a new team")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public TeamDto create(@RequestBody TeamDto teamDto) {
         // Ensure id is null, since this should be for creation
@@ -37,7 +37,7 @@ public class TeamController extends AbstractSpatController {
     }
 
     @ApiOperation(value = "Update an existing team")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(value = "/{id}")
     public TeamDto update(@PathVariable Integer id, @RequestBody TeamDto teamDto) {
         if (teamService.findById(id) == null) {
@@ -49,7 +49,7 @@ public class TeamController extends AbstractSpatController {
     }
 
     @ApiOperation(value = "Delete an existing team")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Integer id) {
         if (teamService.findById(id) == null) {

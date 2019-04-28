@@ -1,10 +1,10 @@
-import React, {Component}                          from 'react';
-import {connect}                                   from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {Button, Card, CardBody, CardHeader, Table} from 'reactstrap';
-import {FontAwesomeIcon}                           from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import * as userActions from '../../redux/actions/user';
-import UserModal        from '../../components/UserModal';
+import UserModal from '../../components/UserModal';
 
 class UserList extends Component {
 
@@ -43,76 +43,76 @@ class UserList extends Component {
       content = (<h1>Error Loading Users</h1>);
     } else {
       content = (
-          <React.Fragment>
-            {this.props.isAdmin && <Button
-                color="secondary"
-                className="mb-2"
-                onClick={this.props.showModal('Add', {username: ''}, this.props.addUser)}>
-              Add User
-            </Button>
-            }
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  {this.props.isAdmin && <th className="action-column"/>}
-                  {this.props.isAdmin && <th className="action-column"/>}
-                  <th>Username</th>
-                  <th>Account Status</th>
-                  <th>Roles</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.props.users.map(user => {
-                  return (
-                      <tr key={user.username}>
-                        {this.props.isAdmin &&
-                        <td className="action-column">
-                          <FontAwesomeIcon
-                              icon="pencil-alt"
-                              onClick={this.props.showModal('Edit', user, this.props.editUser)}/>
-                        </td>
-                        }
-                        {this.props.isAdmin &&
-                        <td className="action-column">
-                          <FontAwesomeIcon
-                              icon="trash-alt"
-                              onClick={this.props.showModal('Delete', user, this.props.deleteUser)}/>
-                        </td>
-                        }
-                        <td>{user.username}</td>
-                        <td>{this.displayAccountStatus(user)}</td>
-                        <td>{this.displayRoles(user)}</td>
-                      </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-            <UserModal
-                open={this.props.modalIsOpen}
-                mode={this.props.modalMode}
-                user={this.props.selectedUser}
-                errorMessage={this.props.modalError}
-                submitCallback={this.props.modalSubmitCallback}
-                cancelCallback={this.props.hideModal}
-            />
-          </React.Fragment>
+        <React.Fragment>
+          {this.props.isAdmin && <Button
+            color='secondary'
+            className='mb-2'
+            onClick={this.props.showModal('Add', {username: ''}, this.props.addUser)}>
+            Add User
+          </Button>
+          }
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                {this.props.isAdmin && <th className='action-column'/>}
+                {this.props.isAdmin && <th className='action-column'/>}
+                <th>Username</th>
+                <th>Account Status</th>
+                <th>Roles</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.props.users.map(user => {
+                return (
+                  <tr key={user.username}>
+                    {this.props.isAdmin &&
+                    <td className='action-column'>
+                      <FontAwesomeIcon
+                        icon='pencil-alt'
+                        onClick={this.props.showModal('Edit', user, this.props.editUser)}/>
+                    </td>
+                    }
+                    {this.props.isAdmin &&
+                    <td className='action-column'>
+                      <FontAwesomeIcon
+                        icon='trash-alt'
+                        onClick={this.props.showModal('Delete', user, this.props.deleteUser)}/>
+                    </td>
+                    }
+                    <td>{user.username}</td>
+                    <td>{this.displayAccountStatus(user)}</td>
+                    <td>{this.displayRoles(user)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <UserModal
+            open={this.props.modalIsOpen}
+            mode={this.props.modalMode}
+            user={this.props.selectedUser}
+            errorMessage={this.props.modalError}
+            submitCallback={this.props.modalSubmitCallback}
+            cancelCallback={this.props.hideModal}
+          />
+        </React.Fragment>
       );
     }
 
     return (
-        <Card className="UserList m-2">
-          <CardHeader>Users</CardHeader>
-          <CardBody>
-            {content}
-          </CardBody>
-        </Card>
+      <Card className='UserList m-2'>
+        <CardHeader>Users</CardHeader>
+        <CardBody>
+          {content}
+        </CardBody>
+      </Card>
     );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('ROLE_ADMIN') !== -1,
+    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('ADMIN') !== -1,
     loading: state.users.loading,
     showError: state.users.showError,
     users: state.users.list,

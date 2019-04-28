@@ -5,7 +5,7 @@
     <groupId>com.pcalouche</groupId>
     <artifactId>spat</artifactId>
     <packaging>pom</packaging>
-    <version>4.0</version>
+    <version>5.0</version>
     <name>Single Page App Template (SPAT)</name>
 
     <repositories>

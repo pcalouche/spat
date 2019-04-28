@@ -49,10 +49,10 @@ public class DatabaseLoader implements CommandLineRunner {
         teamRepository.saveAll(teams);
 
         Role userRole = roleRepository.save(Role.builder()
-                .name("ROLE_USER")
+                .name("USER")
                 .build());
         Role adminRole = roleRepository.save(Role.builder()
-                .name("ROLE_ADMIN")
+                .name("ADMIN")
                 .build());
 
         List<User> users = Arrays.asList(

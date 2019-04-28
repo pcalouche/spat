@@ -36,7 +36,7 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
 
     protected String getValidUserToken() {
         if (validUserToken == null) {
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("USER"));
             JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", authorities);
             validUserToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + SecurityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
         }
@@ -45,7 +45,7 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
 
     protected String getValidAdminToken() {
         if (validAdminToken == null) {
-            List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
+            List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("USER"), new SimpleGrantedAuthority("ADMIN"));
             JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeAdmin", "pretendToken", authorities);
             validAdminToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + SecurityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
         }
@@ -58,13 +58,13 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(Role.builder()
                 .id(1)
-                .name("ROLE_USER")
+                .name("USER")
                 .build());
 
         Set<Role> adminRoles = new HashSet<>(userRoles);
         adminRoles.add(Role.builder()
                 .id(2)
-                .name("ROLE_ADMIN")
+                .name("ADMIN")
                 .build());
 
         User activeUser = User.builder()
