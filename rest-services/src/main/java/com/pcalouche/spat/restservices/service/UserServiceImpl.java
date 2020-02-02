@@ -70,7 +70,8 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         for (RoleDto roleDto : userEditRequest.getRoleDtos()) {
-            user.getRoles().add(roleRepository.findByName(roleDto.getName()));
+            roleRepository.findByName(roleDto.getName())
+                    .ifPresent(role -> user.getRoles().add(role));
         }
 
         return modelMapper.map(userRepository.save(user), UserDto.class);
@@ -91,7 +92,8 @@ public class UserServiceImpl implements UserService {
 
             user.getRoles().clear();
             for (RoleDto roleDto : userEditRequest.getRoleDtos()) {
-                user.getRoles().add(roleRepository.findByName(roleDto.getName()));
+                roleRepository.findByName(roleDto.getName())
+                        .ifPresent(role -> user.getRoles().add(role));
             }
 
             userDtoOptional = Optional.of(modelMapper.map(userRepository.save(user), UserDto.class));
