@@ -33,9 +33,9 @@ public class LoginAuthenticationProviderTest extends AbstractTest {
                 .password("$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi")
                 .build();
 
-        given(userRepository.findById(activeUser.getUsername())).willReturn(Optional.of(activeUser));
+        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(Optional.of(activeUser));
 
-        given(userRepository.findById("bogusUser")).willReturn(Optional.empty());
+        given(userRepository.findByUsername("bogusUser")).willReturn(Optional.empty());
 
         loginAuthenticationProvider = new LoginAuthenticationProvider(userRepository);
     }
@@ -52,7 +52,7 @@ public class LoginAuthenticationProviderTest extends AbstractTest {
         assertThat(authentication.getAuthorities())
                 .isEmpty();
 
-        verify(userRepository, Mockito.times(1)).findById("activeUser");
+        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class LoginAuthenticationProviderTest extends AbstractTest {
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Bad credentials for username: bogusUser");
 
-        verify(userRepository, Mockito.times(1)).findById("bogusUser");
+        verify(userRepository, Mockito.times(1)).findByUsername("bogusUser");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class LoginAuthenticationProviderTest extends AbstractTest {
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Bad credentials for username: activeUser");
 
-        verify(userRepository, Mockito.times(1)).findById("activeUser");
+        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
     }
 
     @Test

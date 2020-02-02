@@ -54,7 +54,19 @@ public class UserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindById() {
-        assertThat(userService.findById(user1.getUsername()))
+        assertThat(userService.findById(user1.getId()))
+                .isEqualTo(
+                        Optional.of(
+                                UserDto.builder()
+                                        .username(user1.getUsername())
+                                        .build()
+                        )
+                );
+    }
+
+    @Test
+    public void testFindByUsername() {
+        assertThat(userService.findByUsername(user1.getUsername()))
                 .isEqualTo(
                         Optional.of(
                                 UserDto.builder()
@@ -100,7 +112,7 @@ public class UserServiceTest extends AbstractServiceTest {
 
         assertThat(userDto).isEqualTo(userDtoExpected);
 
-        Optional<User> userOptional = userRepository.findById(userDto.getUsername());
+        Optional<User> userOptional = userRepository.findById(userDto.getId());
         assertThat(userOptional).isPresent();
 
         User user = userOptional.get();
@@ -127,11 +139,11 @@ public class UserServiceTest extends AbstractServiceTest {
                 .accountNonExpired(false)
                 .build();
 
-        Optional<UserDto> userDtoOptional = userService.update(user2.getUsername(), userEditRequest);
+        Optional<UserDto> userDtoOptional = userService.update(user2.getId(), userEditRequest);
         assertThat(userDtoOptional).isPresent();
         assertThat(userDtoOptional.get()).isEqualTo(userDtoExpected);
 
-        Optional<User> optionalUser = userRepository.findById(user2.getUsername());
+        Optional<User> optionalUser = userRepository.findById(user2.getId());
         assertThat(optionalUser).isPresent();
 
         User user = optionalUser.get();
@@ -144,7 +156,7 @@ public class UserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteById() {
-        userService.delete(user1.getUsername());
+        userService.delete(user1.getId());
 
         assertThat(userService.findAll()).hasSize(1);
 

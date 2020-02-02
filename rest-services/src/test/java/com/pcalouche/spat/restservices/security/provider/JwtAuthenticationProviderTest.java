@@ -41,9 +41,9 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
 
         activeUser.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
 
-        given(userRepository.findById(activeUser.getUsername())).willReturn(Optional.ofNullable(activeUser));
+        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(Optional.ofNullable(activeUser));
 
-        given(userRepository.findById("bogusUser")).willReturn(Optional.empty());
+        given(userRepository.findByUsername("bogusUser")).willReturn(Optional.empty());
 
         jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
 
@@ -67,7 +67,7 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
                 .isEmpty();
 
         // User service should not be hit for non refresh token
-        verify(userRepository, Mockito.times(0)).findById("activeUser");
+        verify(userRepository, Mockito.times(0)).findByUsername("activeUser");
     }
 
 
@@ -95,7 +95,7 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
                 .isEmpty();
 
         // User service should be hit for non refresh token
-        verify(userRepository, Mockito.times(1)).findById("activeUser");
+        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
     }
 
     @Test
@@ -110,14 +110,14 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
                 .hasMessage("Disabled account for username: activeUser");
 
         // User service should be hit for non refresh token
-        verify(userRepository, Mockito.times(1)).findById("activeUser");
+        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
 
     }
 
     @Test
     public void testAuthenticateRefreshTokenHandlesDeletedUserAccount() {
         // Simulate that the user was deleted from the database since they last received a token
-        given(userRepository.findById(activeUser.getUsername())).willReturn(Optional.empty());
+        given(userRepository.findByUsername(activeUser.getUsername())).willReturn(Optional.empty());
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validRefreshToken);
 
         // All other cases are tested in SecurityUtilsTest.  This just checks that the conditional is hit
@@ -126,7 +126,7 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
                 .hasMessage("Bad credentials for username: activeUser");
 
         // User service should be hit for non refresh token
-        verify(userRepository, Mockito.times(1)).findById("activeUser");
+        verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
     }
 
     @Test

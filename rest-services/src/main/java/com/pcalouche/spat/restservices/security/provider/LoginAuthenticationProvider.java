@@ -23,7 +23,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
 
-        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
         if (!optionalUser.isPresent() || !SecurityUtils.PASSWORD_ENCODER.matches(password, optionalUser.get().getPassword())) {
             throw new BadCredentialsException(String.format("Bad credentials for username: %s", username));
         } else {

@@ -51,6 +51,7 @@ public class ModelMapperConfig {
             @Override
             protected UserDto convert(User source) {
                 return UserDto.builder()
+                        .id(source.getId())
                         .username(source.getUsername())
                         .accountNonExpired(source.isAccountNonExpired())
                         .accountNonLocked(source.isAccountNonLocked())

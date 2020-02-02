@@ -7,13 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<UserDto> findById(String username);
+    Optional<UserDto> findById(Integer id);
+
+    Optional<UserDto> findByUsername(String username);
 
     List<UserDto> findAll();
 
     UserDto create(UserEditRequest userEditRequest);
 
-    Optional<UserDto> update(String username, UserEditRequest userEditRequest);
+    Optional<UserDto> update(Integer id, UserEditRequest userEditRequest);
 
-    void delete(String username);
+    void delete(Integer id);
 }

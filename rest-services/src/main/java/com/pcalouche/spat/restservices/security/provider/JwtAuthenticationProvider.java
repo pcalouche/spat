@@ -45,7 +45,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // with what is in the database to ensure the account is still active.
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if (Boolean.valueOf(claims.get(SecurityUtils.CLAIMS_REFRESH_TOKEN_KEY).toString())) {
-            Optional<User> optionalUser = userRepository.findById(subject);
+            Optional<User> optionalUser = userRepository.findByUsername(subject);
             if (optionalUser.isPresent()) {
                 SecurityUtils.validateUserAccountStatus(optionalUser.get());
             } else {

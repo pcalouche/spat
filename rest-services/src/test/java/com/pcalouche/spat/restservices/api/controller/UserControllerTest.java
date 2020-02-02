@@ -41,35 +41,37 @@ public class UserControllerTest extends AbstractControllerTest {
     @Before
     public void before() {
         testUserDto1 = UserDto.builder()
+                .id(1)
                 .username("activeUser")
                 .build();
         testUserDto2 = UserDto.builder()
+                .id(2)
                 .username("jsmith")
                 .build();
     }
 
     @Test
     public void testFindById() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.of(testUserDto1));
+        given(userService.findById(testUserDto1.getId())).willReturn(Optional.of(testUserDto1));
 
-        mockMvc.perform(get(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
+        mockMvc.perform(get(ApiEndpoints.USERS + "/" + testUserDto1.getId())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserDto1)));
 
-        verify(userService, Mockito.times(1)).findById(testUserDto1.getUsername());
+        verify(userService, Mockito.times(1)).findById(testUserDto1.getId());
     }
 
     @Test
     public void testFindByIdUserNotFound() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.empty());
+        given(userService.findById(testUserDto1.getId())).willReturn(Optional.empty());
 
-        mockMvc.perform(get(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
+        mockMvc.perform(get(ApiEndpoints.USERS + "/" + testUserDto1.getId())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_USER_FOUND, testUserDto1.getUsername()))));
+                .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_USER_FOUND, testUserDto1.getId()))));
 
-        verify(userService, Mockito.times(1)).findById(testUserDto1.getUsername());
+        verify(userService, Mockito.times(1)).findById(testUserDto1.getId());
     }
 
     @Test
@@ -147,10 +149,10 @@ public class UserControllerTest extends AbstractControllerTest {
                 .roleDtos(roleDtos)
                 .build();
 
-        given(userService.findById(userEditRequest.getUsername())).willReturn(Optional.of(testUserDto1));
-        given(userService.update(userEditRequest.getUsername(), userEditRequest)).willReturn(Optional.of(testUserDto1));
+        given(userService.findById(1)).willReturn(Optional.of(testUserDto1));
+        given(userService.update(1, userEditRequest)).willReturn(Optional.of(testUserDto1));
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + userEditRequest.getUsername())
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/1")
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userEditRequest));
@@ -159,7 +161,7 @@ public class UserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserDto1)));
 
-        verify(userService, Mockito.times(1)).update(userEditRequest.getUsername(), userEditRequest);
+        verify(userService, Mockito.times(1)).update(1, userEditRequest);
     }
 
     @Test
@@ -173,16 +175,16 @@ public class UserControllerTest extends AbstractControllerTest {
                 .roleDtos(roleDtos)
                 .build();
 
-        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.empty());
+        given(userService.findById(1)).willReturn(Optional.empty());
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + userEditRequest.getUsername())
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/1")
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userEditRequest));
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_USER_FOUND, testUserDto1.getUsername()))));
+                .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_USER_FOUND, 1))));
     }
 
     @Test
@@ -196,7 +198,7 @@ public class UserControllerTest extends AbstractControllerTest {
                 .roleDtos(roleDtos)
                 .build();
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + userEditRequest.getUsername())
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + testUserDto1.getId())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userEditRequest));
@@ -207,36 +209,36 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.of(testUserDto1));
-        willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).delete(testUserDto1.getUsername());
+        given(userService.findById(testUserDto1.getId())).willReturn(Optional.of(testUserDto1));
+        willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).delete(testUserDto1.getId());
 
-        mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getUsername()))
+        mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getId()))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(userService, Mockito.times(1)).delete(testUserDto1.getUsername());
+        verify(userService, Mockito.times(1)).delete(testUserDto1.getId());
     }
 
     @Test
     public void testDeleteWhenUserNotFound() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.empty());
-        willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).delete(testUserDto1.getUsername());
+        given(userService.findById(testUserDto1.getId())).willReturn(Optional.empty());
+        willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).delete(testUserDto1.getId());
 
-        mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getUsername()))
+        mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getId()))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_USER_FOUND, testUserDto1.getUsername()))));
+                .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_USER_FOUND, testUserDto1.getId()))));
 
-        verify(userService, Mockito.times(0)).delete(testUserDto1.getUsername());
+        verify(userService, Mockito.times(0)).delete(testUserDto1.getId());
     }
 
     @Test
     public void testDeleteRequiresAdminRole() throws Exception {
-        mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getUsername()))
+        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.USERS, testUserDto1.getId()))
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isForbidden());
 
-        verify(userService, Mockito.times(0)).delete("activeUser");
+        verify(userService, Mockito.times(0)).delete(testUserDto1.getId());
     }
 }

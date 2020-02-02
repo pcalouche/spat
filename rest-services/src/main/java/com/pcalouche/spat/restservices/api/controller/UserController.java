@@ -26,15 +26,15 @@ public class UserController {
 
     @GetMapping(value = "/current-user")
     public UserDto currentUser(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
-        return userService.findById(jwtAuthenticationToken.getPrincipal().toString())
-                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, jwtAuthenticationToken.getPrincipal().toString())));
+        return userService.findByUsername(jwtAuthenticationToken.getPrincipal())
+                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, jwtAuthenticationToken.getPrincipal())));
     }
 
     @ApiOperation(value = "Find a user by username")
-    @GetMapping(value = "/{username}")
-    public UserDto findById(@PathVariable String username) {
-        return userService.findById(username)
-                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, username)));
+    @GetMapping(value = "/{id}")
+    public UserDto findById(@PathVariable Integer id) {
+        return userService.findById(id)
+                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id)));
     }
 
     @ApiOperation(value = "Find all users")
@@ -47,7 +47,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public UserDto create(@RequestBody UserEditRequest userEditRequest) {
-        if (userService.findById(userEditRequest.getUsername()).isPresent()) {
+        if (userService.findByUsername(userEditRequest.getUsername()).isPresent()) {
             throw new RestResourceForbiddenException(String.format(EndpointMessages.USER_ALREADY_EXISTS, userEditRequest.getUsername()));
         } else {
             return userService.create(userEditRequest);
@@ -56,20 +56,20 @@ public class UserController {
 
     @ApiOperation(value = "Update an existing user")
     @PreAuthorize("hasAuthority('Admin')")
-    @PutMapping(value = "/{username}")
-    public UserDto update(@PathVariable String username, @RequestBody UserEditRequest userEditRequest) {
-        return userService.update(username, userEditRequest)
-                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, username)));
+    @PutMapping(value = "/{id}")
+    public UserDto update(@PathVariable Integer id, @RequestBody UserEditRequest userEditRequest) {
+        return userService.update(id, userEditRequest)
+                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id)));
     }
 
     @ApiOperation(value = "Delete an existing user")
     @PreAuthorize("hasAuthority('Admin')")
-    @DeleteMapping(value = "/{username}")
-    public void delete(@PathVariable String username) {
-        if (userService.findById(username).isPresent()) {
-            userService.delete(username);
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Integer id) {
+        if (userService.findById(id).isPresent()) {
+            userService.delete(id);
         } else {
-            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, username));
+            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id));
         }
     }
 }

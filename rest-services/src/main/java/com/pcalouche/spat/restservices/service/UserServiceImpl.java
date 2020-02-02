@@ -29,9 +29,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Optional<UserDto> findById(String username) {
+    public Optional<UserDto> findById(Integer id) {
         Optional<UserDto> userDtoOptional = Optional.empty();
-        Optional<User> userOptional = userRepository.findById(username);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            userDtoOptional = Optional.of(modelMapper.map(userOptional.get(), UserDto.class));
+        }
+        return userDtoOptional;
+    }
+
+    @Override
+    public Optional<UserDto> findByUsername(String username) {
+        Optional<UserDto> userDtoOptional = Optional.empty();
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             userDtoOptional = Optional.of(modelMapper.map(userOptional.get(), UserDto.class));
         }
@@ -68,9 +78,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Optional<UserDto> update(String username, UserEditRequest userEditRequest) {
+    public Optional<UserDto> update(Integer id, UserEditRequest userEditRequest) {
         Optional<UserDto> userDtoOptional = Optional.empty();
-        Optional<User> userOptional = userRepository.findById(username);
+        Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             // TODO be able to update user name
@@ -92,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(String username) {
-        userRepository.deleteById(username);
+    public void delete(Integer id) {
+        userRepository.deleteById(id);
     }
 }
