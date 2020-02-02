@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.api;
 
-import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.restservices.AbstractTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ClientCodeTest extends AbstractUnitTest {
+public class ClientCodeTest extends AbstractTest {
     @Test
     public void testExceptionWithNoClientCode() {
         ClientCode clientCode = ClientCode.fromException(new RuntimeException("message"));

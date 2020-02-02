@@ -1,4 +1,4 @@
-package com.pcalouche.spat.restservices.api.entity;
+package com.pcalouche.spat.restservices.entity;
 
 import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -23,8 +23,8 @@ class TeamList extends Component {
         <React.Fragment>
           {this.props.isAdmin &&
           <Button
-            color='secondary'
-            className='mb-2'
+            color="secondary"
+            className="mb-2"
             onClick={this.props.showModal('Add', {name: ''}, this.props.addTeam)}>
             Add Team
           </Button>
@@ -32,8 +32,8 @@ class TeamList extends Component {
           <Table striped bordered hover>
             <thead>
               <tr>
-                {this.props.isAdmin && <th className='action-column'/>}
-                {this.props.isAdmin && <th className='action-column'/>}
+                {this.props.isAdmin && <th className="action-column"/>}
+                {this.props.isAdmin && <th className="action-column"/>}
                 <th>Id</th>
                 <th>Name</th>
               </tr>
@@ -43,16 +43,16 @@ class TeamList extends Component {
                 return (
                   <tr key={team.id}>
                     {this.props.isAdmin &&
-                    <td className='action-column'>
+                    <td className="action-column">
                       <FontAwesomeIcon
-                        icon='pencil-alt'
+                        icon="pencil-alt"
                         onClick={this.props.showModal('Edit', team, this.props.editTeam)}/>
                     </td>
                     }
                     {this.props.isAdmin &&
-                    <td className='action-column'>
+                    <td className="action-column">
                       <FontAwesomeIcon
-                        icon='trash-alt'
+                        icon="trash-alt"
                         onClick={this.props.showModal('Delete', team, this.props.deleteTeam)}/>
                     </td>
                     }
@@ -76,7 +76,7 @@ class TeamList extends Component {
     }
 
     return (
-      <Card className='TeamList m-2'>
+      <Card className="TeamList m-2">
         <CardHeader>Teams</CardHeader>
         <CardBody>
           {content}
@@ -88,7 +88,7 @@ class TeamList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('ADMIN') !== -1,
+    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('Admin') !== -1,
     loading: state.teams.loading,
     showError: state.teams.showError,
     teams: state.teams.list,

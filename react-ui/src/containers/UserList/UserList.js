@@ -45,8 +45,8 @@ class UserList extends Component {
       content = (
         <React.Fragment>
           {this.props.isAdmin && <Button
-            color='secondary'
-            className='mb-2'
+            color="secondary"
+            className="mb-2"
             onClick={this.props.showModal('Add', {username: ''}, this.props.addUser)}>
             Add User
           </Button>
@@ -54,8 +54,8 @@ class UserList extends Component {
           <Table striped bordered hover>
             <thead>
               <tr>
-                {this.props.isAdmin && <th className='action-column'/>}
-                {this.props.isAdmin && <th className='action-column'/>}
+                {this.props.isAdmin && <th className="action-column"/>}
+                {this.props.isAdmin && <th className="action-column"/>}
                 <th>Username</th>
                 <th>Account Status</th>
                 <th>Roles</th>
@@ -66,16 +66,16 @@ class UserList extends Component {
                 return (
                   <tr key={user.username}>
                     {this.props.isAdmin &&
-                    <td className='action-column'>
+                    <td className="action-column">
                       <FontAwesomeIcon
-                        icon='pencil-alt'
+                        icon="pencil-alt"
                         onClick={this.props.showModal('Edit', user, this.props.editUser)}/>
                     </td>
                     }
                     {this.props.isAdmin &&
-                    <td className='action-column'>
+                    <td className="action-column">
                       <FontAwesomeIcon
-                        icon='trash-alt'
+                        icon="trash-alt"
                         onClick={this.props.showModal('Delete', user, this.props.deleteUser)}/>
                     </td>
                     }
@@ -100,7 +100,7 @@ class UserList extends Component {
     }
 
     return (
-      <Card className='UserList m-2'>
+      <Card className="UserList m-2">
         <CardHeader>Users</CardHeader>
         <CardBody>
           {content}
@@ -112,7 +112,7 @@ class UserList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('ADMIN') !== -1,
+    isAdmin: state.auth.tokenClaims && state.auth.tokenClaims.authorities.indexOf('Admin') !== -1,
     loading: state.users.loading,
     showError: state.users.showError,
     users: state.users.list,

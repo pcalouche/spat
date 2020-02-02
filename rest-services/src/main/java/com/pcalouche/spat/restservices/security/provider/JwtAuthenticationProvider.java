@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
-import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.repository.UserRepository;
+import com.pcalouche.spat.restservices.entity.User;
+import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;

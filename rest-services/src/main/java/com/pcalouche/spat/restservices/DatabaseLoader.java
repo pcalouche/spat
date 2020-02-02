@@ -1,11 +1,11 @@
 package com.pcalouche.spat.restservices;
 
-import com.pcalouche.spat.restservices.api.entity.Role;
-import com.pcalouche.spat.restservices.api.entity.Team;
-import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.repository.RoleRepository;
-import com.pcalouche.spat.restservices.api.repository.TeamRepository;
-import com.pcalouche.spat.restservices.api.repository.UserRepository;
+import com.pcalouche.spat.restservices.entity.Role;
+import com.pcalouche.spat.restservices.entity.Team;
+import com.pcalouche.spat.restservices.entity.User;
+import com.pcalouche.spat.restservices.repository.RoleRepository;
+import com.pcalouche.spat.restservices.repository.TeamRepository;
+import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -48,48 +48,39 @@ public class DatabaseLoader implements CommandLineRunner {
 
         teamRepository.saveAll(teams);
 
-        Role userRole = roleRepository.save(Role.builder()
-                .name("USER")
-                .build());
         Role adminRole = roleRepository.save(Role.builder()
-                .name("ADMIN")
+                .name("Admin")
                 .build());
 
         List<User> users = Arrays.asList(
                 User.builder()
                         .username("activeUser")
                         .password(SecurityUtils.PASSWORD_ENCODER.encode("password"))
-                        .roles(Stream.of(userRole).collect(Collectors.toSet()))
                         .build(),
                 User.builder()
                         .username("activeAdmin")
                         .password(SecurityUtils.PASSWORD_ENCODER.encode("password"))
-                        .roles(Stream.of(userRole, adminRole)
-                                .collect(Collectors.toSet()))
+                        .roles(Stream.of(adminRole).collect(Collectors.toSet()))
                         .build(),
                 User.builder()
                         .username("expiredUser")
                         .password(SecurityUtils.PASSWORD_ENCODER.encode("password"))
-                        .roles(Stream.of(userRole, adminRole)
-                                .collect(Collectors.toSet()))
+                        .roles(Stream.of(adminRole).collect(Collectors.toSet()))
                         .accountNonExpired(false)
                         .build(),
                 User.builder()
                         .username("credentialsExpiredUser")
                         .password(SecurityUtils.PASSWORD_ENCODER.encode("password"))
-                        .roles(Stream.of(userRole).collect(Collectors.toSet()))
                         .credentialsNonExpired(false)
                         .build(),
                 User.builder()
                         .username("lockedUser")
                         .password(SecurityUtils.PASSWORD_ENCODER.encode("password"))
-                        .roles(Stream.of(userRole).collect(Collectors.toSet()))
                         .accountNonLocked(false)
                         .build(),
                 User.builder()
                         .username("disabledUser")
                         .password(SecurityUtils.PASSWORD_ENCODER.encode("password"))
-                        .roles(Stream.of(userRole).collect(Collectors.toSet()))
                         .enabled(false)
                         .build()
         );

@@ -2,7 +2,7 @@ package com.pcalouche.spat.restservices.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.restservices.AbstractTest;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
@@ -26,7 +26,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ExceptionUtilsTest extends AbstractUnitTest {
+public class ExceptionUtilsTest extends AbstractTest {
     @Test
     public void testHttpStatusForAuthenticationException() {
         HttpStatus httpStatus = ExceptionUtils.getHttpStatusForException(new BadCredentialsException("message"));

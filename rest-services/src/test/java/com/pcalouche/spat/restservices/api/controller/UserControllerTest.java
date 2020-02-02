@@ -5,7 +5,8 @@ import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.EndpointMessages;
 import com.pcalouche.spat.restservices.api.dto.RoleDto;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
-import com.pcalouche.spat.restservices.api.service.UserService;
+import com.pcalouche.spat.restservices.api.dto.UserEditRequest;
+import com.pcalouche.spat.restservices.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,9 +18,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -37,24 +40,17 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Before
     public void before() {
-        Set<RoleDto> expectedRoleDtos = new HashSet<>();
-        expectedRoleDtos.add(RoleDto.builder()
-                .id(1)
-                .name("ROLE_USER")
-                .build());
         testUserDto1 = UserDto.builder()
                 .username("activeUser")
-                .roles(expectedRoleDtos)
                 .build();
         testUserDto2 = UserDto.builder()
                 .username("jsmith")
-                .roles(expectedRoleDtos)
                 .build();
     }
 
     @Test
     public void testFindById() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(testUserDto1);
+        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.of(testUserDto1));
 
         mockMvc.perform(get(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
@@ -66,7 +62,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindByIdUserNotFound() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(null);
+        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.empty());
 
         mockMvc.perform(get(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
@@ -91,85 +87,127 @@ public class UserControllerTest extends AbstractControllerTest {
         verify(userService, Mockito.times(1)).findAll();
     }
 
-
     @Test
     public void testCreate() throws Exception {
-        given(userService.save(testUserDto1)).willReturn(testUserDto1);
+        Set<RoleDto> roleDtos = Stream.of(
+                RoleDto.builder().name("Admin").build()
+        ).collect(Collectors.toSet());
+
+        UserEditRequest userEditRequest = UserEditRequest.builder()
+                .username("activeUser")
+                .roleDtos(roleDtos)
+                .build();
+
+        given(userService.create(userEditRequest)).willReturn(testUserDto1);
 
         MockHttpServletRequestBuilder request = post(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testUserDto1));
+                .content(objectMapper.writeValueAsString(userEditRequest));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserDto1)));
 
-        verify(userService, Mockito.times(1)).save(testUserDto1);
+        verify(userService, Mockito.times(1)).create(userEditRequest);
     }
 
     @Test
     public void testCreateRequiresAdminRole() throws Exception {
-        given(userService.save(testUserDto1)).willReturn(testUserDto1);
+        Set<RoleDto> roleDtos = Stream.of(
+                RoleDto.builder().name("Admin").build()
+        ).collect(Collectors.toSet());
+
+        UserEditRequest userEditRequest = UserEditRequest.builder()
+                .username("activeUser")
+                .roleDtos(roleDtos)
+                .build();
+
+        given(userService.create(userEditRequest)).willReturn(testUserDto1);
 
         MockHttpServletRequestBuilder request = post(ApiEndpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testUserDto1));
+                .content(objectMapper.writeValueAsString(userEditRequest));
 
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
+
+        verify(userService, Mockito.times(0)).create(userEditRequest);
     }
 
     @Test
     public void testUpdate() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(testUserDto1);
-        given(userService.save(testUserDto1)).willReturn(testUserDto1);
+        Set<RoleDto> roleDtos = Stream.of(
+                RoleDto.builder().name("Admin").build()
+        ).collect(Collectors.toSet());
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
+        UserEditRequest userEditRequest = UserEditRequest.builder()
+                .username("activeUser")
+                .roleDtos(roleDtos)
+                .build();
+
+        given(userService.findById(userEditRequest.getUsername())).willReturn(Optional.of(testUserDto1));
+        given(userService.update(userEditRequest.getUsername(), userEditRequest)).willReturn(Optional.of(testUserDto1));
+
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + userEditRequest.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testUserDto1));
+                .content(objectMapper.writeValueAsString(userEditRequest));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserDto1)));
 
-        verify(userService, Mockito.times(1)).save(testUserDto1);
+        verify(userService, Mockito.times(1)).update(userEditRequest.getUsername(), userEditRequest);
     }
 
     @Test
     public void testUpdateWhenUserNotFound() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(null);
+        Set<RoleDto> roleDtos = Stream.of(
+                RoleDto.builder().name("Admin").build()
+        ).collect(Collectors.toSet());
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
+        UserEditRequest userEditRequest = UserEditRequest.builder()
+                .username("activeUser")
+                .roleDtos(roleDtos)
+                .build();
+
+        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + userEditRequest.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testUserDto1));
+                .content(objectMapper.writeValueAsString(userEditRequest));
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_USER_FOUND, testUserDto1.getUsername()))));
-
-        verify(userService, Mockito.times(0)).save(testUserDto1);
     }
 
     @Test
     public void testUpdateRequiresAdminRole() throws Exception {
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + testUserDto1.getUsername())
+        Set<RoleDto> roleDtos = Stream.of(
+                RoleDto.builder().name("Admin").build()
+        ).collect(Collectors.toSet());
+
+        UserEditRequest userEditRequest = UserEditRequest.builder()
+                .username("activeUser")
+                .roleDtos(roleDtos)
+                .build();
+
+        MockHttpServletRequestBuilder request = put(ApiEndpoints.USERS + "/" + userEditRequest.getUsername())
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testUserDto1));
+                .content(objectMapper.writeValueAsString(userEditRequest));
 
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
-
-        verify(userService, Mockito.times(0)).save(testUserDto1);
     }
 
     @Test
     public void testDelete() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(testUserDto1);
+        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.of(testUserDto1));
         willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).delete(testUserDto1.getUsername());
 
         mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getUsername()))
@@ -182,7 +220,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteWhenUserNotFound() throws Exception {
-        given(userService.findById(testUserDto1.getUsername())).willReturn(null);
+        given(userService.findById(testUserDto1.getUsername())).willReturn(Optional.empty());
         willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).delete(testUserDto1.getUsername());
 
         mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getUsername()))
@@ -195,10 +233,10 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteRequiresAdminRole() throws Exception {
-        willAnswer((Answer<Void>) invocationOnMock -> null).given(userService).delete(testUserDto1.getUsername());
-
         mockMvc.perform(delete(String.format("%s/%s", ApiEndpoints.USERS, testUserDto1.getUsername()))
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isForbidden());
+
+        verify(userService, Mockito.times(0)).delete("activeUser");
     }
 }

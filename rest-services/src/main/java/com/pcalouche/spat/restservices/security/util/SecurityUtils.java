@@ -2,10 +2,10 @@ package com.pcalouche.spat.restservices.security.util;
 
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
-import com.pcalouche.spat.restservices.api.entity.User;
+import com.pcalouche.spat.restservices.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
@@ -41,7 +42,8 @@ public class SecurityUtils {
     public static final String AUTH_HEADER_BEARER_PREFIX = "Bearer ";
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";
     public static final String CLAIMS_REFRESH_TOKEN_KEY = "refreshToken";
-    private static final String SIGNING_KEY = "farside597";
+    private static final String SIGNING_KEY = "EM4j6RQuNhtcUDKKDqWDRBxwNk5cgJ3tVzIcm8yjeoB7Dx1LcejSyCkk5AgjZ567ceudpg6Lk7P9hV+koCObUw==";
+    private static final SecretKey secretKey = Keys.hmacShaKeyFor(SIGNING_KEY.getBytes());
     private static final long TOKEN_DURATION_IN_MINUTES = 10L;
     private static final long REFRESH_TOKEN_DURATION_IN_MINUTES = 60L;
 
@@ -70,7 +72,7 @@ public class SecurityUtils {
 
     public static Claims getClaimsFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey(SIGNING_KEY)
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -104,36 +106,7 @@ public class SecurityUtils {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
         return createAuthResponse(authentication.getName(), authorities);
-        //            Date now = new Date();
-        //            String tokenId = UUID.randomUUID().toString();
-        //            String subject = authentication.getName();
-        //            Set<String> authorities = authentication.getAuthorities().stream()
-        //                    .map(GrantedAuthority::getAuthority)
-        //                    .collect(Collectors.toSet());
-        //            Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
-        //            Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
-        //
-        //            return new AuthResponseDto(
-        //                    createToken(subject, authorities, tokenId, now, tokenExpiration, false),
-        //                    createToken(subject, authorities, tokenId, now, refreshTokenExpiration, true)
-        //            );
     }
-
-    //    public static AuthResponseDto createAuthResponse(Authentication authentication) {
-    //        Date now = new Date();
-    //        String tokenId = UUID.randomUUID().toString();
-    //        String subject = authentication.getName();
-    //        Set<String> authorities = authentication.getAuthorities().stream()
-    //                .map(GrantedAuthority::getAuthority)
-    //                .collect(Collectors.toSet());
-    //        Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
-    //        Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
-    //
-    //        return new AuthResponseDto(
-    //                createToken(subject, authorities, tokenId, now, tokenExpiration, false),
-    //                createToken(subject, authorities, tokenId, now, refreshTokenExpiration, true)
-    //        );
-    //    }
 
     private static String createToken(String subject,
                                       Set<String> authorities,
@@ -152,7 +125,7 @@ public class SecurityUtils {
         claims.put(CLAIMS_AUTHORITIES_KEY, authorities);
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
+                .signWith(secretKey)
                 .compact();
     }
 }

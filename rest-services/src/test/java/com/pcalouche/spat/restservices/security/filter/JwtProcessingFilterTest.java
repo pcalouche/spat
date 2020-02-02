@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.security.filter;
 
-import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.restservices.AbstractTest;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
@@ -16,13 +16,13 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -31,12 +31,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
+public class JwtProcessingFilterTest extends AbstractTest {
     @MockBean
     private JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
     private FilterChain filterChain;
-    private JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter;
+    private JwtProcessingFilter jwtProcessingFilter;
 
     @Before
     public void before() {
@@ -44,18 +44,18 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
 
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("goodToken");
         given(jwtAuthenticationProvider.authenticate(jwtAuthenticationToken)).willReturn(
-                new JwtAuthenticationToken("activeUser", null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
+                new JwtAuthenticationToken("activeUser", null, new HashSet<>())
         );
 
         JwtAuthenticationToken jwtRefreshAuthenticationToken = new JwtAuthenticationToken("goodRefreshToken");
         jwtRefreshAuthenticationToken.setDetails("refreshToken");
         given(jwtAuthenticationProvider.authenticate(jwtRefreshAuthenticationToken)).willReturn(
-                new JwtAuthenticationToken("activeUser", null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
+                new JwtAuthenticationToken("activeUser", null, new HashSet<>())
         );
 
         AuthenticationManager authenticationManager = new ProviderManager(Collections.singletonList(jwtAuthenticationProvider));
 
-        jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager);
+        jwtProcessingFilter = new JwtProcessingFilter(authenticationManager);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         // Use an endpoint that is not white listed for testing
-        assertThatCode(() -> jwtAuthenticationProcessingFilter.doFilter(request, response, filterChain))
+        assertThatCode(() -> jwtProcessingFilter.doFilter(request, response, filterChain))
                 .doesNotThrowAnyException();
 
         // The filter chain should have been called once along with the jwtAuthenticationProvider
@@ -83,7 +83,7 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
                 .buildRequest(new MockServletContext());
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        assertThatCode(() -> jwtAuthenticationProcessingFilter.doFilter(request, response, filterChain))
+        assertThatCode(() -> jwtProcessingFilter.doFilter(request, response, filterChain))
                 .doesNotThrowAnyException();
 
         // The filter chain should have been called once, but the jwtAuthenticationProvider should have
@@ -100,7 +100,7 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
                 .buildRequest(new MockServletContext());
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        assertThatCode(() -> jwtAuthenticationProcessingFilter.doFilter(request, response, filterChain))
+        assertThatCode(() -> jwtProcessingFilter.doFilter(request, response, filterChain))
                 .doesNotThrowAnyException();
 
         // The filter chain should have been called once, but the jwtAuthenticationProvider should have
@@ -117,14 +117,14 @@ public class JwtAuthenticationProcessingFilterTest extends AbstractUnitTest {
                 .buildRequest(new MockServletContext());
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        Authentication authentication = jwtAuthenticationProcessingFilter.attemptAuthentication(request, response);
+        Authentication authentication = jwtProcessingFilter.attemptAuthentication(request, response);
 
         assertThat(authentication.getName())
                 .isEqualTo("activeUser");
         assertThat(authentication.getCredentials())
                 .isNull();
         assertThat(authentication.getAuthorities())
-                .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                .isEmpty();
         assertThat(authentication.getDetails())
                 .isNull();
     }

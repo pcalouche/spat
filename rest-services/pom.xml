@@ -48,7 +48,11 @@
         <!--JSON Web Token Support for the JVM-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
+            <artifactId>jjwt-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
         </dependency>
         <!--ModelMapper-->
         <dependency>
@@ -114,29 +118,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <groups>com.pcalouche.spat.restservices.UnitTestCategory</groups>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <!--The Maven Failsafe plugin does not includes the file patterns below by default-->
-                <!--http://maven.apache.org/surefire/maven-failsafe-plugin/examples/inclusion-exclusion.html-->
-                <configuration>
-                    <includes>
-                        <include>**/*Tests.java</include>
-                        <include>**/*Test.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/Abstract*.java</exclude>
-                    </excludes>
-                    <groups>com.pcalouche.spat.restservices.IntegrationTestCategory</groups>
-                </configuration>
             </plugin>
         </plugins>
     </build>

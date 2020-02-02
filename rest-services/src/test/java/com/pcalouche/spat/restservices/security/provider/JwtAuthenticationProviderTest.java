@@ -1,10 +1,9 @@
 package com.pcalouche.spat.restservices.security.provider;
 
-import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.restservices.AbstractTest;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
-import com.pcalouche.spat.restservices.api.entity.Role;
-import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.repository.UserRepository;
+import com.pcalouche.spat.restservices.entity.User;
+import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.junit.Before;
@@ -15,16 +14,16 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-public class JwtAuthenticationProviderTest extends AbstractUnitTest {
+public class JwtAuthenticationProviderTest extends AbstractTest {
     private JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
     private UserRepository userRepository;
@@ -35,14 +34,9 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
     @Before
     public void before() {
         Mockito.reset(userRepository);
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.builder()
-                .id(1)
-                .name("ROLE_USER")
-                .build());
+
         activeUser = User.builder()
                 .username("activeUser")
-                .roles(roles)
                 .build();
 
         activeUser.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
@@ -53,8 +47,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
 
         jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
 
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", authorities);
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", new HashSet<>());
         AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authenticationToken);
         validJwtToken = authResponseDto.getToken();
         validRefreshToken = authResponseDto.getRefreshToken();
@@ -71,7 +64,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
         assertThat(authentication.getCredentials())
                 .isNull();
         assertThat(authentication.getAuthorities())
-                .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                .isEmpty();
 
         // User service should not be hit for non refresh token
         verify(userRepository, Mockito.times(0)).findById("activeUser");
@@ -99,7 +92,7 @@ public class JwtAuthenticationProviderTest extends AbstractUnitTest {
         assertThat(authentication.getCredentials())
                 .isNull();
         assertThat(authentication.getAuthorities())
-                .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                .isEmpty();
 
         // User service should be hit for non refresh token
         verify(userRepository, Mockito.times(1)).findById("activeUser");

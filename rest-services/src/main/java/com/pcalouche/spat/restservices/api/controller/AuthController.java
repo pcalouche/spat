@@ -1,6 +1,5 @@
 package com.pcalouche.spat.restservices.api.controller;
 
-import com.pcalouche.spat.restservices.api.AbstractSpatController;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = ApiEndpoints.AUTH)
-public class AuthController extends AbstractSpatController {
+public class AuthController {
 
     @ApiOperation(value = "Get JWT from username and password")
     @PostMapping(value = ApiEndpoints.TOKEN)

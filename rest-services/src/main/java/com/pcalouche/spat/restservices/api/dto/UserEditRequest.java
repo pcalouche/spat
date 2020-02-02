@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserEditRequest {
     private String username;
     @Builder.Default
     private boolean accountNonExpired = true;
@@ -23,7 +23,7 @@ public class UserDto {
     private boolean credentialsNonExpired = true;
     @Builder.Default
     private boolean enabled = true;
-    @JsonProperty("roles")
     @Builder.Default
+    @JsonProperty("roles")
     private Set<RoleDto> roleDtos = new HashSet<>();
 }

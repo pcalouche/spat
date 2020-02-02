@@ -1,9 +1,8 @@
 package com.pcalouche.spat.restservices.security.provider;
 
-import com.pcalouche.spat.restservices.AbstractUnitTest;
-import com.pcalouche.spat.restservices.api.entity.Role;
-import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.repository.UserRepository;
+import com.pcalouche.spat.restservices.AbstractTest;
+import com.pcalouche.spat.restservices.entity.User;
+import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,20 +11,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
-    private AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
+public class LoginAuthenticationProviderTest extends AbstractTest {
+    private LoginAuthenticationProvider loginAuthenticationProvider;
     @MockBean
     private UserRepository userRepository;
 
@@ -33,35 +28,29 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
     public void before() {
         Mockito.reset(userRepository);
 
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.builder()
-                .id(1)
-                .name("ROLE_USER")
-                .build());
         User activeUser = User.builder()
                 .username("activeUser")
                 .password("$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi")
-                .roles(roles)
                 .build();
 
-        given(userRepository.findById(activeUser.getUsername())).willReturn(Optional.ofNullable(activeUser));
+        given(userRepository.findById(activeUser.getUsername())).willReturn(Optional.of(activeUser));
 
         given(userRepository.findById("bogusUser")).willReturn(Optional.empty());
 
-        ajaxLoginAuthenticationProvider = new AjaxLoginAuthenticationProvider(userRepository);
+        loginAuthenticationProvider = new LoginAuthenticationProvider(userRepository);
     }
 
     @Test
     public void testAuthenticate() {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeUser", "password");
-        Authentication authentication = ajaxLoginAuthenticationProvider.authenticate(authenticationToken);
+        Authentication authentication = loginAuthenticationProvider.authenticate(authenticationToken);
 
         assertThat(authentication.getName())
                 .isEqualTo("activeUser");
         assertThat(authentication.getCredentials())
                 .isNull();
         assertThat(authentication.getAuthorities())
-                .isEqualTo(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                .isEmpty();
 
         verify(userRepository, Mockito.times(1)).findById("activeUser");
     }
@@ -70,7 +59,7 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
     public void testAuthenticateThrowsBadCredentialsForNullUser() {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("bogusUser", "password");
 
-        assertThatThrownBy(() -> ajaxLoginAuthenticationProvider.authenticate(authenticationToken))
+        assertThatThrownBy(() -> loginAuthenticationProvider.authenticate(authenticationToken))
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Bad credentials for username: bogusUser");
 
@@ -81,7 +70,7 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
     public void testAuthenticateThrowsBadCredentialsForBadPassword() {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeUser", "badPassword");
 
-        assertThatThrownBy(() -> ajaxLoginAuthenticationProvider.authenticate(authenticationToken))
+        assertThatThrownBy(() -> loginAuthenticationProvider.authenticate(authenticationToken))
                 .isInstanceOf(BadCredentialsException.class)
                 .hasMessage("Bad credentials for username: activeUser");
 
@@ -90,13 +79,13 @@ public class AjaxLoginAuthenticationProviderTest extends AbstractUnitTest {
 
     @Test
     public void testSupportValidAuthenticationClass() {
-        assertThat(ajaxLoginAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class))
+        assertThat(loginAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class))
                 .isTrue();
     }
 
     @Test
     public void testSupportInvalidAuthenticationClass() {
-        assertThat(ajaxLoginAuthenticationProvider.supports(JwtAuthenticationToken.class))
+        assertThat(loginAuthenticationProvider.supports(JwtAuthenticationToken.class))
                 .isFalse();
     }
 }

@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.provider;
 
-import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.repository.UserRepository;
+import com.pcalouche.spat.restservices.entity.User;
+import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,10 +11,10 @@ import org.springframework.security.core.AuthenticationException;
 
 import java.util.Optional;
 
-public class AjaxLoginAuthenticationProvider implements AuthenticationProvider {
+public class LoginAuthenticationProvider implements AuthenticationProvider {
     private final UserRepository userRepository;
 
-    public AjaxLoginAuthenticationProvider(UserRepository userRepository) {
+    public LoginAuthenticationProvider(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

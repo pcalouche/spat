@@ -1,11 +1,11 @@
 package com.pcalouche.spat.restservices;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pcalouche.spat.restservices.api.entity.Role;
-import com.pcalouche.spat.restservices.api.entity.User;
-import com.pcalouche.spat.restservices.api.repository.UserRepository;
 import com.pcalouche.spat.restservices.config.SecurityConfig;
+import com.pcalouche.spat.restservices.entity.Role;
+import com.pcalouche.spat.restservices.entity.User;
 import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
+import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.junit.Before;
@@ -15,13 +15,16 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @Import({SecurityConfig.class})
-public abstract class AbstractControllerTest extends AbstractUnitTest {
+public abstract class AbstractControllerTest extends AbstractTest {
     private final static String ENCODED_PASSWORD = "$2a$10$VSkAHLuuGgU.Oo/5TpiKieHSdW2Whz83PfPJoFvvrh.pQbT2YsNSi";
     @Autowired
     protected ObjectMapper objectMapper;
@@ -36,8 +39,7 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
 
     protected String getValidUserToken() {
         if (validUserToken == null) {
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("USER"));
-            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", authorities);
+            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", new HashSet<>());
             validUserToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + SecurityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
         }
         return validUserToken;
@@ -45,7 +47,7 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
 
     protected String getValidAdminToken() {
         if (validAdminToken == null) {
-            List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("USER"), new SimpleGrantedAuthority("ADMIN"));
+            Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
             JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeAdmin", "pretendToken", authorities);
             validAdminToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + SecurityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
         }
@@ -64,7 +66,7 @@ public abstract class AbstractControllerTest extends AbstractUnitTest {
         Set<Role> adminRoles = new HashSet<>(userRoles);
         adminRoles.add(Role.builder()
                 .id(2)
-                .name("ADMIN")
+                .name("Admin")
                 .build());
 
         User activeUser = User.builder()

@@ -1,6 +1,6 @@
-package com.pcalouche.spat.restservices.api.repository;
+package com.pcalouche.spat.restservices.repository;
 
-import com.pcalouche.spat.restservices.api.entity.Role;
+import com.pcalouche.spat.restservices.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

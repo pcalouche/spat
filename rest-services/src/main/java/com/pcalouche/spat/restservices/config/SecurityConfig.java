@@ -1,10 +1,10 @@
 package com.pcalouche.spat.restservices.config;
 
-import com.pcalouche.spat.restservices.api.repository.UserRepository;
-import com.pcalouche.spat.restservices.security.filter.AjaxLoginProcessingFilter;
-import com.pcalouche.spat.restservices.security.filter.JwtAuthenticationProcessingFilter;
-import com.pcalouche.spat.restservices.security.provider.AjaxLoginAuthenticationProvider;
+import com.pcalouche.spat.restservices.repository.UserRepository;
+import com.pcalouche.spat.restservices.security.filter.JwtProcessingFilter;
+import com.pcalouche.spat.restservices.security.filter.LoginProcessingFilter;
 import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
+import com.pcalouche.spat.restservices.security.provider.LoginAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,14 +23,14 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final AjaxLoginAuthenticationProvider ajaxLoginAuthenticationProvider;
+    private final LoginAuthenticationProvider loginAuthenticationProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final AuthenticationManager authenticationManager;
 
     public SecurityConfig(UserRepository userRepository) {
-        ajaxLoginAuthenticationProvider = new AjaxLoginAuthenticationProvider(userRepository);
+        loginAuthenticationProvider = new LoginAuthenticationProvider(userRepository);
         jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
-        authenticationManager = new ProviderManager(Arrays.asList(ajaxLoginAuthenticationProvider, jwtAuthenticationProvider));
+        authenticationManager = new ProviderManager(Arrays.asList(loginAuthenticationProvider, jwtAuthenticationProvider));
     }
 
     @Override
@@ -46,8 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter(authenticationManager);
-        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(authenticationManager);
+        LoginProcessingFilter loginProcessingFilter = new LoginProcessingFilter(authenticationManager);
+        JwtProcessingFilter jwtProcessingFilter = new JwtProcessingFilter(authenticationManager);
 
         http
                 // Disable basic security since we won't be using that
@@ -69,9 +69,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(SecurityUtils.AUTHENTICATED_PATH).authenticated()
                 // Setup filters for the endpoints
                 .and()
-                .authenticationProvider(ajaxLoginAuthenticationProvider)
+                .authenticationProvider(loginAuthenticationProvider)
                 .authenticationProvider(jwtAuthenticationProvider)
-                .addFilterBefore(ajaxLoginProcessingFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(loginProcessingFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtProcessingFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

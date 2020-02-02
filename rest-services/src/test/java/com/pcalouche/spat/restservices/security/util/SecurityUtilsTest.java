@@ -1,9 +1,8 @@
 package com.pcalouche.spat.restservices.security.util;
 
-import com.pcalouche.spat.restservices.AbstractUnitTest;
+import com.pcalouche.spat.restservices.AbstractTest;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
-import com.pcalouche.spat.restservices.api.entity.Role;
-import com.pcalouche.spat.restservices.api.entity.User;
+import com.pcalouche.spat.restservices.entity.User;
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
@@ -13,12 +12,16 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.*;
+import java.util.Base64;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class SecurityUtilsTest extends AbstractUnitTest {
+public class SecurityUtilsTest extends AbstractTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequest() {
@@ -63,7 +66,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testGetClaimsFromToken() {
-        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
+        Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "pretendToken", authorities);
         AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authenticationToken);
         Claims claims = SecurityUtils.getClaimsFromToken(authResponseDto.getToken());
@@ -72,22 +75,15 @@ public class SecurityUtilsTest extends AbstractUnitTest {
         assertThat(claims.getIssuedAt()).isNotNull();
         assertThat(claims.getExpiration()).isNotNull();
         List<String> tokenAuthorities = (List<String>) claims.get("authorities", List.class);
-        assertThat(tokenAuthorities).hasSize(2);
-        assertThat(tokenAuthorities.get(0)).isEqualTo("ROLE_USER");
-        assertThat(tokenAuthorities.get(1)).isEqualTo("ROLE_ADMIN");
+        assertThat(tokenAuthorities).hasSize(1);
+        assertThat(tokenAuthorities.get(0)).isEqualTo("Admin");
     }
 
     @Test
     public void testValidateUserAccountStatusAccountExpiredException() {
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.builder()
-                .id(1)
-                .name("ROLE_USER")
-                .build());
         User user = User.builder()
                 .username("expiredUser")
                 .accountNonExpired(false)
-                .roles(roles)
                 .build();
         user.setAccountNonExpired(false);
 
@@ -98,15 +94,9 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testValidateUserAccountStatusAccountLockedException() {
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.builder()
-                .id(1)
-                .name("ROLE_USER")
-                .build());
         User user = User.builder()
                 .username("lockedUser")
                 .accountNonLocked(false)
-                .roles(roles)
                 .build();
         user.setAccountNonLocked(false);
 
@@ -117,15 +107,9 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testValidateUserAccountStatusCredentialsException() {
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.builder()
-                .id(1)
-                .name("ROLE_USER")
-                .build());
         User user = User.builder()
                 .username("credentialsExpiredUser")
                 .credentialsNonExpired(false)
-                .roles(roles)
                 .build();
         user.setCredentialsNonExpired(false);
 
@@ -136,15 +120,9 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testValidateUserAccountStatusDisabledException() {
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.builder()
-                .id(1)
-                .name("ROLE_USER")
-                .build());
         User user = User.builder()
                 .username("disabledUser")
                 .enabled(false)
-                .roles(roles)
                 .build();
         user.setEnabled(false);
 
@@ -155,7 +133,7 @@ public class SecurityUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testCreateAuthResponse() {
-        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
+        Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "pretendToken", authorities);
         AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authenticationToken);
         assertThat(authResponseDto.getToken()).isNotBlank();
