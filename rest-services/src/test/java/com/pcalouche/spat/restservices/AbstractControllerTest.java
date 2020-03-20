@@ -6,7 +6,7 @@ import com.pcalouche.spat.restservices.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -51,7 +51,7 @@ public abstract class AbstractControllerTest extends AbstractTest {
         return validAdminToken;
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         // Mock the logger interceptor
         given(loggerInterceptor.preHandle(any(), any(), any())).willReturn(true);

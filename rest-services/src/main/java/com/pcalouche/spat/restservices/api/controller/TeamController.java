@@ -6,12 +6,14 @@ import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.dto.TeamEditRequest;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.service.TeamService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Team endpoints")
 @RestController
 @RequestMapping(value = ApiEndpoints.TEAMS)
 public class TeamController {
@@ -21,20 +23,20 @@ public class TeamController {
         this.teamService = teamService;
     }
 
-    @ApiOperation(value = "Find all teams")
+    @Operation(description = "Find all teams")
     @GetMapping
     public List<TeamDto> findAll() {
         return teamService.findAll();
     }
 
-    @ApiOperation(value = "Create a new team")
+    @Operation(description = "Create a new team")
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public TeamDto create(@RequestBody TeamEditRequest teamEditRequest) {
         return teamService.create(teamEditRequest);
     }
 
-    @ApiOperation(value = "Update an existing team")
+    @Operation(description = "Update an existing team")
     @PreAuthorize("hasAuthority('Admin')")
     @PutMapping(value = "/{id}")
     public TeamDto update(@PathVariable Integer id, @RequestBody TeamEditRequest teamEditRequest) {
@@ -42,7 +44,7 @@ public class TeamController {
                 .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id)));
     }
 
-    @ApiOperation(value = "Delete an existing team")
+    @Operation(description = "Delete an existing team")
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Integer id) {

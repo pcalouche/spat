@@ -9,8 +9,8 @@ import com.pcalouche.spat.restservices.entity.User;
 import com.pcalouche.spat.restservices.repository.RoleRepository;
 import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class UserServiceTest extends AbstractServiceTest {
     private User user1;
     private User user2;
 
-    @Before
+    @BeforeEach
     public void before() {
         userService = new UserServiceImpl(modelMapper, userRepository, roleRepository);
 

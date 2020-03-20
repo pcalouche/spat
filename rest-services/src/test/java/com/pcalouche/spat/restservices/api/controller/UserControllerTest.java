@@ -7,8 +7,8 @@ import com.pcalouche.spat.restservices.api.dto.RoleDto;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
 import com.pcalouche.spat.restservices.api.dto.UserEditRequest;
 import com.pcalouche.spat.restservices.service.UserService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,7 +38,7 @@ public class UserControllerTest extends AbstractControllerTest {
     private UserDto testUserDto1;
     private UserDto testUserDto2;
 
-    @Before
+    @BeforeEach
     public void before() {
         testUserDto1 = UserDto.builder()
                 .id(1)

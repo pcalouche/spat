@@ -4,7 +4,7 @@ import com.pcalouche.spat.restservices.AbstractTest;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.entity.User;
 import io.jsonwebtoken.Claims;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;

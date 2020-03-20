@@ -4,8 +4,8 @@ import com.pcalouche.spat.restservices.AbstractTest;
 import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.security.provider.LoginAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,7 +39,7 @@ public class LoginProcessingFilterTest extends AbstractTest {
     private FilterChain filterChain;
     private LoginProcessingFilter loginProcessingFilter;
 
-    @Before
+    @BeforeEach
     public void before() {
         given(loginAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class)).willCallRealMethod();
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

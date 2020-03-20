@@ -5,8 +5,8 @@ import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.dto.TeamEditRequest;
 import com.pcalouche.spat.restservices.entity.Team;
 import com.pcalouche.spat.restservices.repository.TeamRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class TeamServiceTest extends AbstractServiceTest {
     private Team team1;
     private Team team2;
 
-    @Before
+    @BeforeEach
     public void before() {
         teamService = new TeamServiceImpl(modelMapper, teamRepository);
 

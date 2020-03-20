@@ -6,8 +6,8 @@ import com.pcalouche.spat.restservices.api.EndpointMessages;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.dto.TeamEditRequest;
 import com.pcalouche.spat.restservices.service.TeamService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,7 +34,7 @@ public class TeamControllerTest extends AbstractControllerTest {
     private TeamDto testTeamDto1;
     private TeamDto testTeamDto2;
 
-    @Before
+    @BeforeEach
     public void before() {
         testTeamDto1 = TeamDto.builder()
                 .id(1)

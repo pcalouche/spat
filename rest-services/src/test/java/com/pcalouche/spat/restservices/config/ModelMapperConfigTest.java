@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.config;
 
 import com.pcalouche.spat.restservices.AbstractModelMapperTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ModelMapperConfigTest extends AbstractModelMapperTest {
     /**

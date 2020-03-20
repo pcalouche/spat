@@ -3,7 +3,7 @@ package com.pcalouche.spat.restservices.api;
 import com.pcalouche.spat.restservices.AbstractTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 

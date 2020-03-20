@@ -7,7 +7,7 @@ import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;

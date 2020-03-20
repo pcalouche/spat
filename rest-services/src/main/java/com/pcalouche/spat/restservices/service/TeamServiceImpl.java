@@ -23,7 +23,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<TeamDto> findById(Integer id) {
         Optional<TeamDto> teamDtoOptional = Optional.empty();
         Optional<Team> optionalTeam = teamRepository.findById(id);
@@ -34,7 +34,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TeamDto> findAll() {
         return teamRepository.findAll().stream()
                 .map(team -> modelMapper.map(team, TeamDto.class))

@@ -5,8 +5,8 @@ import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -38,7 +38,7 @@ public class JwtProcessingFilterTest extends AbstractTest {
     private FilterChain filterChain;
     private JwtProcessingFilter jwtProcessingFilter;
 
-    @Before
+    @BeforeEach
     public void before() {
         given(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class)).willCallRealMethod();
 

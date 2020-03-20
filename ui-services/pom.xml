@@ -40,12 +40,6 @@
         </dependency>
 
         <!--Test Dependencies Below-->
-        <!--Spring Boot Test Dependencies-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>

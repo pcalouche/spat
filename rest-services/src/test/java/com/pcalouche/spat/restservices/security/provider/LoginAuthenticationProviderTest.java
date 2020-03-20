@@ -4,8 +4,8 @@ import com.pcalouche.spat.restservices.AbstractTest;
 import com.pcalouche.spat.restservices.entity.User;
 import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,7 +24,7 @@ public class LoginAuthenticationProviderTest extends AbstractTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Before
+    @BeforeEach
     public void before() {
         Mockito.reset(userRepository);
 

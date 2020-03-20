@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<UserDto> findById(Integer id) {
         Optional<UserDto> userDtoOptional = Optional.empty();
         Optional<User> userOptional = userRepository.findById(id);
@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserDto> findByUsername(String username) {
         Optional<UserDto> userDtoOptional = Optional.empty();
         Optional<User> userOptional = userRepository.findByUsername(username);
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
                 .map(user -> modelMapper.map(user, UserDto.class))

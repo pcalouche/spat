@@ -8,13 +8,15 @@ import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenExcept
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.service.UserService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "User endpoints")
 @RestController
 @RequestMapping(value = ApiEndpoints.USERS)
 public class UserController {
@@ -30,20 +32,20 @@ public class UserController {
                 .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, jwtAuthenticationToken.getPrincipal())));
     }
 
-    @ApiOperation(value = "Find a user by username")
+    @Operation(description = "Find a user by username")
     @GetMapping(value = "/{id}")
     public UserDto findById(@PathVariable Integer id) {
         return userService.findById(id)
                 .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id)));
     }
 
-    @ApiOperation(value = "Find all users")
+    @Operation(description = "Find all users")
     @GetMapping
     public List<UserDto> findAll() {
         return userService.findAll();
     }
 
-    @ApiOperation(value = "Create a new user")
+    @Operation(description = "Create a new user")
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public UserDto create(@RequestBody UserEditRequest userEditRequest) {
@@ -54,7 +56,7 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "Update an existing user")
+    @Operation(description = "Update an existing user")
     @PreAuthorize("hasAuthority('Admin')")
     @PutMapping(value = "/{id}")
     public UserDto update(@PathVariable Integer id, @RequestBody UserEditRequest userEditRequest) {
@@ -62,7 +64,7 @@ public class UserController {
                 .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id)));
     }
 
-    @ApiOperation(value = "Delete an existing user")
+    @Operation(description = "Delete an existing user")
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Integer id) {

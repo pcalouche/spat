@@ -6,8 +6,8 @@ import com.pcalouche.spat.restservices.entity.User;
 import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,7 +31,7 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
     private String validRefreshToken;
     private User activeUser;
 
-    @Before
+    @BeforeEach
     public void before() {
         Mockito.reset(userRepository);
 
@@ -69,7 +69,6 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
         // User service should not be hit for non refresh token
         verify(userRepository, Mockito.times(0)).findByUsername("activeUser");
     }
-
 
     @Test
     public void testAuthenticateThrowsBadCredentialsForNullToken() {
@@ -111,7 +110,6 @@ public class JwtAuthenticationProviderTest extends AbstractTest {
 
         // User service should be hit for non refresh token
         verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
-
     }
 
     @Test
