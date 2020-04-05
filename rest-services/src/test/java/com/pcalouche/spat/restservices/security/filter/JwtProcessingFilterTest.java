@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.filter;
 
 import com.pcalouche.spat.restservices.AbstractTest;
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
@@ -60,7 +60,7 @@ public class JwtProcessingFilterTest extends AbstractTest {
 
     @Test
     public void testExpectedPathsAreAuthenticated() throws IOException, ServletException {
-        MockHttpServletRequest request = MockMvcRequestBuilders.post(ApiEndpoints.USERS)
+        MockHttpServletRequest request = MockMvcRequestBuilders.post(Endpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
@@ -78,7 +78,7 @@ public class JwtProcessingFilterTest extends AbstractTest {
     @Test
     public void testTokenPathIsNotAuthenticated() throws IOException, ServletException {
         // Test that the token path is not authenticated because that is handled by the AjaxLoginProcessingFilter
-        MockHttpServletRequest request = MockMvcRequestBuilders.post(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
+        MockHttpServletRequest request = MockMvcRequestBuilders.post(Endpoints.AUTH + Endpoints.TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -111,7 +111,7 @@ public class JwtProcessingFilterTest extends AbstractTest {
 
     @Test
     public void testAttemptAuthentication() {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(ApiEndpoints.USERS)
+        MockHttpServletRequest request = MockMvcRequestBuilders.get(Endpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());

@@ -1,101 +1,102 @@
-import React                                                                                                  from 'react';
-import PropTypes                                                                                              from 'prop-types';
-import {Button, Col, Form, FormFeedback, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
-import {Formik}                                                                                               from 'formik';
-import * as Yup                                                                                               from 'yup';
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+import {
+  Button,
+  Form,
+  FormFeedback,
+  FormGroup,
+  Input,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader
+} from 'reactstrap';
+import {Field, Formik} from 'formik';
+import * as Yup from 'yup';
 
-const TeamModal = props => {
-  let modalTitle = '';
-  let buttonText = '';
+import {teamApi} from '../api';
 
-  switch (props.mode) {
-    case 'Add':
-      modalTitle = 'Add Team';
-      buttonText = 'Save Team';
-      break;
-    case 'Edit':
-      modalTitle = 'Edit Team';
-      buttonText = 'Save Team';
-      break;
-    case 'Delete':
-      modalTitle = 'Delete Team';
-      buttonText = 'Delete Team';
-      break;
-    default:
-      break;
-  }
+const TeamModal = ({isOpen, mode, team, submitCallback, cancelCallback}) => {
+  const [errorMessage, setErrorMessage] = useState(undefined);
+
+  const initialValues = {
+    name: team.name
+  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Required')
+  });
+
+  const handleSubmit = async (formikValues, formikActions) => {
+    const teamRequest = {...formikValues};
+
+    try {
+      if (mode === 'Add') {
+        await teamApi.createTeam(teamRequest);
+      } else {
+        await teamApi.updateTeam(team.id, teamRequest);
+      }
+      formikActions.setSubmitting(false);
+      submitCallback(formikValues);
+    } catch (error) {
+      formikActions.setSubmitting(false);
+      setErrorMessage(error.message);
+    }
+  };
 
   return (
-      <Formik
-          initialValues={{
-            name: props.team.name ? props.team.name : ''
-          }}
-          enableReinitialize={true}
-          validationSchema={Yup.object().shape({
-            name: Yup.string().required('Required')
-          })}
-          isInitialValid={(formikBag) => {
-            return formikBag.validationSchema.isValidSync(formikBag.initialValues);
-          }}
-          onSubmit={async (values, actions) => {
-            await props.submitCallback({...props.team, ...values});
-            actions.setSubmitting(false);
-          }}
-      >
-        {(formikProps) => (
-            <Modal isOpen={props.open} toggle={props.cancelCallback}>
-              <ModalHeader toggle={props.cancelCallback}>{modalTitle}</ModalHeader>
-              <Form onSubmit={e => e.preventDefault()}>
-                <ModalBody>
-                  {props.errorMessage &&
-                  <Label className="text-danger font-weight-bold">Error: {props.errorMessage}</Label>}
-                  {props.mode === 'Delete' &&
-                  <p>Are you sure you want to delete {props.team.name}?</p>
-                  }
-                  {props.mode !== 'Delete' &&
-                  <React.Fragment>
-                    <FormGroup row>
-                      <Label sm={2}>Name</Label>
-                      <Col sm={10}>
-                        <Input
-                            name="name"
-                            placeholder="Team Name"
-                            onChange={formikProps.handleChange}
-                            onBlur={formikProps.handleBlur}
-                            value={formikProps.values.name}
-                            invalid={formikProps.touched.name && formikProps.errors.name}/>
-                        <FormFeedback>{formikProps.errors.name}</FormFeedback>
-                      </Col>
-                    </FormGroup>
-                  </React.Fragment>
-                  }
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                      color="primary"
+    <Formik initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}>
+      {(formikProps) => (
+        <Modal isOpen={isOpen}
+               backdrop="static">
+          <ModalHeader>{mode === 'Add' ? 'Add Team' : 'Edit Team'}</ModalHeader>
+          <Form onSubmit={formikProps.handleSubmit}>
+            <ModalBody>
+              {errorMessage &&
+              <h6 className="text-danger">{errorMessage}</h6>
+              }
+              <FormGroup>
+                <Label>Username</Label>
+                <Field name="name">
+                  {({field, meta}) => (
+                    <Input {...field}
+                           placeholder="Name"
+                           invalid={!!(meta.touched && meta.error)}/>
+                  )}
+                </Field>
+                <FormFeedback>{formikProps.errors.username}</FormFeedback>
+              </FormGroup>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary"
                       onClick={formikProps.handleSubmit}
-                      disabled={!formikProps.isValid || formikProps.isSubmitting}>
-                    {buttonText}</Button>
-                  <Button
-                      color="primary"
-                      onClick={props.cancelCallback}>
-                    Cancel
-                  </Button>
-                </ModalFooter>
-              </Form>
-            </Modal>
-        )}
-      </Formik>
+                      disabled={!formikProps.dirty || !formikProps.isValid || formikProps.isSubmitting}>
+                {mode === 'Add' ? 'Add Team' : 'Save Team'}
+              </Button>
+              <Button color="secondary" onClick={cancelCallback}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Form>
+        </Modal>
+      )}
+    </Formik>
   );
 };
 
 TeamModal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  mode: PropTypes.oneOf(['Add', 'Edit', 'Delete']).isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  mode: PropTypes.oneOf(['Add', 'Edit']).isRequired,
   team: PropTypes.object.isRequired,
-  errorMessage: PropTypes.string,
   submitCallback: PropTypes.func.isRequired,
   cancelCallback: PropTypes.func.isRequired
+};
+
+TeamModal.defaultProps = {
+  mode: 'Add'
 };
 
 export default TeamModal;

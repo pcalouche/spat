@@ -71,7 +71,7 @@ public class TeamServiceTest extends AbstractServiceTest {
 
         TeamDto teamDto = teamService.create(teamEditRequest);
 
-        assertThat(teamService.create(teamEditRequest)).isEqualTo(teamDtoExpected);
+        assertThat(teamDto).isEqualTo(teamDtoExpected);
 
         Optional<Team> teamOptional = teamRepository.findById(teamDto.getId());
         assertThat(teamOptional).isPresent();

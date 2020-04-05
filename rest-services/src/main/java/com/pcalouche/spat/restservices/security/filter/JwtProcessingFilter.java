@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.security.filter;
 
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
@@ -30,7 +30,7 @@ public class JwtProcessingFilter extends AbstractAuthenticationProcessingFilter 
         // whitelisted URLS like Swagger URLs
         super(new AndRequestMatcher(
                 new AntPathRequestMatcher(SecurityUtils.AUTHENTICATED_PATH),
-                new NegatedRequestMatcher(new AntPathRequestMatcher(ApiEndpoints.AUTH + ApiEndpoints.TOKEN, HttpMethod.POST.toString())),
+                new NegatedRequestMatcher(new AntPathRequestMatcher(Endpoints.AUTH + Endpoints.TOKEN, HttpMethod.POST.toString())),
                 new NegatedRequestMatcher(new OrRequestMatcher(
                         Arrays.stream(SecurityUtils.WHITELISTED_ENDPOINTS)
                                 .map(AntPathRequestMatcher::new)

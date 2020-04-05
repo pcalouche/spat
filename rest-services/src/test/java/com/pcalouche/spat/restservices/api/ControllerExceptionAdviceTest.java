@@ -31,7 +31,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
         MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
-        request.setRequestURI(ApiEndpoints.USERS);
+        request.setRequestURI(Endpoints.USERS);
 
         ObjectNode expectedObjectNode = (ObjectNode) ExceptionUtils.buildJsonErrorObject(runtimeException, request);
         // Remove timestamp for easier comparision
@@ -39,7 +39,7 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
 
         given(userController.findAll()).willThrow(runtimeException);
 
-        MvcResult mvcResult = mockMvc.perform(get(ApiEndpoints.USERS)
+        MvcResult mvcResult = mockMvc.perform(get(Endpoints.USERS)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()))
                 .andReturn();

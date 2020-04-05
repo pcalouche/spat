@@ -1,9 +1,10 @@
 package com.pcalouche.spat.restservices.api.controller;
 
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.EndpointMessages;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.dto.TeamEditRequest;
+import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.restservices.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.restservices.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "Team endpoints")
 @RestController
-@RequestMapping(value = ApiEndpoints.TEAMS)
+@RequestMapping(value = Endpoints.TEAMS)
 public class TeamController {
     private final TeamService teamService;
 
@@ -33,6 +34,9 @@ public class TeamController {
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public TeamDto create(@RequestBody TeamEditRequest teamEditRequest) {
+        if (teamService.findByName(teamEditRequest.getName()).isPresent()) {
+            throw new RestResourceForbiddenException(String.format(EndpointMessages.TEAM_ALREADY_EXISTS, teamEditRequest.getName()));
+        }
         return teamService.create(teamEditRequest);
     }
 

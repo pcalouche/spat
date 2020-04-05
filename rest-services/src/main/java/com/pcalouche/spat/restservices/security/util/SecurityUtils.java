@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.security.util;
 
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.entity.User;
 import io.jsonwebtoken.Claims;
@@ -37,14 +37,14 @@ public class SecurityUtils {
             // status endpoint
             "/status"
     };
-    public static final String AUTHENTICATED_PATH = String.format("%s/**", ApiEndpoints.API_ROOT);
+    public static final String AUTHENTICATED_PATH = String.format("%s/**", Endpoints.API_ROOT);
     public static final String AUTH_HEADER_BASIC_PREFIX = "Basic ";
     public static final String AUTH_HEADER_BEARER_PREFIX = "Bearer ";
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";
     public static final String CLAIMS_REFRESH_TOKEN_KEY = "refreshToken";
     private static final String SIGNING_KEY = "EM4j6RQuNhtcUDKKDqWDRBxwNk5cgJ3tVzIcm8yjeoB7Dx1LcejSyCkk5AgjZ567ceudpg6Lk7P9hV+koCObUw==";
     private static final SecretKey secretKey = Keys.hmacShaKeyFor(SIGNING_KEY.getBytes());
-    private static final long TOKEN_DURATION_IN_MINUTES = 10L;
+    private static final long TOKEN_DURATION_IN_MINUTES = 15L;
     private static final long REFRESH_TOKEN_DURATION_IN_MINUTES = 60L;
 
     public static String[] getDecodedBasicAuthFromRequest(HttpServletRequest request) throws AuthenticationException {

@@ -84,9 +84,10 @@ public class UserServiceTest extends AbstractServiceTest {
                         .build(),
                 UserDto.builder()
                         .username(user2.getUsername())
-                        .roleDtos(Stream.of(
-                                modelMapper.map(adminRole, RoleDto.class))
-                                .collect(Collectors.toSet())
+                        .roleDtos(
+                                Stream.of(
+                                        modelMapper.map(adminRole, RoleDto.class)
+                                ).collect(Collectors.toSet())
                         )
                         .build()
         );
@@ -131,11 +132,17 @@ public class UserServiceTest extends AbstractServiceTest {
     public void testUpdate() {
         UserEditRequest userEditRequest = UserEditRequest.builder()
                 .username("newUsername")
+                .enabled(false)
+                .accountNonLocked(false)
+                .credentialsNonExpired(false)
                 .accountNonExpired(false)
                 .build();
 
         UserDto userDtoExpected = UserDto.builder()
-                .username("jsmith") // TODO be able to update username and make it an email
+                .username("newUsername")
+                .enabled(false)
+                .accountNonLocked(false)
+                .credentialsNonExpired(false)
                 .accountNonExpired(false)
                 .build();
 
@@ -147,10 +154,11 @@ public class UserServiceTest extends AbstractServiceTest {
         assertThat(optionalUser).isPresent();
 
         User user = optionalUser.get();
+        assertThat(user.getUsername()).isEqualTo(userEditRequest.getUsername());
         assertThat(user.isAccountNonExpired()).isFalse();
-        assertThat(user.isAccountNonLocked()).isTrue();
-        assertThat(user.isCredentialsNonExpired()).isTrue();
-        assertThat(user.isEnabled()).isTrue();
+        assertThat(user.isAccountNonLocked()).isFalse();
+        assertThat(user.isCredentialsNonExpired()).isFalse();
+        assertThat(user.isEnabled()).isFalse();
         assertThat(user.getRoles()).isEmpty();
     }
 
@@ -163,9 +171,10 @@ public class UserServiceTest extends AbstractServiceTest {
         assertThat(userService.findAll()).containsOnly(
                 UserDto.builder()
                         .username(user2.getUsername())
-                        .roleDtos(Stream.of(
-                                modelMapper.map(adminRole, RoleDto.class))
-                                .collect(Collectors.toSet())
+                        .roleDtos(
+                                Stream.of(
+                                        modelMapper.map(adminRole, RoleDto.class)
+                                ).collect(Collectors.toSet())
                         )
                         .build()
         );

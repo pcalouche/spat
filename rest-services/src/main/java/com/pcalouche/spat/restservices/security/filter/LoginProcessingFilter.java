@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.security.filter;
 
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import com.pcalouche.spat.restservices.util.ExceptionUtils;
 import org.springframework.http.HttpMethod;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     public LoginProcessingFilter(AuthenticationManager authenticationManager) {
-        super(new AntPathRequestMatcher(ApiEndpoints.AUTH + ApiEndpoints.TOKEN, HttpMethod.POST.toString()));
+        super(new AntPathRequestMatcher(Endpoints.AUTH + Endpoints.TOKEN, HttpMethod.POST.toString()));
         setAuthenticationManager(authenticationManager);
     }
 

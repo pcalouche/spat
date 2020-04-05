@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface TeamService {
     Optional<TeamDto> findById(Integer id);
 
+    Optional<TeamDto> findByName(String name);
+
     List<TeamDto> findAll();
 
     TeamDto create(TeamEditRequest teamEditRequest);

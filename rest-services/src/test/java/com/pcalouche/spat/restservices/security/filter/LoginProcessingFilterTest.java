@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.security.filter;
 
 import com.pcalouche.spat.restservices.AbstractTest;
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.security.provider.LoginAuthenticationProvider;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +57,7 @@ public class LoginProcessingFilterTest extends AbstractTest {
 
     @Test
     public void testExpectedPathsAreAuthenticated() throws IOException, ServletException {
-        MockHttpServletRequest request = MockMvcRequestBuilders.post(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
+        MockHttpServletRequest request = MockMvcRequestBuilders.post(Endpoints.AUTH + Endpoints.TOKEN)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("activeUser:password".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
@@ -91,7 +91,7 @@ public class LoginProcessingFilterTest extends AbstractTest {
 
     @Test
     public void testAttemptAuthentication() {
-        MockHttpServletRequest request = MockMvcRequestBuilders.get(ApiEndpoints.AUTH + ApiEndpoints.TOKEN)
+        MockHttpServletRequest request = MockMvcRequestBuilders.get(Endpoints.AUTH + Endpoints.TOKEN)
                 .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BASIC_PREFIX + Base64.getEncoder().encodeToString("activeUser:password".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());

@@ -1,7 +1,7 @@
 package com.pcalouche.spat.restservices.api.controller;
 
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.EndpointMessages;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.api.dto.UserDto;
 import com.pcalouche.spat.restservices.api.dto.UserEditRequest;
 import com.pcalouche.spat.restservices.api.exception.RestResourceForbiddenException;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Tag(name = "User endpoints")
 @RestController
-@RequestMapping(value = ApiEndpoints.USERS)
+@RequestMapping(value = Endpoints.USERS)
 public class UserController {
     private final UserService userService;
 
@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping(value = "/current-user")
     public UserDto currentUser(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
         return userService.findByUsername(jwtAuthenticationToken.getPrincipal())
-                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, jwtAuthenticationToken.getPrincipal())));
+                .orElseThrow(() -> new RestResourceNotFoundException(EndpointMessages.CURRENT_USER_NOT_FOUND));
     }
 
     @Operation(description = "Find a user by username")

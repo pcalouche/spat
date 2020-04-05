@@ -1,15 +1,14 @@
 package com.pcalouche.spat.restservices.api.controller;
 
 import com.pcalouche.spat.restservices.AbstractControllerTest;
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
 import com.pcalouche.spat.restservices.api.EndpointMessages;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.api.dto.TeamDto;
 import com.pcalouche.spat.restservices.api.dto.TeamEditRequest;
 import com.pcalouche.spat.restservices.service.TeamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +21,6 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -54,7 +52,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         given(teamService.findAll()).willReturn(expectedTeamDtos);
 
-        mockMvc.perform(get(ApiEndpoints.TEAMS)
+        mockMvc.perform(get(Endpoints.TEAMS)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedTeamDtos)));
@@ -70,7 +68,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         given(teamService.create(teamEditRequest)).willReturn(testTeamDto1);
 
-        MockHttpServletRequestBuilder request = post(ApiEndpoints.TEAMS)
+        MockHttpServletRequestBuilder request = post(Endpoints.TEAMS)
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teamEditRequest));
@@ -90,7 +88,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         given(teamService.create(teamEditRequest)).willReturn(testTeamDto1);
 
-        MockHttpServletRequestBuilder request = post(ApiEndpoints.TEAMS)
+        MockHttpServletRequestBuilder request = post(Endpoints.TEAMS)
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teamEditRequest));
@@ -115,7 +113,7 @@ public class TeamControllerTest extends AbstractControllerTest {
         given(teamService.findById(testTeamDto1.getId())).willReturn(Optional.of(testTeamDto1));
         given(teamService.update(updatedTeamDto.getId(), teamEditRequest)).willReturn(Optional.of(updatedTeamDto));
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS + "/" + updatedTeamDto.getId())
+        MockHttpServletRequestBuilder request = put(Endpoints.TEAMS + "/" + updatedTeamDto.getId())
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teamEditRequest));
@@ -123,19 +121,17 @@ public class TeamControllerTest extends AbstractControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(updatedTeamDto)));
-
-        verify(teamService, Mockito.times(1)).update(updatedTeamDto.getId(), teamEditRequest);
     }
 
     @Test
-    public void testUpdateWhenTeamNotFound() throws Exception {
+    public void testUpdateHandlesTeamNotFound() throws Exception {
         TeamEditRequest teamEditRequest = TeamEditRequest.builder()
                 .name("Team1 Change")
                 .build();
 
         given(teamService.findById(2)).willReturn(Optional.empty());
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS + "/1")
+        MockHttpServletRequestBuilder request = put(Endpoints.TEAMS + "/1")
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teamEditRequest));
@@ -151,7 +147,7 @@ public class TeamControllerTest extends AbstractControllerTest {
                 .name("Team1 Change")
                 .build();
 
-        MockHttpServletRequestBuilder request = put(ApiEndpoints.TEAMS + "/1")
+        MockHttpServletRequestBuilder request = put(Endpoints.TEAMS + "/1")
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teamEditRequest));
@@ -163,9 +159,8 @@ public class TeamControllerTest extends AbstractControllerTest {
     @Test
     public void testDelete() throws Exception {
         given(teamService.findById(testTeamDto1.getId())).willReturn(Optional.of(testTeamDto1));
-        willAnswer((Answer<Void>) invocationOnMock -> null).given(teamService).delete(testTeamDto1.getId());
 
-        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.TEAMS, testTeamDto1.getId()))
+        mockMvc.perform(delete(String.format("%s/%d", Endpoints.TEAMS, testTeamDto1.getId()))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
@@ -176,9 +171,8 @@ public class TeamControllerTest extends AbstractControllerTest {
     @Test
     public void testDeleteWhenTeamNotFound() throws Exception {
         given(teamService.findById(testTeamDto1.getId())).willReturn(Optional.empty());
-        willAnswer((Answer<Void>) invocationOnMock -> null).given(teamService).delete(testTeamDto1.getId());
 
-        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.TEAMS, testTeamDto1.getId()))
+        mockMvc.perform(delete(String.format("%s/%d", Endpoints.TEAMS, testTeamDto1.getId()))
                 .header(HttpHeaders.AUTHORIZATION, getValidAdminToken()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_TEAM_FOUND, testTeamDto1.getId()))));
@@ -188,10 +182,8 @@ public class TeamControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteRequiresAdminRole() throws Exception {
-        mockMvc.perform(delete(String.format("%s/%d", ApiEndpoints.TEAMS, 1))
+        mockMvc.perform(delete(String.format("%s/%d", Endpoints.TEAMS, 1))
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isForbidden());
-
-        verify(teamService, Mockito.times(0)).delete(1);
     }
 }

@@ -8,6 +8,7 @@ import com.pcalouche.spat.restservices.repository.RoleRepository;
 import com.pcalouche.spat.restservices.repository.UserRepository;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,29 +31,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public Optional<UserDto> findById(Integer id) {
-        Optional<UserDto> userDtoOptional = Optional.empty();
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            userDtoOptional = Optional.of(modelMapper.map(userOptional.get(), UserDto.class));
-        }
-        return userDtoOptional;
+        return userRepository.findById(id)
+                .map(user -> modelMapper.map(user, UserDto.class));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<UserDto> findByUsername(String username) {
-        Optional<UserDto> userDtoOptional = Optional.empty();
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isPresent()) {
-            userDtoOptional = Optional.of(modelMapper.map(userOptional.get(), UserDto.class));
-        }
-        return userDtoOptional;
+        return userRepository.findByUsername(username)
+                .map(user -> modelMapper.map(user, UserDto.class));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
-        return userRepository.findAll().stream()
+        return userRepository.findAll(Sort.by("username")).stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
                 .collect(Collectors.toList());
     }
@@ -85,13 +78,14 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            // TODO be able to update user name
+            user.setUsername(userEditRequest.getUsername());
             user.setAccountNonExpired(userEditRequest.isAccountNonExpired());
             user.setAccountNonLocked(userEditRequest.isAccountNonLocked());
             user.setCredentialsNonExpired(userEditRequest.isCredentialsNonExpired());
             user.setEnabled(userEditRequest.isEnabled());
 
             user.getRoles().clear();
+
             for (RoleDto roleDto : userEditRequest.getRoleDtos()) {
                 roleRepository.findByName(roleDto.getName())
                         .ifPresent(role -> user.getRoles().add(role));

@@ -5,6 +5,7 @@ import com.pcalouche.spat.restservices.api.dto.TeamEditRequest;
 import com.pcalouche.spat.restservices.entity.Team;
 import com.pcalouche.spat.restservices.repository.TeamRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,18 +26,20 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional(readOnly = true)
     public Optional<TeamDto> findById(Integer id) {
-        Optional<TeamDto> teamDtoOptional = Optional.empty();
-        Optional<Team> optionalTeam = teamRepository.findById(id);
-        if (optionalTeam.isPresent()) {
-            teamDtoOptional = Optional.of(modelMapper.map(optionalTeam.get(), TeamDto.class));
-        }
-        return teamDtoOptional;
+        return teamRepository.findById(id)
+                .map(team -> modelMapper.map(team, TeamDto.class));
+    }
+
+    @Override
+    public Optional<TeamDto> findByName(String name) {
+        return teamRepository.findByName(name)
+                .map(team -> modelMapper.map(team, TeamDto.class));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<TeamDto> findAll() {
-        return teamRepository.findAll().stream()
+        return teamRepository.findAll(Sort.by("name")).stream()
                 .map(team -> modelMapper.map(team, TeamDto.class))
                 .collect(Collectors.toList());
     }

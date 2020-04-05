@@ -1,6 +1,6 @@
 package com.pcalouche.spat.restservices.api.controller;
 
-import com.pcalouche.spat.restservices.api.ApiEndpoints;
+import com.pcalouche.spat.restservices.api.Endpoints;
 import com.pcalouche.spat.restservices.api.dto.AuthResponseDto;
 import com.pcalouche.spat.restservices.security.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Auth endpoints")
 @RestController
-@RequestMapping(value = ApiEndpoints.AUTH)
+@RequestMapping(value = Endpoints.AUTH)
 public class AuthController {
 
     @Operation(description = "Get JWT from username and password")
-    @PostMapping(value = ApiEndpoints.TOKEN)
+    @PostMapping(value = Endpoints.TOKEN)
     public AuthResponseDto token(@AuthenticationPrincipal Authentication authentication) {
         return SecurityUtils.createAuthResponse(authentication);
     }
 
     @Operation(description = "Get JWT from refresh token")
-    @PostMapping(value = ApiEndpoints.REFRESH_TOKEN)
+    @PostMapping(value = Endpoints.REFRESH_TOKEN)
     public AuthResponseDto refreshToken(@AuthenticationPrincipal Authentication authentication,
                                         @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         // Grab latest user details and build a token from that.
