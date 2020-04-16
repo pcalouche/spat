@@ -1,6 +1,5 @@
 package com.pcalouche.spat.security.util;
 
-import com.pcalouche.spat.api.Endpoints;
 import com.pcalouche.spat.api.dto.AuthResponseDto;
 import com.pcalouche.spat.entity.User;
 import io.jsonwebtoken.Claims;
@@ -27,17 +26,20 @@ public class SecurityUtils {
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     public static final String[] WHITELISTED_ENDPOINTS = {
             // swagger endpoints
-            "/v2/api-docs",
+            "/csrf",
+            "/error",
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
             "/swagger-resources",
             "/swagger-resources/**",
             "/configuration/ui",
             "/configuration/security",
-            "/swagger-ui.html",
+            "/swagger-ui/**",
             "/webjars/**",
             // status endpoint
             "/status"
     };
-    public static final String AUTHENTICATED_PATH = String.format("%s/**", Endpoints.API_ROOT);
+    public static final String AUTHENTICATED_PATH = "/**";
     public static final String AUTH_HEADER_BASIC_PREFIX = "Basic ";
     public static final String AUTH_HEADER_BEARER_PREFIX = "Bearer ";
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";

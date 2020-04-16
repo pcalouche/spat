@@ -32,7 +32,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         if (jwtAuthenticationToken.getCredentials() == null) {
             throw new BadCredentialsException("JSON web token was empty.");
         }
-        String token = jwtAuthenticationToken.getCredentials().toString();
+        String token = jwtAuthenticationToken.getCredentials();
         Claims claims;
         try {
             claims = SecurityUtils.getClaimsFromToken(token);
@@ -44,7 +44,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // When a refresh token happens double check the account status and the authorities
         // with what is in the database to ensure the account is still active.
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
-        if (Boolean.valueOf(claims.get(SecurityUtils.CLAIMS_REFRESH_TOKEN_KEY).toString())) {
+        if (Boolean.parseBoolean(claims.get(SecurityUtils.CLAIMS_REFRESH_TOKEN_KEY).toString())) {
             Optional<User> optionalUser = userRepository.findByUsername(subject);
             if (optionalUser.isPresent()) {
                 SecurityUtils.validateUserAccountStatus(optionalUser.get());
@@ -54,7 +54,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
             simpleGrantedAuthorities = optionalUser.get().getAuthorities();
         } else {
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings({"unchecked", "rawtypes"})
             Set<String> authorities = new HashSet<>(claims.get(SecurityUtils.CLAIMS_AUTHORITIES_KEY, List.class));
             simpleGrantedAuthorities = authorities.stream()
                     .map(SimpleGrantedAuthority::new)

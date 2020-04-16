@@ -9,7 +9,6 @@ import com.pcalouche.spat.entity.User;
 import com.pcalouche.spat.repository.RoleRepository;
 import com.pcalouche.spat.repository.UserRepository;
 import com.pcalouche.spat.security.util.SecurityUtils;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class UserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindById() {
-        Assertions.assertThat(userService.findById(user1.getId()))
+        assertThat(userService.findById(user1.getId()))
                 .isEqualTo(
                         Optional.of(
                                 UserDto.builder()
@@ -63,11 +62,14 @@ public class UserServiceTest extends AbstractServiceTest {
                                         .build()
                         )
                 );
+
+        assertThat(userService.findById(user2.getId() + 42))
+                .isEqualTo(Optional.empty());
     }
 
     @Test
     public void testFindByUsername() {
-        Assertions.assertThat(userService.findByUsername(user1.getUsername()))
+        assertThat(userService.findByUsername(user1.getUsername()))
                 .isEqualTo(
                         Optional.of(
                                 UserDto.builder()
@@ -75,11 +77,14 @@ public class UserServiceTest extends AbstractServiceTest {
                                         .build()
                         )
                 );
+
+        assertThat(userService.findByUsername("bogus"))
+                .isEqualTo(Optional.empty());
     }
 
     @Test
     public void testFindAll() {
-        Assertions.assertThat(userService.findAll()).containsOnly(
+        assertThat(userService.findAll()).containsOnly(
                 UserDto.builder()
                         .username(user1.getUsername())
                         .build(),
@@ -167,9 +172,9 @@ public class UserServiceTest extends AbstractServiceTest {
     public void testDeleteById() {
         userService.delete(user1.getId());
 
-        Assertions.assertThat(userService.findAll()).hasSize(1);
+        assertThat(userService.findAll()).hasSize(1);
 
-        Assertions.assertThat(userService.findAll()).containsOnly(
+        assertThat(userService.findAll()).containsOnly(
                 UserDto.builder()
                         .username(user2.getUsername())
                         .roleDtos(

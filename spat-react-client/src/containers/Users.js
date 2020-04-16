@@ -56,9 +56,20 @@ const Users = () => {
   };
 
   const deleteSelectedUser = async () => {
-    await userApi.deleteUser(selectedUser.id);
-    setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
-    setDeleteModalIsOpen(false);
+    try {
+      await userApi.deleteUser(selectedUser.id);
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
+      setDeleteModalIsOpen(false);
+    } catch (error) {
+      // Handle cases where it may have been deleted on another tab or someone else and
+      // the current screen is stale
+      if (error.status === 404) {
+        setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
+        setDeleteModalIsOpen(false);
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   const loadUsers = useCallback(

@@ -30,9 +30,20 @@ const Teams = () => {
   };
 
   const deleteSelectedTeam = async () => {
-    await teamApi.deleteTeam(selectedTeam.id);
-    setTeams(prevUsers => prevUsers.filter(team => team.id !== selectedTeam.id));
-    setDeleteModalIsOpen(false);
+    try {
+      await teamApi.deleteTeam(selectedTeam.id);
+      setTeams(prevUsers => prevUsers.filter(team => team.id !== selectedTeam.id));
+      setDeleteModalIsOpen(false);
+    } catch (error) {
+      // Handle cases where it may have been deleted on another tab or someone else and
+      // the current screen is stale
+      if (error.status === 404) {
+        setTeams(prevUsers => prevUsers.filter(user => user.id !== selectedTeam.id));
+        setDeleteModalIsOpen(false);
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   const loadTeams = useCallback(

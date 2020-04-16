@@ -1,12 +1,12 @@
 package com.pcalouche.spat.security.filter;
 
-import com.pcalouche.spat.AbstractTest;
 import com.pcalouche.spat.api.Endpoints;
 import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.security.provider.JwtAuthenticationProvider;
 import com.pcalouche.spat.security.util.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.FilterChain;
@@ -31,7 +32,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class JwtProcessingFilterTest extends AbstractTest {
+@ExtendWith(SpringExtension.class)
+public class JwtProcessingFilterTest {
     @MockBean
     private JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean

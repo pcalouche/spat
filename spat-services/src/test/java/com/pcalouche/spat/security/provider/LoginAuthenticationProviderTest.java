@@ -1,16 +1,17 @@
 package com.pcalouche.spat.security.provider;
 
-import com.pcalouche.spat.AbstractTest;
 import com.pcalouche.spat.entity.User;
 import com.pcalouche.spat.repository.UserRepository;
 import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
@@ -19,7 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-public class LoginAuthenticationProviderTest extends AbstractTest {
+@ExtendWith(SpringExtension.class)
+public class LoginAuthenticationProviderTest {
     private LoginAuthenticationProvider loginAuthenticationProvider;
     @MockBean
     private UserRepository userRepository;

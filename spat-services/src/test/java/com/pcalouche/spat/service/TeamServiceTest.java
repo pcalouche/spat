@@ -5,7 +5,6 @@ import com.pcalouche.spat.api.dto.TeamDto;
 import com.pcalouche.spat.api.dto.TeamEditRequest;
 import com.pcalouche.spat.entity.Team;
 import com.pcalouche.spat.repository.TeamRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class TeamServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindById() {
-        Assertions.assertThat(teamService.findById(team1.getId()))
+        assertThat(teamService.findById(team1.getId()))
                 .isEqualTo(
                         Optional.of(
                                 TeamDto.builder()
@@ -44,11 +43,29 @@ public class TeamServiceTest extends AbstractServiceTest {
                                         .name("Team1")
                                         .build()
                         ));
+
+        assertThat(teamService.findById(team2.getId() + 42))
+                .isEqualTo(Optional.empty());
+    }
+
+    @Test
+    public void testFindByName() {
+        assertThat(teamService.findByName(team1.getName()))
+                .isEqualTo(
+                        Optional.of(
+                                TeamDto.builder()
+                                        .id(team1.getId())
+                                        .name("Team1")
+                                        .build()
+                        ));
+
+        assertThat(teamService.findByName("bogus"))
+                .isEqualTo(Optional.empty());
     }
 
     @Test
     public void testFindAll() {
-        Assertions.assertThat(teamService.findAll()).containsOnly(
+        assertThat(teamService.findAll()).containsOnly(
                 TeamDto.builder()
                         .id(team1.getId())
                         .name("Team1")
@@ -107,9 +124,9 @@ public class TeamServiceTest extends AbstractServiceTest {
     public void testDeleteById() {
         teamService.delete(team2.getId());
 
-        Assertions.assertThat(teamService.findAll()).hasSize(1);
+        assertThat(teamService.findAll()).hasSize(1);
 
-        Assertions.assertThat(teamService.findAll()).containsOnly(
+        assertThat(teamService.findAll()).containsOnly(
                 TeamDto.builder()
                         .id(team1.getId())
                         .name("Team1")

@@ -8,8 +8,11 @@ import com.pcalouche.spat.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.api.exception.RestResourceNotFoundException;
 import com.pcalouche.spat.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,15 +28,20 @@ public class TeamController {
     }
 
     @Operation(description = "Find all teams")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "get all teams")})
     @GetMapping
     public List<TeamDto> findAll() {
         return teamService.findAll();
     }
 
     @Operation(description = "Create a new team")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "create team"),
+            @ApiResponse(responseCode = "403", description = "team already exists")
+    })
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
-    public TeamDto create(@RequestBody TeamEditRequest teamEditRequest) {
+    public TeamDto create(@RequestBody @Validated TeamEditRequest teamEditRequest) {
         if (teamService.findByName(teamEditRequest.getName()).isPresent()) {
             throw new RestResourceForbiddenException(String.format(EndpointMessages.TEAM_ALREADY_EXISTS, teamEditRequest.getName()));
         }
@@ -41,14 +49,22 @@ public class TeamController {
     }
 
     @Operation(description = "Update an existing team")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "update team"),
+            @ApiResponse(responseCode = "404", description = "team not found")
+    })
     @PreAuthorize("hasAuthority('Admin')")
     @PutMapping(value = "/{id}")
-    public TeamDto update(@PathVariable Integer id, @RequestBody TeamEditRequest teamEditRequest) {
+    public TeamDto update(@PathVariable Integer id, @RequestBody @Validated TeamEditRequest teamEditRequest) {
         return teamService.update(id, teamEditRequest)
                 .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id)));
     }
 
     @Operation(description = "Delete an existing team")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "delete team"),
+            @ApiResponse(responseCode = "404", description = "team not found")
+    })
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Integer id) {

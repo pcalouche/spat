@@ -1,6 +1,5 @@
 package com.pcalouche.spat.security.util;
 
-import com.pcalouche.spat.AbstractTest;
 import com.pcalouche.spat.api.dto.AuthResponseDto;
 import com.pcalouche.spat.entity.User;
 import io.jsonwebtoken.Claims;
@@ -21,7 +20,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class SecurityUtilsTest extends AbstractTest {
+public class SecurityUtilsTest {
 
     @Test
     public void testGetDecodedBasicAuthFromRequest() {

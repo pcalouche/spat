@@ -7,7 +7,6 @@ import com.pcalouche.spat.api.dto.RoleDto;
 import com.pcalouche.spat.api.dto.UserDto;
 import com.pcalouche.spat.api.dto.UserEditRequest;
 import com.pcalouche.spat.service.UserService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(value = UserController.class)
+@WebMvcTest(UserController.class)
 public class UserControllerTest extends AbstractControllerTest {
     @MockBean
     protected UserService userService;
@@ -57,26 +55,6 @@ public class UserControllerTest extends AbstractControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserDto1)));
-    }
-
-    @Test
-    public void testFindById() throws Exception {
-        given(userService.findById(testUserDto1.getId())).willReturn(Optional.of(testUserDto1));
-
-        mockMvc.perform(get(Endpoints.USERS + "/" + testUserDto1.getId())
-                .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(testUserDto1)));
-    }
-
-    @Test
-    public void testFindByIdUserNotFound() throws Exception {
-        given(userService.findById(testUserDto1.getId())).willReturn(Optional.empty());
-
-        mockMvc.perform(get(Endpoints.USERS + "/" + testUserDto1.getId())
-                .header(HttpHeaders.AUTHORIZATION, getValidUserToken()))
-                .andExpect(status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(String.format(EndpointMessages.NO_USER_FOUND, testUserDto1.getId()))));
     }
 
     @Test

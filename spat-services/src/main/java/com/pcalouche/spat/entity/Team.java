@@ -3,6 +3,7 @@ package com.pcalouche.spat.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Entity
@@ -16,7 +17,8 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Override

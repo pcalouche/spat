@@ -22,7 +22,7 @@ export const handleJsonResponse = async (response) => {
   } else {
     return response.json().catch(err => {
       // the status was not ok and there is no json body
-      throw new Error(response.statusText);
+      throw new Error(err.responseText);
     }).then(json => {
       // the status was not ok and there is a json body
       throw json;
@@ -32,9 +32,9 @@ export const handleJsonResponse = async (response) => {
 
 export const handleEmptyResponse = async response => {
   if (!response.ok) {
-    response.json().catch(err => {
+    return response.json().catch(err => {
       // the status was not ok and there is no json body
-      throw new Error(response.statusText);
+      throw new Error(err.responseText);
     }).then(json => {
       // the status was not ok and there is a json body
       throw json;

@@ -6,7 +6,6 @@ import com.pcalouche.spat.api.Endpoints;
 import com.pcalouche.spat.api.dto.TeamDto;
 import com.pcalouche.spat.api.dto.TeamEditRequest;
 import com.pcalouche.spat.service.TeamService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(value = TeamController.class)
+@WebMvcTest(TeamController.class)
 public class TeamControllerTest extends AbstractControllerTest {
     @MockBean
     private TeamService teamService;
@@ -141,7 +139,7 @@ public class TeamControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(String.format(EndpointMessages.NO_TEAM_FOUND, testTeamDto1.getId()))));
+                .andExpect(jsonPath("$.message", is(String.format(EndpointMessages.NO_TEAM_FOUND, testTeamDto1.getId()))));
     }
 
     @Test

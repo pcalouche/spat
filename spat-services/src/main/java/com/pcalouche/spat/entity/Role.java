@@ -3,6 +3,7 @@ package com.pcalouche.spat.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,7 +18,8 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String name;
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

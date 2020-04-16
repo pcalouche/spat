@@ -1,13 +1,18 @@
 package com.pcalouche.spat.config;
 
-import com.pcalouche.spat.AbstractModelMapperTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-public class ModelMapperConfigTest extends AbstractModelMapperTest {
-    /**
-     * Test if we have any unmapped fields that were not explicitly
-     * called out as skipped.
-     */
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = ModelMapperConfig.class)
+public class ModelMapperConfigTest {
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Test
     public void testModelMapperValidation() {
         modelMapper.validate();
