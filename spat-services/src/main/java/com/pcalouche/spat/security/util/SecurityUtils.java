@@ -44,7 +44,7 @@ public class SecurityUtils {
     public static final String AUTH_HEADER_BEARER_PREFIX = "Bearer ";
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";
     public static final String CLAIMS_REFRESH_TOKEN_KEY = "refreshToken";
-    private static final String SIGNING_KEY = "EM4j6RQuNhtcUDKKDqWDRBxwNk5cgJ3tVzIcm8yjeoB7Dx1LcejSyCkk5AgjZ567ceudpg6Lk7P9hV+koCObUw==";
+    private static final String SIGNING_KEY = "Vlg1A40XMNUCLuMZ4h5qh5K4li3P3lqgqSLhNVNOBHqM9ZSnirtV+Hlcl4VOjfLI/shtzqmNNAnB8v0tvECJMQ==";
     private static final SecretKey secretKey = Keys.hmacShaKeyFor(SIGNING_KEY.getBytes());
     private static final long TOKEN_DURATION_IN_MINUTES = 15L;
     private static final long REFRESH_TOKEN_DURATION_IN_MINUTES = 60L;
@@ -73,8 +73,9 @@ public class SecurityUtils {
     }
 
     public static Claims getClaimsFromToken(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
