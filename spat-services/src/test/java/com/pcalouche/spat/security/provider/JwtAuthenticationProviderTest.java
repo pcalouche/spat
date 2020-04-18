@@ -1,6 +1,7 @@
 package com.pcalouche.spat.security.provider;
 
 import com.pcalouche.spat.api.dto.AuthResponseDto;
+import com.pcalouche.spat.config.SpatProperties;
 import com.pcalouche.spat.entity.User;
 import com.pcalouche.spat.repository.UserRepository;
 import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
@@ -9,11 +10,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashSet;
@@ -25,7 +30,14 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
+@Import({
+        SecurityUtils.class
+})
+@EnableConfigurationProperties(value = SpatProperties.class)
+@TestPropertySource("classpath:application-test.properties")
 public class JwtAuthenticationProviderTest {
+    @Autowired
+    private SecurityUtils securityUtils;
     private JwtAuthenticationProvider jwtAuthenticationProvider;
     @MockBean
     private UserRepository userRepository;
@@ -47,10 +59,10 @@ public class JwtAuthenticationProviderTest {
 
         given(userRepository.findByUsername("bogusUser")).willReturn(Optional.empty());
 
-        jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
+        jwtAuthenticationProvider = new JwtAuthenticationProvider(securityUtils, userRepository);
 
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", new HashSet<>());
-        AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authenticationToken);
+        AuthResponseDto authResponseDto = securityUtils.createAuthResponse(authenticationToken);
         validJwtToken = authResponseDto.getToken();
         validRefreshToken = authResponseDto.getRefreshToken();
     }

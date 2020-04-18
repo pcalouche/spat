@@ -1,14 +1,21 @@
 package com.pcalouche.spat.security.util;
 
 import com.pcalouche.spat.api.dto.AuthResponseDto;
+import com.pcalouche.spat.config.SpatProperties;
 import com.pcalouche.spat.entity.User;
 import io.jsonwebtoken.Claims;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Base64;
@@ -20,7 +27,18 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(SpringExtension.class)
+@EnableConfigurationProperties(value = SpatProperties.class)
+@TestPropertySource("classpath:application-test.properties")
 public class SecurityUtilsTest {
+    private SecurityUtils securityUtils;
+    @Autowired
+    private SpatProperties spatProperties;
+
+    @BeforeEach
+    public void before() {
+        securityUtils = new SecurityUtils(spatProperties);
+    }
 
     @Test
     public void testGetDecodedBasicAuthFromRequest() {
@@ -67,8 +85,8 @@ public class SecurityUtilsTest {
     public void testGetClaimsFromToken() {
         Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "pretendToken", authorities);
-        AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authenticationToken);
-        Claims claims = SecurityUtils.getClaimsFromToken(authResponseDto.getToken());
+        AuthResponseDto authResponseDto = securityUtils.createAuthResponse(authenticationToken);
+        Claims claims = securityUtils.getClaimsFromToken(authResponseDto.getToken());
         assertThat(claims.getSubject()).isEqualTo("activeAdmin");
         assertThat(claims.getId()).isNotEmpty();
         assertThat(claims.getIssuedAt()).isNotNull();
@@ -134,7 +152,7 @@ public class SecurityUtilsTest {
     public void testCreateAuthResponse() {
         Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "pretendToken", authorities);
-        AuthResponseDto authResponseDto = SecurityUtils.createAuthResponse(authenticationToken);
+        AuthResponseDto authResponseDto = securityUtils.createAuthResponse(authenticationToken);
         assertThat(authResponseDto.getToken()).isNotBlank();
         assertThat(authResponseDto.getRefreshToken()).isNotBlank();
     }

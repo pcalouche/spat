@@ -100,6 +100,12 @@ These users can be updated inside the application.
 1. Run `mvnw clean package` to run test and create a jar file
 1. This will create a `target` folder that contains a `spat-services.jar`.
 1. Run `java -jar target/spat-service.jar` to run the jar file. You can choose to run the jar in Docker if you wish.
+1. The following properties can be set using Spring's `application.properties`:
+   1. **spat.cors-allowed-origins** - what origins to allow. Default is to allow any.
+   1. **spat.jwt-signing-key** - the signing key used for JWTs. In a production application you would not want
+   to commit this, but rather load it from something like an environment variable. 
+   1. **spat.jwt-token-duration** - the duration of a JWT token. Must be less than the refresh token duration.
+   1. **spat.refresh-token-duration** - the duration of a JWT refresh token.
 
 ## H2 In Memory Database
 

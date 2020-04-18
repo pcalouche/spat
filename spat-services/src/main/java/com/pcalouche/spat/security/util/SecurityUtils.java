@@ -1,6 +1,7 @@
 package com.pcalouche.spat.security.util;
 
 import com.pcalouche.spat.api.dto.AuthResponseDto;
+import com.pcalouche.spat.config.SpatProperties;
 import com.pcalouche.spat.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +21,9 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@Component
 public class SecurityUtils {
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     public static final String[] WHITELISTED_ENDPOINTS = {
@@ -45,9 +47,16 @@ public class SecurityUtils {
     public static final String CLAIMS_AUTHORITIES_KEY = "authorities";
     public static final String CLAIMS_REFRESH_TOKEN_KEY = "refreshToken";
     private static final String SIGNING_KEY = "Vlg1A40XMNUCLuMZ4h5qh5K4li3P3lqgqSLhNVNOBHqM9ZSnirtV+Hlcl4VOjfLI/shtzqmNNAnB8v0tvECJMQ==";
-    private static final SecretKey secretKey = Keys.hmacShaKeyFor(SIGNING_KEY.getBytes());
-    private static final long TOKEN_DURATION_IN_MINUTES = 15L;
-    private static final long REFRESH_TOKEN_DURATION_IN_MINUTES = 60L;
+    private final SecretKey secretKey;
+    private final SpatProperties spatProperties;
+
+    public SecurityUtils(SpatProperties spatProperties) {
+        if (spatProperties.getJwtTokenDuration().compareTo(spatProperties.getRefreshTokenDuration()) > 0) {
+            throw new IllegalArgumentException("jwt token duration cannot be greater than refresh token duration");
+        }
+        this.spatProperties = spatProperties;
+        this.secretKey = Keys.hmacShaKeyFor(SIGNING_KEY.getBytes());
+    }
 
     public static String[] getDecodedBasicAuthFromRequest(HttpServletRequest request) throws AuthenticationException {
         String headerValue = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -72,14 +81,6 @@ public class SecurityUtils {
         return token;
     }
 
-    public static Claims getClaimsFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
     public static void validateUserAccountStatus(User user) {
         if (!user.isAccountNonExpired()) {
             throw new AccountExpiredException(String.format("Expired account for username: %s", user.getUsername()));
@@ -92,11 +93,19 @@ public class SecurityUtils {
         }
     }
 
-    public static AuthResponseDto createAuthResponse(String subject, Set<String> authorities) {
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public AuthResponseDto createAuthResponse(String subject, Set<String> authorities) {
         Date now = new Date();
         String tokenId = UUID.randomUUID().toString();
-        Date tokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(TOKEN_DURATION_IN_MINUTES));
-        Date refreshTokenExpiration = new Date(now.getTime() + TimeUnit.MINUTES.toMillis(REFRESH_TOKEN_DURATION_IN_MINUTES));
+        Date tokenExpiration = new Date(now.getTime() + spatProperties.getJwtTokenDuration().toMillis());
+        Date refreshTokenExpiration = new Date(now.getTime() + spatProperties.getRefreshTokenDuration().toMillis());
 
         return new AuthResponseDto(
                 createToken(subject, authorities, tokenId, now, tokenExpiration, false),
@@ -104,19 +113,19 @@ public class SecurityUtils {
         );
     }
 
-    public static AuthResponseDto createAuthResponse(Authentication authentication) {
+    public AuthResponseDto createAuthResponse(Authentication authentication) {
         Set<String> authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
         return createAuthResponse(authentication.getName(), authorities);
     }
 
-    private static String createToken(String subject,
-                                      Set<String> authorities,
-                                      String tokenId,
-                                      Date now,
-                                      Date expiration,
-                                      boolean refreshToken) {
+    private String createToken(String subject,
+                               Set<String> authorities,
+                               String tokenId,
+                               Date now,
+                               Date expiration,
+                               boolean refreshToken) {
         Claims claims = Jwts.claims();
         claims.setIssuer("com.pcalouche.spat");
         claims.setId(tokenId);

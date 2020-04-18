@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest extends AbstractControllerTest {
-
     @Test
     public void testToken() throws Exception {
         User existingUser = User.builder()
@@ -42,7 +41,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     @Test
     public void testRefreshToken() throws Exception {
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", new HashSet<>());
-        String validAdminRefreshToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + SecurityUtils.createAuthResponse(jwtAuthenticationToken).getRefreshToken();
+        String validAdminRefreshToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + securityUtils.createAuthResponse(jwtAuthenticationToken).getRefreshToken();
 
         User existingUser = User.builder()
                 .id(1)

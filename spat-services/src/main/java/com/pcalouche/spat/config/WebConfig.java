@@ -8,9 +8,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    private final SpatProperties spatProperties;
     private final LoggerInterceptor loggerInterceptor;
 
-    public WebConfig(LoggerInterceptor loggerInterceptor) {
+    public WebConfig(SpatProperties spatProperties,
+                     LoggerInterceptor loggerInterceptor) {
+        this.spatProperties = spatProperties;
         this.loggerInterceptor = loggerInterceptor;
     }
 
@@ -22,6 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
+                .allowedOrigins(spatProperties.getCorsAllowedOrigins())
                 .allowedMethods(
                         "OPTIONS",
                         "GET",

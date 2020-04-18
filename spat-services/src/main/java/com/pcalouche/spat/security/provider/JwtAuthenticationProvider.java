@@ -19,9 +19,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JwtAuthenticationProvider implements AuthenticationProvider {
+    private final SecurityUtils securityUtils;
     private final UserRepository userRepository;
 
-    public JwtAuthenticationProvider(UserRepository userRepository) {
+    public JwtAuthenticationProvider(SecurityUtils securityUtils,
+                                     UserRepository userRepository) {
+        this.securityUtils = securityUtils;
         this.userRepository = userRepository;
     }
 
@@ -35,7 +38,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String token = jwtAuthenticationToken.getCredentials();
         Claims claims;
         try {
-            claims = SecurityUtils.getClaimsFromToken(token);
+            claims = securityUtils.getClaimsFromToken(token);
         } catch (JwtException e) {
             throw new BadCredentialsException("JSON web token was invalid");
         }

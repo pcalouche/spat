@@ -21,12 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = Endpoints.AUTH)
 public class AuthController {
+    private final SecurityUtils securityUtils;
+
+    public AuthController(SecurityUtils securityUtils) {
+        this.securityUtils = securityUtils;
+    }
 
     @Operation(description = "Get JWT from username and password")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "token and refresh token created")})
     @PostMapping(value = Endpoints.TOKEN)
     public AuthResponseDto token(@AuthenticationPrincipal Authentication authentication) {
-        return SecurityUtils.createAuthResponse(authentication);
+        return securityUtils.createAuthResponse(authentication);
     }
 
     @Operation(description = "Get JWT from refresh token")
@@ -35,10 +40,10 @@ public class AuthController {
     public AuthResponseDto refreshToken(@AuthenticationPrincipal Authentication authentication,
                                         @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         // If token wasn't a refresh token don't allow request to complete.
-        Claims claims = SecurityUtils.getClaimsFromToken(authHeader.replace(SecurityUtils.AUTH_HEADER_BEARER_PREFIX, ""));
+        Claims claims = securityUtils.getClaimsFromToken(authHeader.replace(SecurityUtils.AUTH_HEADER_BEARER_PREFIX, ""));
         if (!Boolean.parseBoolean(claims.get(SecurityUtils.CLAIMS_REFRESH_TOKEN_KEY).toString())) {
             throw new BadCredentialsException("Non refresh token used");
         }
-        return SecurityUtils.createAuthResponse(authentication);
+        return securityUtils.createAuthResponse(authentication);
     }
 }

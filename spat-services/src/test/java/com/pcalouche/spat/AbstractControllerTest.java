@@ -2,6 +2,7 @@ package com.pcalouche.spat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.config.SecurityConfig;
+import com.pcalouche.spat.config.SpatProperties;
 import com.pcalouche.spat.interceptors.LoggerInterceptor;
 import com.pcalouche.spat.repository.UserRepository;
 import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
@@ -24,12 +25,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
-@Import({SecurityConfig.class})
+@Import({
+        SpatProperties.class,
+        SecurityUtils.class,
+        SecurityConfig.class
+})
 public abstract class AbstractControllerTest {
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired
     protected MockMvc mockMvc;
+    @Autowired
+    protected SecurityUtils securityUtils;
     @MockBean
     protected LoggerInterceptor loggerInterceptor;
     @MockBean
@@ -40,7 +47,7 @@ public abstract class AbstractControllerTest {
     protected String getValidUserToken() {
         if (validUserToken == null) {
             JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", new HashSet<>());
-            validUserToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + SecurityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
+            validUserToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + securityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
         }
         return validUserToken;
     }
@@ -49,7 +56,7 @@ public abstract class AbstractControllerTest {
         if (validAdminToken == null) {
             Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
             JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeAdmin", "pretendToken", authorities);
-            validAdminToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + SecurityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
+            validAdminToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + securityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
         }
         return validAdminToken;
     }

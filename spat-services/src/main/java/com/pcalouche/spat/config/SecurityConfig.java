@@ -27,9 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final AuthenticationManager authenticationManager;
 
-    public SecurityConfig(UserRepository userRepository) {
+    public SecurityConfig(SecurityUtils securityUtils, UserRepository userRepository) {
         loginAuthenticationProvider = new LoginAuthenticationProvider(userRepository);
-        jwtAuthenticationProvider = new JwtAuthenticationProvider(userRepository);
+        jwtAuthenticationProvider = new JwtAuthenticationProvider(securityUtils, userRepository);
         authenticationManager = new ProviderManager(Arrays.asList(loginAuthenticationProvider, jwtAuthenticationProvider));
     }
 
