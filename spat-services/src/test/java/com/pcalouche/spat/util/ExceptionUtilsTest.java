@@ -51,7 +51,7 @@ public class ExceptionUtilsTest {
 
         // Test response that will include validation messages
         JsonNode jsonNode = ExceptionUtils.buildJsonErrorObject(methodArgumentNotValidException, request);
-        assertThat(jsonNode.has("timestamp"));
+        assertThat(jsonNode.has("timestamp")).isTrue();
         assertThat(jsonNode.get("timestamp").longValue()).isGreaterThanOrEqualTo(currentTimeMillis);
         assertThat(jsonNode.get("status").intValue()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
         assertThat(jsonNode.get("error").textValue()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase());
@@ -62,7 +62,7 @@ public class ExceptionUtilsTest {
 
         // Test response that will not include validation messages
         jsonNode = ExceptionUtils.buildJsonErrorObject(new RestResourceForbiddenException("can touch this"), request);
-        assertThat(jsonNode.has("timestamp"));
+        assertThat(jsonNode.has("timestamp")).isTrue();
         assertThat(jsonNode.get("timestamp").longValue()).isGreaterThanOrEqualTo(currentTimeMillis);
         assertThat(jsonNode.get("status").intValue()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(jsonNode.get("error").textValue()).isEqualTo(HttpStatus.FORBIDDEN.getReasonPhrase());

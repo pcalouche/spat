@@ -17,11 +17,10 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     public JwtAuthenticationToken(String subject,
-                                  String token,
                                   Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.subject = subject;
-        this.token = token;
+        this.token = null;
         setAuthenticated(true);
     }
 

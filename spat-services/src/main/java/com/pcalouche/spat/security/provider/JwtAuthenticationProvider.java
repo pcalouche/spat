@@ -65,7 +65,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         }
 
         // Authentication was good, so return a good authentication without credentials so the request can continue
-        return new JwtAuthenticationToken(subject, null, simpleGrantedAuthorities);
+        return new JwtAuthenticationToken(subject, simpleGrantedAuthorities);
     }
 
     @Override

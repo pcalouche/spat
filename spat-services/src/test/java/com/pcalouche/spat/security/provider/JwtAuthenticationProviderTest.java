@@ -1,6 +1,5 @@
 package com.pcalouche.spat.security.provider;
 
-import com.pcalouche.spat.api.dto.AuthResponseDto;
 import com.pcalouche.spat.config.SpatProperties;
 import com.pcalouche.spat.entity.User;
 import com.pcalouche.spat.repository.UserRepository;
@@ -61,10 +60,9 @@ public class JwtAuthenticationProviderTest {
 
         jwtAuthenticationProvider = new JwtAuthenticationProvider(securityUtils, userRepository);
 
-        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", new HashSet<>());
-        AuthResponseDto authResponseDto = securityUtils.createAuthResponse(authenticationToken);
-        validJwtToken = authResponseDto.getToken();
-        validRefreshToken = authResponseDto.getRefreshToken();
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken("activeUser", new HashSet<>());
+        validJwtToken = securityUtils.createToken(authenticationToken);
+        validRefreshToken = securityUtils.createRefreshTokenCookie(authenticationToken.getName()).getValue();
     }
 
     @Test
@@ -96,7 +94,6 @@ public class JwtAuthenticationProviderTest {
     @Test
     public void testAuthenticateHandlesRefreshToken() {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(validRefreshToken);
-        authenticationToken.setDetails("refreshToken");
 
         Authentication authentication = jwtAuthenticationProvider.authenticate(authenticationToken);
 

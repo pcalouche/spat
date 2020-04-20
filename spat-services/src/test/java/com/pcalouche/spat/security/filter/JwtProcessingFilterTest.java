@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,13 +47,12 @@ public class JwtProcessingFilterTest {
 
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("goodToken");
         given(jwtAuthenticationProvider.authenticate(jwtAuthenticationToken)).willReturn(
-                new JwtAuthenticationToken("activeUser", null, new HashSet<>())
+                new JwtAuthenticationToken("activeUser", new HashSet<>())
         );
 
         JwtAuthenticationToken jwtRefreshAuthenticationToken = new JwtAuthenticationToken("goodRefreshToken");
-        jwtRefreshAuthenticationToken.setDetails("refreshToken");
         given(jwtAuthenticationProvider.authenticate(jwtRefreshAuthenticationToken)).willReturn(
-                new JwtAuthenticationToken("activeUser", null, new HashSet<>())
+                new JwtAuthenticationToken("activeUser", new HashSet<>())
         );
 
         AuthenticationManager authenticationManager = new ProviderManager(Collections.singletonList(jwtAuthenticationProvider));
@@ -79,18 +79,28 @@ public class JwtProcessingFilterTest {
 
     @Test
     public void testTokenPathIsNotAuthenticated() throws IOException, ServletException {
-        // Test that the token path is not authenticated because that is handled by the AjaxLoginProcessingFilter
-        MockHttpServletRequest request = MockMvcRequestBuilders.post(Endpoints.AUTH + Endpoints.TOKEN)
-                .contentType(MediaType.APPLICATION_JSON)
-                .buildRequest(new MockServletContext());
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        // Test that a POST to the token path is not authenticated because that is handled by the AjaxLoginProcessingFilter
+        assertThatCode(() -> jwtProcessingFilter.doFilter(
+                MockMvcRequestBuilders.post(Endpoints.AUTH + Endpoints.TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .buildRequest(new MockServletContext()),
+                new MockHttpServletResponse(),
+                filterChain))
+                .doesNotThrowAnyException();
 
-        assertThatCode(() -> jwtProcessingFilter.doFilter(request, response, filterChain))
+        // Test that a DELETE to the token path is not authenticated because that requires no authentication when
+        // client chooses to logout.
+        assertThatCode(() -> jwtProcessingFilter.doFilter(
+                MockMvcRequestBuilders.delete(Endpoints.AUTH + Endpoints.TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .buildRequest(new MockServletContext()),
+                new MockHttpServletResponse(),
+                filterChain))
                 .doesNotThrowAnyException();
 
         // The filter chain should have been called once, but the jwtAuthenticationProvider should have
         // been called 0 times since authentication should not be done on white listed endpoints
-        verify(filterChain, times(1)).doFilter(any(), any());
+        verify(filterChain, times(2)).doFilter(any(), any());
         verify(jwtAuthenticationProvider, times(0)).authenticate(any());
     }
 
@@ -121,13 +131,24 @@ public class JwtProcessingFilterTest {
 
         Authentication authentication = jwtProcessingFilter.attemptAuthentication(request, response);
 
-        assertThat(authentication.getName())
-                .isEqualTo("activeUser");
-        assertThat(authentication.getCredentials())
-                .isNull();
-        assertThat(authentication.getAuthorities())
-                .isEmpty();
-        assertThat(authentication.getDetails())
-                .isNull();
+        assertThat(authentication.getName()).isEqualTo("activeUser");
+        assertThat(authentication.getCredentials()).isNull();
+        assertThat(authentication.getAuthorities()).isEmpty();
+    }
+
+    @Test
+    public void testAttemptAuthenticationHandlesRefreshTokenCase() {
+        MockHttpServletRequest request = MockMvcRequestBuilders.post(Endpoints.AUTH + Endpoints.REFRESH_TOKEN)
+                .cookie(new Cookie("refresh_token", "goodRefreshToken"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .buildRequest(new MockServletContext());
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        Authentication authentication = jwtProcessingFilter.attemptAuthentication(request, response);
+
+        assertThat(authentication.getName()).isEqualTo("activeUser");
+        assertThat(authentication.getCredentials()).isNull();
+        assertThat(authentication.getAuthorities()).isEmpty();
     }
 }

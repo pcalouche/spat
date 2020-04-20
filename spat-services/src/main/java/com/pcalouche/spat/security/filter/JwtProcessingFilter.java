@@ -17,6 +17,7 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class JwtProcessingFilter extends AbstractAuthenticationProcessingFilter 
         super(new AndRequestMatcher(
                 new AntPathRequestMatcher(SecurityUtils.AUTHENTICATED_PATH),
                 new NegatedRequestMatcher(new AntPathRequestMatcher(Endpoints.AUTH + Endpoints.TOKEN, HttpMethod.POST.toString())),
+                new NegatedRequestMatcher(new AntPathRequestMatcher(Endpoints.AUTH + Endpoints.TOKEN, HttpMethod.DELETE.toString())),
                 new NegatedRequestMatcher(new OrRequestMatcher(
                         Arrays.stream(SecurityUtils.WHITELISTED_ENDPOINTS)
                                 .map(AntPathRequestMatcher::new)
@@ -42,7 +44,18 @@ public class JwtProcessingFilter extends AbstractAuthenticationProcessingFilter 
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(SecurityUtils.getTokenFromRequest(request));
+        JwtAuthenticationToken authenticationToken;
+        if (request.getRequestURI().equals(Endpoints.AUTH + Endpoints.REFRESH_TOKEN)) {
+            String refreshTokenValue = request.getCookies() == null ? null :
+                    Arrays.stream(request.getCookies())
+                            .filter(cookie -> "refresh_token".equals(cookie.getName()))
+                            .findFirst()
+                            .map(Cookie::getValue)
+                            .orElse(null);
+            authenticationToken = new JwtAuthenticationToken(refreshTokenValue);
+        } else {
+            authenticationToken = new JwtAuthenticationToken(SecurityUtils.getTokenFromRequest(request));
+        }
         return getAuthenticationManager().authenticate(authenticationToken);
     }
 

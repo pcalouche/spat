@@ -1,12 +1,12 @@
 package com.pcalouche.spat.security.util;
 
-import com.pcalouche.spat.api.dto.AuthResponseDto;
 import com.pcalouche.spat.config.SpatProperties;
 import com.pcalouche.spat.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -93,51 +93,63 @@ public class SecurityUtils {
         }
     }
 
+    public String createToken(Authentication authentication) {
+        Date now = new Date();
+        Claims claims = Jwts.claims();
+        claims.setIssuer("com.pcalouche.spat");
+        claims.setId(UUID.randomUUID().toString());
+        claims.setSubject(authentication.getName());
+        claims.setIssuedAt(now);
+        claims.setExpiration(new Date(now.getTime() + spatProperties.getJwtTokenDuration().toMillis()));
+        // Add additional information to the JWT claims
+        Set<String> authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+        claims.put(CLAIMS_AUTHORITIES_KEY, authorities);
+        claims.put(CLAIMS_REFRESH_TOKEN_KEY, false);
+        return Jwts.builder()
+                .setClaims(claims)
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public ResponseCookie createRefreshTokenCookie(String subject) {
+        Date now = new Date();
+        Claims claims = Jwts.claims();
+        claims.setIssuer("com.pcalouche.spat");
+        claims.setId(UUID.randomUUID().toString());
+        claims.setSubject(subject);
+        claims.setIssuedAt(now);
+        claims.setExpiration(new Date(now.getTime() + spatProperties.getRefreshTokenDuration().toMillis()));
+        claims.put(CLAIMS_REFRESH_TOKEN_KEY, true);
+        String refreshTokeValue = Jwts.builder()
+                .setClaims(claims)
+                .signWith(secretKey)
+                .compact();
+
+        return ResponseCookie.from("refresh_token", refreshTokeValue)
+                .domain(spatProperties.getHostname())
+                .path("/")
+                .httpOnly(true)
+                .secure(spatProperties.isHttpsEnvironment())
+                .build();
+    }
+
+    public ResponseCookie deleteRefreshTokenCookie() {
+        return ResponseCookie.from("refresh_token", "")
+                .domain(spatProperties.getHostname())
+                .path("/")
+                .httpOnly(true)
+                .secure(spatProperties.isHttpsEnvironment())
+                .maxAge(0)
+                .build();
+    }
+
     public Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public AuthResponseDto createAuthResponse(String subject, Set<String> authorities) {
-        Date now = new Date();
-        String tokenId = UUID.randomUUID().toString();
-        Date tokenExpiration = new Date(now.getTime() + spatProperties.getJwtTokenDuration().toMillis());
-        Date refreshTokenExpiration = new Date(now.getTime() + spatProperties.getRefreshTokenDuration().toMillis());
-
-        return new AuthResponseDto(
-                createToken(subject, authorities, tokenId, now, tokenExpiration, false),
-                createToken(subject, authorities, tokenId, now, refreshTokenExpiration, true)
-        );
-    }
-
-    public AuthResponseDto createAuthResponse(Authentication authentication) {
-        Set<String> authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet());
-        return createAuthResponse(authentication.getName(), authorities);
-    }
-
-    private String createToken(String subject,
-                               Set<String> authorities,
-                               String tokenId,
-                               Date now,
-                               Date expiration,
-                               boolean refreshToken) {
-        Claims claims = Jwts.claims();
-        claims.setIssuer("com.pcalouche.spat");
-        claims.setId(tokenId);
-        claims.setSubject(subject);
-        claims.setIssuedAt(now);
-        claims.setExpiration(expiration);
-        claims.put(CLAIMS_REFRESH_TOKEN_KEY, refreshToken);
-        // Add additional information to the JWT claims
-        claims.put(CLAIMS_AUTHORITIES_KEY, authorities);
-        return Jwts.builder()
-                .setClaims(claims)
-                .signWith(secretKey)
-                .compact();
     }
 }

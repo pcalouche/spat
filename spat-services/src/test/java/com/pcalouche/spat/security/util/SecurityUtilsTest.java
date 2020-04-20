@@ -1,6 +1,5 @@
 package com.pcalouche.spat.security.util;
 
-import com.pcalouche.spat.api.dto.AuthResponseDto;
 import com.pcalouche.spat.config.SpatProperties;
 import com.pcalouche.spat.entity.User;
 import io.jsonwebtoken.Claims;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.*;
@@ -82,21 +82,6 @@ public class SecurityUtilsTest {
     }
 
     @Test
-    public void testGetClaimsFromToken() {
-        Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "pretendToken", authorities);
-        AuthResponseDto authResponseDto = securityUtils.createAuthResponse(authenticationToken);
-        Claims claims = securityUtils.getClaimsFromToken(authResponseDto.getToken());
-        assertThat(claims.getSubject()).isEqualTo("activeAdmin");
-        assertThat(claims.getId()).isNotEmpty();
-        assertThat(claims.getIssuedAt()).isNotNull();
-        assertThat(claims.getExpiration()).isNotNull();
-        List<String> tokenAuthorities = (List<String>) claims.get("authorities", List.class);
-        assertThat(tokenAuthorities).hasSize(1);
-        assertThat(tokenAuthorities.get(0)).isEqualTo("Admin");
-    }
-
-    @Test
     public void testValidateUserAccountStatusAccountExpiredException() {
         User user = User.builder()
                 .username("expiredUser")
@@ -149,11 +134,70 @@ public class SecurityUtilsTest {
     }
 
     @Test
-    public void testCreateAuthResponse() {
+    public void testCreateToken() {
         Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "pretendToken", authorities);
-        AuthResponseDto authResponseDto = securityUtils.createAuthResponse(authenticationToken);
-        assertThat(authResponseDto.getToken()).isNotBlank();
-        assertThat(authResponseDto.getRefreshToken()).isNotBlank();
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "password", authorities);
+
+        String token = securityUtils.createToken(authenticationToken);
+        Claims claims = securityUtils.getClaimsFromToken(token);
+
+        assertThat(claims.getIssuer()).isEqualTo("com.pcalouche.spat");
+        assertThat(claims.getSubject()).isEqualTo("activeAdmin");
+        assertThat(claims.getId()).isNotBlank();
+        assertThat(claims.getIssuedAt()).isNotNull();
+        assertThat(claims.getExpiration()).isNotNull();
+        assertThat(claims.getIssuedAt().getTime())
+                .isEqualTo(claims.getExpiration().getTime() - spatProperties.getJwtTokenDuration().toMillis());
+        @SuppressWarnings("unchecked")
+        List<String> tokenAuthorities = (List<String>) claims.get("authorities", List.class);
+        assertThat(tokenAuthorities).containsExactly("Admin");
+        assertThat(Boolean.parseBoolean(claims.get("refreshToken").toString())).isFalse();
+    }
+
+    @Test
+    public void testCreateRefreshTokenCookie() {
+        ResponseCookie responseCookie = securityUtils.createRefreshTokenCookie("activeUser");
+        assertThat(responseCookie.getValue()).isNotBlank();
+        assertThat(responseCookie.getDomain()).isEqualTo(spatProperties.getHostname());
+        assertThat(responseCookie.getPath()).isEqualTo("/");
+        assertThat(responseCookie.isHttpOnly()).isEqualTo(true);
+        assertThat(responseCookie.isSecure()).isEqualTo(spatProperties.isHttpsEnvironment());
+
+        Claims claims = securityUtils.getClaimsFromToken(responseCookie.getValue());
+
+        assertThat(claims.getIssuer()).isEqualTo("com.pcalouche.spat");
+        assertThat(claims.getSubject()).isEqualTo("activeUser");
+        assertThat(claims.getId()).isNotBlank();
+        assertThat(claims.getIssuedAt()).isNotNull();
+        assertThat(claims.getExpiration()).isNotNull();
+        assertThat(claims.getIssuedAt().getTime())
+                .isEqualTo(claims.getExpiration().getTime() - spatProperties.getRefreshTokenDuration().toMillis());
+        assertThat(Boolean.parseBoolean(claims.get("refreshToken").toString())).isTrue();
+    }
+
+    @Test
+    public void testDeleteRefreshTokenCookie() {
+        ResponseCookie responseCookie = securityUtils.deleteRefreshTokenCookie();
+        assertThat(responseCookie.getValue()).isBlank();
+        assertThat(responseCookie.getDomain()).isEqualTo(spatProperties.getHostname());
+        assertThat(responseCookie.getPath()).isEqualTo("/");
+        assertThat(responseCookie.isHttpOnly()).isEqualTo(true);
+        assertThat(responseCookie.isSecure()).isEqualTo(spatProperties.isHttpsEnvironment());
+        assertThat(responseCookie.getMaxAge().toMillis()).isEqualTo(0);
+    }
+
+    @Test
+    public void testGetClaimsFromToken() {
+        Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("activeAdmin", "password", authorities);
+        Claims claims = securityUtils.getClaimsFromToken(securityUtils.createToken(authenticationToken));
+        assertThat(claims.getSubject()).isEqualTo("activeAdmin");
+        assertThat(claims.getId()).isNotEmpty();
+        assertThat(claims.getIssuedAt()).isNotNull();
+        assertThat(claims.getExpiration()).isNotNull();
+        @SuppressWarnings("unchecked")
+        List<String> tokenAuthorities = (List<String>) claims.get("authorities", List.class);
+        assertThat(tokenAuthorities).hasSize(1);
+        assertThat(tokenAuthorities.get(0)).isEqualTo("Admin");
     }
 }

@@ -1,5 +1,6 @@
 package com.pcalouche.spat.config;
 
+import com.pcalouche.spat.api.Endpoints;
 import com.pcalouche.spat.repository.UserRepository;
 import com.pcalouche.spat.security.filter.JwtProcessingFilter;
 import com.pcalouche.spat.security.filter.LoginProcessingFilter;
@@ -8,6 +9,7 @@ import com.pcalouche.spat.security.provider.LoginAuthenticationProvider;
 import com.pcalouche.spat.security.util.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -66,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(SecurityUtils.WHITELISTED_ENDPOINTS).permitAll()
+                .antMatchers(HttpMethod.DELETE.name(), Endpoints.AUTH + Endpoints.TOKEN).permitAll()
                 .antMatchers(SecurityUtils.AUTHENTICATED_PATH).authenticated()
                 // Setup filters for the endpoints
                 .and()

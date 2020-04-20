@@ -37,6 +37,8 @@ public abstract class AbstractControllerTest {
     protected MockMvc mockMvc;
     @Autowired
     protected SecurityUtils securityUtils;
+    @Autowired
+    protected SpatProperties spatProperties;
     @MockBean
     protected LoggerInterceptor loggerInterceptor;
     @MockBean
@@ -46,8 +48,8 @@ public abstract class AbstractControllerTest {
 
     protected String getValidUserToken() {
         if (validUserToken == null) {
-            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeUser", "pretendToken", new HashSet<>());
-            validUserToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + securityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
+            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeUser", new HashSet<>());
+            validUserToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + securityUtils.createToken(jwtAuthenticationToken);
         }
         return validUserToken;
     }
@@ -55,8 +57,8 @@ public abstract class AbstractControllerTest {
     protected String getValidAdminToken() {
         if (validAdminToken == null) {
             Set<SimpleGrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority("Admin")).collect(Collectors.toSet());
-            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeAdmin", "pretendToken", authorities);
-            validAdminToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + securityUtils.createAuthResponse(jwtAuthenticationToken).getToken();
+            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("activeAdmin", authorities);
+            validAdminToken = SecurityUtils.AUTH_HEADER_BEARER_PREFIX + securityUtils.createToken(jwtAuthenticationToken);
         }
         return validAdminToken;
     }

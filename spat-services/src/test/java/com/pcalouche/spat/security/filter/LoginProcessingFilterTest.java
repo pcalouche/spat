@@ -101,11 +101,8 @@ public class LoginProcessingFilterTest {
 
         Authentication authentication = loginProcessingFilter.attemptAuthentication(request, response);
 
-        assertThat(authentication.getName())
-                .isEqualTo("activeUser");
-        assertThat(authentication.getCredentials())
-                .isNull();
-        assertThat(authentication.getAuthorities())
-                .isEmpty();
+        assertThat(authentication.getName()).isEqualTo("activeUser");
+        assertThat(authentication.getCredentials()).isNull();
+        assertThat(authentication.getAuthorities()).isEmpty();
     }
 }

@@ -25,9 +25,8 @@ const Login = () => {
   const handleSubmit = async (formikValues, formikActions) => {
     try {
       // Try to login. If successful a token information will be returned that needs to be added to local storage.
-      const loginResult = await authApi.login(formikValues);
-      localStorage.setItem('token', loginResult.token);
-      localStorage.setItem('refreshToken', loginResult.refreshToken);
+      const token = await authApi.login(formikValues);
+      localStorage.setItem('token', token);
       // Get the current user's information next
       const user = await userApi.currentUser();
       // Setting the current user will re-render the routes to be the available in App.js

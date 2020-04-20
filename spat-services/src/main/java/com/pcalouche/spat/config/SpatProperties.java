@@ -36,4 +36,13 @@ public class SpatProperties {
      */
     @NotNull
     private Duration refreshTokenDuration;
+    /**
+     * The hostname of the environment
+     */
+    @NotEmpty
+    private String hostname;
+
+    public boolean isHttpsEnvironment() {
+        return !"localhost".equals(hostname);
+    }
 }
