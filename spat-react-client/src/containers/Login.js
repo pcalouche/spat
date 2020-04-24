@@ -33,7 +33,7 @@ const Login = () => {
       formikActions.setSubmitting(false);
       setCurrentUser(user);
     } catch (error) {
-      console.error(error);
+      console.error('sdf', error);
       formikActions.setSubmitting(false);
       if (error instanceof TypeError) {
         setErrorMessage('Unable to connect to service.');

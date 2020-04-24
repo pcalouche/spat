@@ -14,10 +14,15 @@ export const login = async ({username, password}) => {
 };
 
 export const logout = async () => {
-  // TODO handle error case
-  const response = await fetch(`${config.apiUrl}/auth/token`, {
-    credentials: 'include',
-    method: 'DELETE'
-  });
-  return apiHelper.handleEmptyResponse(response);
+  try {
+    await fetch(`${config.apiUrl}/auth/token`, {
+      credentials: 'include',
+      method: 'DELETE'
+    });
+  } catch (error) {
+    // do nothing if we can't communicate with server during logout
+  } finally {
+    localStorage.clear();
+    window.location = '/login';
+  }
 };

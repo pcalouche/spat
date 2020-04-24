@@ -1,25 +1,17 @@
 import React, {useState} from 'react';
-import {Link, NavLink as RRNavLink, useHistory} from 'react-router-dom';
+import {Link, NavLink as RRNavLink} from 'react-router-dom';
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavLink} from 'reactstrap';
 
 import {useAppContext} from '../hooks';
 import {authApi} from '../api';
 
 const AppBar = () => {
-  const history = useHistory();
   const {currentUser, setCurrentUser} = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
   const logoutHandler = async () => {
-    try {
-      await authApi.logout();
-    } catch (e) {
-      // do nothing if we can't communicate with server during logout
-    } finally {
-      localStorage.clear();
-      setCurrentUser(undefined);
-      history.push('/login');
-    }
+    await authApi.logout();
+    setCurrentUser(null);
   };
 
   if (!currentUser) {
