@@ -45,7 +45,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String subject = claims.getSubject();
 
         // When a refresh token happens double check the account status and the authorities
-        // with what is in the database to ensure the account is still active.
+        // with what is in the database to ensure the account is still active and accurate.
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities;
         if (Boolean.parseBoolean(claims.get(SecurityUtils.CLAIMS_REFRESH_TOKEN_KEY).toString())) {
             Optional<User> optionalUser = userRepository.findByUsername(subject);
