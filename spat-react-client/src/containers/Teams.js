@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Card, CardBody, CardHeader, Container, Table} from 'reactstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
@@ -46,8 +46,8 @@ const Teams = () => {
     }
   };
 
-  const loadTeams = useCallback(
-    async () => {
+  useEffect(() => {
+    const fetchData = async () => {
       if (!teams) {
         try {
           const teams = await teamApi.teams();
@@ -56,13 +56,9 @@ const Teams = () => {
           setLoadError(true);
         }
       }
-    },
-    [teams]
-  );
-
-  useEffect(() => {
-    loadTeams();
-  }, [loadTeams]);
+    };
+    fetchData().then();
+  }, [teams]);
 
   return (
     <Container fluid className="Users mt-5">

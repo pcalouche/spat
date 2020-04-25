@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import {
   Button,
   Card,
@@ -19,7 +20,8 @@ import {authApi, userApi} from '../api';
 import {useAppContext} from '../hooks';
 
 const Login = () => {
-  const {setCurrentUser} = useAppContext();
+  const history = useHistory();
+  const {currentUser, setCurrentUser} = useAppContext();
   const [errorMessage, setErrorMessage] = useState(undefined);
 
   const handleSubmit = async (formikValues, formikActions) => {
@@ -33,7 +35,6 @@ const Login = () => {
       formikActions.setSubmitting(false);
       setCurrentUser(user);
     } catch (error) {
-      console.error('sdf', error);
       formikActions.setSubmitting(false);
       if (error instanceof TypeError) {
         setErrorMessage('Unable to connect to service.');
@@ -42,6 +43,12 @@ const Login = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      history.push('/users');
+    }
+  }, [currentUser, history]);
 
   return (
     <Container fluid className="Login mt-5">

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Card, CardBody, CardHeader, Container, Table} from 'reactstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
@@ -72,8 +72,8 @@ const Users = () => {
     }
   };
 
-  const loadUsers = useCallback(
-    async () => {
+  useEffect(() => {
+    const fetchData = async () => {
       if (!users) {
         try {
           const users = await userApi.users();
@@ -82,13 +82,9 @@ const Users = () => {
           setLoadError(true);
         }
       }
-    },
-    [users]
-  );
-
-  useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
+    };
+    fetchData().then();
+  }, [users]);
 
   return (
     <Container fluid className="Users mt-5">

@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Redirect, Route, Switch, useHistory} from 'react-router-dom';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faPencilAlt, faStroopwafel, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
-import {userApi} from './api';
+import {authApi, userApi} from './api';
 import {useAppContext} from './hooks';
 import {AppBar} from './components';
 import {Login, Teams, Users} from './containers';
@@ -20,30 +20,29 @@ const App = () => {
 
   const PageNotFound = () => (<h1>Page Not Found</h1>);
 
-  const authenticate = useCallback(
-    async () => {
-      if (localStorage.getItem('token')) {
-        try {
-          const currentUser = await userApi.currentUser();
-          setCurrentUser(currentUser);
-          setLoading(false);
-        } catch (error) {
-          localStorage.clear();
-          setCurrentUser(undefined);
-          history.push('/login');
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-        history.push('/login');
-      }
-    },
-    [setCurrentUser, history]
-  );
+  // Setup session monitoring
+  useEffect(() => {
+    const interval = authApi.monitorSession();
+    return () => clearInterval(interval);
+  }, []);
+
 
   useEffect(() => {
-    authenticate();
-  }, [authenticate]);
+    const fetchData = async () => {
+      try {
+        // Attempt to use refresh token cookie to login
+        await authApi.loginFromRefreshToken();
+        const currentUser = await userApi.currentUser();
+        setCurrentUser(currentUser);
+        setLoading(false);
+      } catch (error) {
+        console.info(error);
+        await authApi.logout();
+        setLoading(false);
+      }
+    };
+    fetchData().then();
+  }, [setCurrentUser, history]);
 
   const renderRoutes = () => {
     return loading ? null
