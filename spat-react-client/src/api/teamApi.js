@@ -1,48 +1,48 @@
 import config from '../config';
-import * as apiHelper from './apiHelper';
+import * as apiUtils from './apiUtils';
 
 export const teams = async () => {
   const response = await fetch(`${config.apiUrl}/teams`, {
     method: 'GET',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     }
   });
-  return apiHelper.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse(response);
 };
 
 export const createTeam = async (teamRequest) => {
   const response = await fetch(`${config.apiUrl}/teams`, {
     method: 'POST',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     },
     body: JSON.stringify(teamRequest)
   });
-  return apiHelper.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse(response);
 };
 
 export const updateTeam = async (id, teamRequest) => {
   const response = await fetch(`${config.apiUrl}/teams/${id}`, {
     method: 'PUT',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     },
     body: JSON.stringify(teamRequest)
   });
-  return apiHelper.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse(response);
 };
 
 export const deleteTeam = async (id) => {
   const response = await fetch(`${config.apiUrl}/teams/${id}`, {
     method: 'DELETE',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     }
   });
-  return apiHelper.handleEmptyResponse(response);
+  return apiUtils.handleEmptyResponse(response);
 };

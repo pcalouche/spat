@@ -16,8 +16,6 @@ const App = () => {
   const {currentUser, setCurrentUser} = useAppContext();
   const [loading, setLoading] = useState(true);
 
-  // TODO implement JWT monitoring
-
   const PageNotFound = () => (<h1>Page Not Found</h1>);
 
   // Setup session monitoring
@@ -30,13 +28,15 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Attempt to use refresh token cookie to login
-        await authApi.loginFromRefreshToken();
+        // Attempt to use refresh token cookie to acquire a token
+        // User will be directed to login if this fails, otherwise
+        // the current user is retrieved from server and set in the
+        // application's react context
+        await authApi.requestNewToken();
         const currentUser = await userApi.currentUser();
         setCurrentUser(currentUser);
         setLoading(false);
       } catch (error) {
-        console.info(error);
         await authApi.logout();
         setLoading(false);
       }

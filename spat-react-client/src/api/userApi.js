@@ -1,59 +1,59 @@
 import config from '../config';
-import * as apiHelper from './apiHelper';
+import * as apiUtils from './apiUtils';
 
 export const currentUser = async () => {
   const response = await fetch(`${config.apiUrl}/users/current-user`, {
     method: 'GET',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     }
   });
-  return apiHelper.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse(response);
 };
 
 export const users = async () => {
   const response = await fetch(`${config.apiUrl}/users`, {
     method: 'GET',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     }
   });
-  return apiHelper.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse(response);
 };
 
 export const createUser = async (userRequest) => {
   const response = await fetch(`${config.apiUrl}/users`, {
     method: 'POST',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     },
     body: JSON.stringify(userRequest)
   });
-  return apiHelper.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse(response);
 };
 
 export const updateUser = async (id, userRequest) => {
   const response = await fetch(`${config.apiUrl}/users/${id}`, {
     method: 'PUT',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     },
     body: JSON.stringify(userRequest)
   });
-  return apiHelper.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse(response);
 };
 
 export const deleteUser = async (id) => {
   const response = await fetch(`${config.apiUrl}/users/${id}`, {
     method: 'DELETE',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.jwtHeader()
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildJwtHeader()
     }
   });
-  return apiHelper.handleEmptyResponse(response);
+  return apiUtils.handleEmptyResponse(response);
 };

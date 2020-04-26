@@ -1,28 +1,28 @@
 import config from '../config';
-import * as apiHelper from './apiHelper';
+import * as apiUtils from './apiUtils';
 
 export const login = async ({username, password}) => {
   const response = await fetch(`${config.apiUrl}/auth/token`, {
     credentials: 'include',
     method: 'POST',
     headers: {
-      ...apiHelper.jsonHeader,
-      ...apiHelper.basicAuthHeader(username, password)
+      ...apiUtils.jsonHeader,
+      ...apiUtils.buildBasicAuthHeader(username, password)
     }
   });
-  return apiHelper.handleTextResponse(response);
+  return apiUtils.handleTextResponse(response);
 };
 
-export const loginFromRefreshToken = async () => {
+export const requestNewToken = async () => {
   const response = await fetch(`${config.apiUrl}/auth/refresh-token`, {
     credentials: 'include',
     method: 'POST'
   });
-  const jwt = await apiHelper.handleTextResponse(response);
+  const jwt = await apiUtils.handleTextResponse(response);
   localStorage.setItem('token', jwt);
 };
 
-export const logout = async () => {
+export const logout = async (message) => {
   try {
     await fetch(`${config.apiUrl}/auth/token`, {
       credentials: 'include',
@@ -35,13 +35,41 @@ export const logout = async () => {
     if (window.location.pathname !== '/login') {
       window.location = '/login';
     }
+    if (message) {
+      alert(message);
+    }
   }
 };
 
 export const monitorSession = () => {
-  // TODO
+  // Update if server configuration changes this
+  const tokenDuration = 15 * 60 * 1000;
   const checkSession = async () => {
-    console.info('checking session');
+    if (localStorage.getItem('token')) {
+      const lastActivity = new Date(localStorage.getItem('lastActivity'));
+      console.debug('lastActivity', lastActivity);
+      const timeElapsed = new Date() - lastActivity;
+      console.debug('timeElapsed', timeElapsed);
+      const timeLeft = tokenDuration - timeElapsed;
+      console.debug('timeLeft', timeLeft);
+      if (timeLeft <= 0) {
+        await logout('You have been logged out from inactivity.');
+      } else if (timeLeft <= 2 * 60 * 1000) {
+        // If less than two minutes left, start trying to refresh the token in the background
+        try {
+          console.debug('attempting to acquire new token in the background');
+          await requestNewToken();
+        } catch (error) {
+          if (error instanceof TypeError) {
+            console.debug('Server response not received. Failing silently in hopes this was just a network hiccup.', error);
+          } else {
+            console.debug('Error happened during token refresh, so signing out.');
+            await logout('Authorization error. You are being signed out.');
+          }
+        }
+      }
+    }
   };
-  return setInterval(() => checkSession(), 10 * 1000);
+  // Check every minute
+  return setInterval(() => checkSession(), 60 * 1000);
 };

@@ -4,13 +4,13 @@ export const jsonHeader = {
   'Content-Type': 'application/json;'
 };
 
-export const basicAuthHeader = (username, password) => {
+export const buildBasicAuthHeader = (username, password) => {
   return {
     'Authorization': 'Basic ' + btoa(username + ':' + password)
   };
 };
 
-export const jwtHeader = () => {
+export const buildJwtHeader = () => {
   return {
     'Authorization': 'Bearer ' + localStorage.getItem('token')
   };
@@ -27,12 +27,12 @@ const handleError = async (response) => {
     const jsonError = await response.json();
     console.error(jsonError);
     // Log user out if unexpected unauthorized error happened
-    if (jsonError.path !== '/auth/token' && jsonError.path !== '/auth/refresh-token' && jsonError.status === 401) {
-      await authApi.logout();
-      alert('Authorization error. You are being signed out.');
+    if (!response.url.includes('/auth/token') &&
+      !response.url.includes('/auth/refresh-token') &&
+      jsonError.status === 401) {
+      await authApi.logout('Authorization error. You are being signed out.');
       window.location = '/login';
     } else {
-      console.info('throwing error');
       throw jsonError;
     }
   } else {
@@ -54,8 +54,11 @@ export const handleJsonResponse = async (response) => {
 
 export const handleTextResponse = async response => {
   if (response.ok) {
-    // Update last activity on successful server responses
-    updateLastActivity();
+    // Update last activity on successful server responses, unless it was a refresh token request.
+    // This request is considered a background request and not a user initiated one.
+    if (!response.url.includes('/auth/refresh-token')) {
+      updateLastActivity();
+    }
     return response.text();
   } else {
     await handleError(response);
