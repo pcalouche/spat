@@ -27,6 +27,26 @@ Some of my goals in this project were to:
 * Provide Swagger API documentation
 * Demonstrate a path to production
 
+## JWT Notes and Flow Logic
+
+### Notable properties
+1. Tokens have a 15-minute expiration. This can be altered with the **spat.jwt-token-duration** property.
+1. Refresh tokens have a 2-hour expiration. This can be altered with the **spat.refresh-token-duration** property.
+1. The JWT signing key can be set with the **spat.jwt-signing-key** property.
+1. The **monitorSession** method in **autApi.js** utilizes these defaults.
+
+### Flow Logic
+
+1. On page load the  application will try to use a refresh token which is stored in an HTTP only cookie to login.
+1. If a valid refresh token cookie exists, the application automatically logs the user and stores a JWT token in 
+local storage. This token will be used for all application requests.
+1. If login fails through the refresh token, the application directs the user to login with their username and password.
+1. The application will update a last activity value in local storage after each successful request the user makes to the
+server. 
+1. The application monitors the user's session every minute. If will request a new token from the refresh token cookie
+when it will expire less than two minutes. In addition, if the user has been inactive for more than token duration 
+(15 minutes), they will be logged out.
+ 
 ## Required Software
 
 * Java 8
