@@ -48,9 +48,7 @@ public class JwtAuthenticationProviderTest {
     public void before() {
         Mockito.reset(userRepository);
 
-        activeUser = User.builder()
-                .username("activeUser")
-                .build();
+        activeUser = User.builder().username("activeUser").build();
 
         activeUser.setPassword(SecurityUtils.PASSWORD_ENCODER.encode("password"));
 
@@ -71,12 +69,9 @@ public class JwtAuthenticationProviderTest {
 
         Authentication authentication = jwtAuthenticationProvider.authenticate(authenticationToken);
 
-        assertThat(authentication.getName())
-                .isEqualTo("activeUser");
-        assertThat(authentication.getCredentials())
-                .isNull();
-        assertThat(authentication.getAuthorities())
-                .isEmpty();
+        assertThat(authentication.getName()).isEqualTo("activeUser");
+        assertThat(authentication.getCredentials()).isNull();
+        assertThat(authentication.getAuthorities()).isEmpty();
 
         // User service should not be hit for non refresh token
         verify(userRepository, Mockito.times(0)).findByUsername("activeUser");
@@ -97,12 +92,9 @@ public class JwtAuthenticationProviderTest {
 
         Authentication authentication = jwtAuthenticationProvider.authenticate(authenticationToken);
 
-        assertThat(authentication.getName())
-                .isEqualTo("activeUser");
-        assertThat(authentication.getCredentials())
-                .isNull();
-        assertThat(authentication.getAuthorities())
-                .isEmpty();
+        assertThat(authentication.getName()).isEqualTo("activeUser");
+        assertThat(authentication.getCredentials()).isNull();
+        assertThat(authentication.getAuthorities()).isEmpty();
 
         // User service should be hit for non refresh token
         verify(userRepository, Mockito.times(1)).findByUsername("activeUser");
@@ -140,13 +132,11 @@ public class JwtAuthenticationProviderTest {
 
     @Test
     public void testSupportValidAuthenticationClass() {
-        assertThat(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class))
-                .isTrue();
+        assertThat(jwtAuthenticationProvider.supports(JwtAuthenticationToken.class)).isTrue();
     }
 
     @Test
     public void testSupportInvalidAuthenticationClass() {
-        assertThat(jwtAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class))
-                .isFalse();
+        assertThat(jwtAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class)).isFalse();
     }
 }
