@@ -58,7 +58,7 @@ const Login = () => {
             <CardHeader className="font-weight-bold text-center">Login</CardHeader>
             <CardBody>
               {errorMessage && <p className="text-center text-danger">{errorMessage}</p>}
-              <Formik initialValues={{username: 'activeAdmin', password: 'password'}}
+              <Formik initialValues={{username: '', password: ''}}
                       validationSchema={
                         Yup.object().shape({
                           username: Yup.string().required('Required'),
