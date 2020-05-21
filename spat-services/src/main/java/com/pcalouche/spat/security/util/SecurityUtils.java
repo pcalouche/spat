@@ -28,6 +28,7 @@ public class SecurityUtils {
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     public static final String[] WHITELISTED_ENDPOINTS = {
             // swagger endpoints
+            "/",
             "/csrf",
             "/error",
             "/v3/api-docs/**",
@@ -38,6 +39,7 @@ public class SecurityUtils {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
+            "/favicon.ico",
             // status endpoint
             "/status"
     };

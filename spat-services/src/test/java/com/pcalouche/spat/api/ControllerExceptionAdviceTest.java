@@ -1,9 +1,9 @@
 package com.pcalouche.spat.api;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.AbstractControllerTest;
 import com.pcalouche.spat.api.controller.UserController;
-import com.pcalouche.spat.util.ExceptionUtils;
+import com.pcalouche.spat.exception.ExceptionUtils;
+import com.pcalouche.spat.exception.JsonExceptionResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,15 +27,16 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
 
     @Test
     public void testException() throws Exception {
+        long currentTimeInMillis = System.currentTimeMillis();
         RuntimeException runtimeException = new RuntimeException("some random runtime exception");
         MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
                 .contentType(MediaType.APPLICATION_JSON)
                 .buildRequest(new MockServletContext());
         request.setRequestURI(Endpoints.USERS);
 
-        ObjectNode expectedObjectNode = (ObjectNode) ExceptionUtils.buildJsonErrorObject(runtimeException, request);
-        // Remove timestamp for easier comparision
-        expectedObjectNode.remove("timestamp");
+        JsonExceptionResponse expectedJsonExceptionResponse = ExceptionUtils.buildJsonErrorResponse(runtimeException, request);
+        // Remove timestamp for easier comparison
+        expectedJsonExceptionResponse.setTimestamp(0);
 
         given(userController.findAll()).willThrow(runtimeException);
 
@@ -44,15 +45,14 @@ public class ControllerExceptionAdviceTest extends AbstractControllerTest {
                 .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()))
                 .andReturn();
 
-        ObjectNode actualObjectNode = (ObjectNode) objectMapper.readTree(mvcResult.getResponse().getContentAsString());
-        // Check timestamp is not null
-        assertThat(actualObjectNode.get("timestamp"))
-                .isNotNull();
+        JsonExceptionResponse actualJsonExceptionResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), JsonExceptionResponse.class);
+        // Check timestamp is greater than current time
+        assertThat(actualJsonExceptionResponse.getTimestamp() >= currentTimeInMillis);
 
-        // Remove timestamp for easier comparision since it will be dynamic anyways
-        actualObjectNode.remove("timestamp");
+        // Remove timestamp for easier comparison since it will be dynamic anyways
+        actualJsonExceptionResponse.setTimestamp(0);
 
-        assertThat(actualObjectNode).isEqualTo(expectedObjectNode);
+        assertThat(actualJsonExceptionResponse).isEqualTo(expectedJsonExceptionResponse);
 
         assertThat(mvcResult.getResolvedException()).isInstanceOf(Exception.class);
     }

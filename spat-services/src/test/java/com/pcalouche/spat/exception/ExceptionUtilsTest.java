@@ -1,8 +1,6 @@
-package com.pcalouche.spat.util;
+package com.pcalouche.spat.exception;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.api.dto.TeamDto;
 import com.pcalouche.spat.api.dto.TeamEditRequest;
 import com.pcalouche.spat.api.exception.RestResourceForbiddenException;
@@ -31,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExceptionUtilsTest {
 
     @Test
-    public void testBuildJsonErrorObject() throws NoSuchMethodException {
+    public void testBuildJsonErrorResponse() throws NoSuchMethodException {
         long currentTimeMillis = System.currentTimeMillis();
         MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
                 .buildRequest(new MockServletContext());
@@ -45,29 +43,27 @@ public class ExceptionUtilsTest {
         );
 
         MethodArgumentNotValidException methodArgumentNotValidException = new MethodArgumentNotValidException(
-                new MethodParameter(getClass().getDeclaredMethod("testBuildJsonErrorObject"), -1),
+                new MethodParameter(getClass().getDeclaredMethod("testBuildJsonErrorResponse"), -1),
                 errors
         );
 
         // Test response that will include validation messages
-        JsonNode jsonNode = ExceptionUtils.buildJsonErrorObject(methodArgumentNotValidException, request);
-        assertThat(jsonNode.has("timestamp")).isTrue();
-        assertThat(jsonNode.get("timestamp").longValue()).isGreaterThanOrEqualTo(currentTimeMillis);
-        assertThat(jsonNode.get("status").intValue()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
-        assertThat(jsonNode.get("error").textValue()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase());
-        assertThat(jsonNode.get("exception").textValue()).isEqualTo(MethodArgumentNotValidException.class.getName());
-        assertThat(jsonNode.get("message").textValue()).isEqualTo("See validation messages for more details.");
-        assertThat(jsonNode.has("validationMessages")).isTrue();
-        assertThat(jsonNode.path("validationMessages").get("name").textValue()).isEqualTo("Required");
+        JsonExceptionResponse jsonExceptionResponse = ExceptionUtils.buildJsonErrorResponse(methodArgumentNotValidException, request);
+        assertThat(jsonExceptionResponse.getTimestamp()).isGreaterThanOrEqualTo(currentTimeMillis);
+        assertThat(jsonExceptionResponse.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+        assertThat(jsonExceptionResponse.getError()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase());
+        assertThat(jsonExceptionResponse.getException()).isEqualTo(MethodArgumentNotValidException.class.getSimpleName());
+        assertThat(jsonExceptionResponse.getMessage()).isEqualTo("See validation messages for more details.");
+        assertThat(jsonExceptionResponse.getValidationMessages()).isNotNull();
+        assertThat(jsonExceptionResponse.getValidationMessages().get("name")).isEqualTo("Required");
 
         // Test response that will not include validation messages
-        jsonNode = ExceptionUtils.buildJsonErrorObject(new RestResourceForbiddenException("can touch this"), request);
-        assertThat(jsonNode.has("timestamp")).isTrue();
-        assertThat(jsonNode.get("timestamp").longValue()).isGreaterThanOrEqualTo(currentTimeMillis);
-        assertThat(jsonNode.get("status").intValue()).isEqualTo(HttpStatus.FORBIDDEN.value());
-        assertThat(jsonNode.get("error").textValue()).isEqualTo(HttpStatus.FORBIDDEN.getReasonPhrase());
-        assertThat(jsonNode.get("exception").textValue()).isEqualTo(RestResourceForbiddenException.class.getName());
-        assertThat(jsonNode.has("validationMessages")).isFalse();
+        jsonExceptionResponse = ExceptionUtils.buildJsonErrorResponse(new RestResourceForbiddenException("can touch this"), request);
+        assertThat(jsonExceptionResponse.getTimestamp()).isGreaterThanOrEqualTo(currentTimeMillis);
+        assertThat(jsonExceptionResponse.getStatus()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(jsonExceptionResponse.getError()).isEqualTo(HttpStatus.FORBIDDEN.getReasonPhrase());
+        assertThat(jsonExceptionResponse.getException()).isEqualTo(RestResourceForbiddenException.class.getSimpleName());
+        assertThat(jsonExceptionResponse.getValidationMessages()).isNull();
     }
 
     @Test
@@ -136,6 +132,7 @@ public class ExceptionUtilsTest {
 
     @Test
     public void testWriteExceptionToResponse() throws IOException {
+        long currentTimeInMillis = System.currentTimeMillis();
         ObjectMapper objectMapper = new ObjectMapper();
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockHttpServletRequest request = MockMvcRequestBuilders.get("/some-endpoint")
@@ -143,21 +140,18 @@ public class ExceptionUtilsTest {
 
         AuthenticationException authenticationException = new BadCredentialsException("bad credentials");
 
-        ObjectNode expectedObjectNode = (ObjectNode) objectMapper.readTree(ExceptionUtils.buildJsonErrorObject(authenticationException, request).toString());
-        // Remove timestamp for easier comparision
-        expectedObjectNode.remove("timestamp");
+        JsonExceptionResponse expectedJsonExceptionResponse = ExceptionUtils.buildJsonErrorResponse(authenticationException, request);
+        // Remove timestamp for easier comparison
+        expectedJsonExceptionResponse.setTimestamp(0);
 
         ExceptionUtils.writeExceptionToResponse(authenticationException, request, response);
 
-        ObjectNode actualObjectNode = (ObjectNode) objectMapper.readTree(response.getContentAsString());
+        JsonExceptionResponse actualJsonExceptionResponse = objectMapper.readValue(response.getContentAsString(), JsonExceptionResponse.class);
 
-        // Check timestamp is not null
-        assertThat(actualObjectNode.get("timestamp"))
-                .isNotNull();
+        assertThat(actualJsonExceptionResponse.getTimestamp() >= currentTimeInMillis);
+        // Set timestamp to 0 for reach comparision
+        actualJsonExceptionResponse.setTimestamp(0);
 
-        // Remove timestamp for easier comparision
-        actualObjectNode.remove("timestamp");
-
-        assertThat(actualObjectNode).isEqualTo(expectedObjectNode);
+        assertThat(actualJsonExceptionResponse).isEqualTo(expectedJsonExceptionResponse);
     }
 }

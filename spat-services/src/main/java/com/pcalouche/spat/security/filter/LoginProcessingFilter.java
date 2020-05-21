@@ -1,8 +1,8 @@
 package com.pcalouche.spat.security.filter;
 
 import com.pcalouche.spat.api.Endpoints;
+import com.pcalouche.spat.exception.ExceptionUtils;
 import com.pcalouche.spat.security.util.SecurityUtils;
-import com.pcalouche.spat.util.ExceptionUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,16 +1,16 @@
-package com.pcalouche.spat.util;
+package com.pcalouche.spat.exception;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pcalouche.spat.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.api.exception.RestResourceNotFoundException;
 import io.jsonwebtoken.JwtException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -20,32 +20,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExceptionUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static JsonNode buildJsonErrorObject(Exception e, HttpServletRequest request) {
-        ObjectNode errorObjectNode = objectMapper.createObjectNode();
-        errorObjectNode.put("timestamp", System.currentTimeMillis());
+    public static JsonExceptionResponse buildJsonErrorResponse(Exception e, HttpServletRequest request) {
+        JsonExceptionResponse jsonExceptionResponse = new JsonExceptionResponse();
+        jsonExceptionResponse.setTimestamp(System.currentTimeMillis());
         if (request != null) {
-            errorObjectNode.put("path", request.getRequestURI());
+            jsonExceptionResponse.setPath(StringUtils.isNotBlank(request.getQueryString()) ?
+                    request.getRequestURI() + "?" + request.getQueryString()
+                    :
+                    request.getRequestURI()
+            );
         }
-        HttpStatus status = getHttpStatusForException(e);
-        errorObjectNode.put("status", status.value());
-        errorObjectNode.put("error", status.getReasonPhrase());
-        errorObjectNode.put("exception", e.getClass().getName());
+        HttpStatus httpStatus = getHttpStatusForException(e);
+        jsonExceptionResponse.setStatus(httpStatus.value());
+        jsonExceptionResponse.setError(httpStatus.getReasonPhrase());
+        jsonExceptionResponse.setException(e.getClass().getSimpleName());
         if (e instanceof MethodArgumentNotValidException) {
-            errorObjectNode.put("message", "See validation messages for more details.");
-            // Make the message output more meaningful by providing a map of error codes and messages.
-            MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
-            List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
-            HashMap<String, String> errorMap = new HashMap<>();
-            fieldErrors.forEach(objectError -> errorMap.put(objectError.getField(), objectError.getDefaultMessage()));
-            errorObjectNode.set("validationMessages", objectMapper.valueToTree(errorMap));
+            jsonExceptionResponse.setMessage("See validation messages for more details.");
+            jsonExceptionResponse.setValidationMessages(getFieldErrorsMap(e));
         } else {
-            errorObjectNode.put("message", e.getMessage());
+            jsonExceptionResponse.setMessage(e.getMessage());
         }
-        return errorObjectNode;
+        return jsonExceptionResponse;
     }
 
     public static HttpStatus getHttpStatusForException(Exception e) {
@@ -68,6 +68,20 @@ public class ExceptionUtils {
     public static void writeExceptionToResponse(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(getHttpStatusForException(e).value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), ExceptionUtils.buildJsonErrorObject(e, request));
+        objectMapper.writeValue(response.getWriter(), ExceptionUtils.buildJsonErrorResponse(e, request));
+    }
+
+    private static Map<String, String> getFieldErrorsMap(Exception e) {
+        Map<String, String> errorMap = new HashMap<>();
+        List<FieldError> fieldErrors;
+        if (e instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
+            fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
+        } else {
+            BindException bindException = (BindException) e;
+            fieldErrors = bindException.getBindingResult().getFieldErrors();
+        }
+        fieldErrors.forEach(fieldError -> errorMap.put(fieldError.getField(), fieldError.getDefaultMessage()));
+        return errorMap;
     }
 }

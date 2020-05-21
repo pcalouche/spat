@@ -1,7 +1,7 @@
 package com.pcalouche.spat.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.pcalouche.spat.util.ExceptionUtils;
+import com.pcalouche.spat.exception.ExceptionUtils;
+import com.pcalouche.spat.exception.JsonExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,8 @@ public class ControllerExceptionAdvice {
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionAdvice.class);
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<JsonNode> exceptionResponse(Exception e, HttpServletRequest request) {
+    public ResponseEntity<JsonExceptionResponse> exceptionResponse(Exception e, HttpServletRequest request) {
         logger.error(String.format("%s occurred", e.getClass().getName()), e);
-        return new ResponseEntity<>(ExceptionUtils.buildJsonErrorObject(e, request), ExceptionUtils.getHttpStatusForException(e));
+        return new ResponseEntity<>(ExceptionUtils.buildJsonErrorResponse(e, request), ExceptionUtils.getHttpStatusForException(e));
     }
 }

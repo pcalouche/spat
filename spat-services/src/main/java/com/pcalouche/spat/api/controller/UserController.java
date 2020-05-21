@@ -6,9 +6,12 @@ import com.pcalouche.spat.api.dto.UserDto;
 import com.pcalouche.spat.api.dto.UserEditRequest;
 import com.pcalouche.spat.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.api.exception.RestResourceNotFoundException;
+import com.pcalouche.spat.exception.JsonExceptionResponse;
 import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +35,11 @@ public class UserController {
     @GetMapping(value = "/current-user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "get current user"),
-            @ApiResponse(responseCode = "404", description = "current user no longer exists")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "current user no longer exists",
+                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+            )
     })
     public UserDto currentUser(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
         return userService.findByUsername(jwtAuthenticationToken.getPrincipal())
@@ -48,7 +55,11 @@ public class UserController {
     @Operation(description = "Create a new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "user created"),
-            @ApiResponse(responseCode = "403", description = "user already exists")
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "user already exists",
+                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+            )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
@@ -63,7 +74,11 @@ public class UserController {
     @Operation(description = "Update an existing user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "user update"),
-            @ApiResponse(responseCode = "404", description = "user not found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "user not found",
+                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+            )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PutMapping(value = "/{id}")
@@ -75,7 +90,11 @@ public class UserController {
     @Operation(description = "Delete an existing user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "user deleted"),
-            @ApiResponse(responseCode = "404", description = "user not found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "user not found",
+                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+            )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping(value = "/{id}")

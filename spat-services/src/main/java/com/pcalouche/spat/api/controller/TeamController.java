@@ -6,8 +6,11 @@ import com.pcalouche.spat.api.dto.TeamDto;
 import com.pcalouche.spat.api.dto.TeamEditRequest;
 import com.pcalouche.spat.api.exception.RestResourceForbiddenException;
 import com.pcalouche.spat.api.exception.RestResourceNotFoundException;
+import com.pcalouche.spat.exception.JsonExceptionResponse;
 import com.pcalouche.spat.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,7 +40,11 @@ public class TeamController {
     @Operation(description = "Create a new team")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "create team"),
-            @ApiResponse(responseCode = "403", description = "team already exists")
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "team already exists",
+                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+            )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
@@ -51,7 +58,11 @@ public class TeamController {
     @Operation(description = "Update an existing team")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "update team"),
-            @ApiResponse(responseCode = "404", description = "team not found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "team not found",
+                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+            )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PutMapping(value = "/{id}")
@@ -63,7 +74,11 @@ public class TeamController {
     @Operation(description = "Delete an existing team")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "delete team"),
-            @ApiResponse(responseCode = "404", description = "team not found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "team not found",
+                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+            )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping(value = "/{id}")
