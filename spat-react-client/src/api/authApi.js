@@ -33,7 +33,7 @@ export const logout = async (message) => {
   } finally {
     localStorage.clear();
     if (window.location.pathname !== '/login') {
-      window.location = '/login';
+      window.location = '/login?signOut=true';
     }
     if (message) {
       alert(message);

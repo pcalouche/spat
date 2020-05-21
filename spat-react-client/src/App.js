@@ -27,18 +27,23 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // Attempt to use refresh token cookie to acquire a token
-        // User will be directed to login if this fails, otherwise
-        // the current user is retrieved from server and set in the
-        // application's react context
-        await authApi.requestNewToken();
-        const currentUser = await userApi.currentUser();
-        setCurrentUser(currentUser);
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      if (urlSearchParams.get('signOut')) {
         setLoading(false);
-      } catch (error) {
-        await authApi.logout();
-        setLoading(false);
+      } else {
+        try {
+          // Attempt to use refresh token cookie to acquire a token
+          // User will be directed to login if this fails, otherwise
+          // the current user is retrieved from server and set in the
+          // application's react context
+          await authApi.requestNewToken();
+          const currentUser = await userApi.currentUser();
+          setCurrentUser(currentUser);
+          setLoading(false);
+        } catch (error) {
+          await authApi.logout();
+          setLoading(false);
+        }
       }
     };
     fetchData().then();
