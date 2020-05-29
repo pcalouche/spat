@@ -30,7 +30,6 @@ public class AuthController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "token and refresh token created")})
     @PostMapping(value = Endpoints.TOKEN)
     public ResponseEntity<String> token(@AuthenticationPrincipal UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
-        System.out.println("goaafdsf");
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, securityUtils.createRefreshTokenCookie(usernamePasswordAuthenticationToken.getName()).toString())
                 .body(securityUtils.createToken(usernamePasswordAuthenticationToken));
