@@ -124,7 +124,7 @@ public class JwtAuthenticationProviderTest {
         // All other cases are tested in SecurityUtilsTest.  This just checks that the conditional is hit
         assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(authenticationToken))
                 .isInstanceOf(BadCredentialsException.class)
-                .hasMessage("Bad credentials for username: activeUser");
+                .hasMessage("Bad credentials for username: activeUser.");
 
         // User service should be hit for non refresh token
         verify(userRepository, Mockito.times(1)).findByUsername("activeUser");

@@ -4,9 +4,9 @@ import com.pcalouche.spat.api.EndpointMessages;
 import com.pcalouche.spat.api.Endpoints;
 import com.pcalouche.spat.api.dto.UserDto;
 import com.pcalouche.spat.api.dto.UserEditRequest;
-import com.pcalouche.spat.api.exception.RestResourceForbiddenException;
-import com.pcalouche.spat.api.exception.RestResourceNotFoundException;
-import com.pcalouche.spat.exception.JsonExceptionResponse;
+import com.pcalouche.spat.exception.ApiErrorResponse;
+import com.pcalouche.spat.exception.ApiForbiddenException;
+import com.pcalouche.spat.exception.ApiNotFoundException;
 import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,12 +38,12 @@ public class UserController {
             @ApiResponse(
                     responseCode = "404",
                     description = "current user no longer exists",
-                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
     public UserDto currentUser(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
         return userService.findByUsername(jwtAuthenticationToken.getPrincipal())
-                .orElseThrow(() -> new RestResourceNotFoundException(EndpointMessages.CURRENT_USER_NOT_FOUND));
+                .orElseThrow(() -> new ApiNotFoundException(EndpointMessages.CURRENT_USER_NOT_FOUND));
     }
 
     @Operation(description = "Find all users")
@@ -58,14 +58,14 @@ public class UserController {
             @ApiResponse(
                     responseCode = "403",
                     description = "user already exists",
-                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public UserDto create(@RequestBody @Validated UserEditRequest userEditRequest) {
         if (userService.findByUsername(userEditRequest.getUsername()).isPresent()) {
-            throw new RestResourceForbiddenException(String.format(EndpointMessages.USER_ALREADY_EXISTS, userEditRequest.getUsername()));
+            throw new ApiForbiddenException(String.format(EndpointMessages.USER_ALREADY_EXISTS, userEditRequest.getUsername()));
         } else {
             return userService.create(userEditRequest);
         }
@@ -77,14 +77,14 @@ public class UserController {
             @ApiResponse(
                     responseCode = "404",
                     description = "user not found",
-                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PutMapping(value = "/{id}")
     public UserDto update(@PathVariable Integer id, @RequestBody @Validated UserEditRequest userEditRequest) {
         return userService.update(id, userEditRequest)
-                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id)));
+                .orElseThrow(() -> new ApiNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id)));
     }
 
     @Operation(description = "Delete an existing user")
@@ -93,7 +93,7 @@ public class UserController {
             @ApiResponse(
                     responseCode = "404",
                     description = "user not found",
-                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
     @PreAuthorize("hasAuthority('Admin')")
@@ -102,7 +102,7 @@ public class UserController {
         if (userService.findById(id).isPresent()) {
             userService.delete(id);
         } else {
-            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id));
+            throw new ApiNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id));
         }
     }
 }

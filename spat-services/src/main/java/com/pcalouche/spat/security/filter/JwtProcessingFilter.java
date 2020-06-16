@@ -1,7 +1,7 @@
 package com.pcalouche.spat.security.filter;
 
 import com.pcalouche.spat.api.Endpoints;
-import com.pcalouche.spat.exception.ExceptionUtils;
+import com.pcalouche.spat.exception.ApiErrorResponse;
 import com.pcalouche.spat.security.authentication.JwtAuthenticationToken;
 import com.pcalouche.spat.security.util.SecurityUtils;
 import org.springframework.http.HttpMethod;
@@ -68,6 +68,6 @@ public class JwtProcessingFilter extends AbstractAuthenticationProcessingFilter 
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
-        ExceptionUtils.writeExceptionToResponse(failed, request, response);
+        ApiErrorResponse.writeExceptionToResponse(failed, request, response);
     }
 }

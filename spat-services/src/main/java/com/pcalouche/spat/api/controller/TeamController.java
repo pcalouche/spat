@@ -4,9 +4,9 @@ import com.pcalouche.spat.api.EndpointMessages;
 import com.pcalouche.spat.api.Endpoints;
 import com.pcalouche.spat.api.dto.TeamDto;
 import com.pcalouche.spat.api.dto.TeamEditRequest;
-import com.pcalouche.spat.api.exception.RestResourceForbiddenException;
-import com.pcalouche.spat.api.exception.RestResourceNotFoundException;
-import com.pcalouche.spat.exception.JsonExceptionResponse;
+import com.pcalouche.spat.exception.ApiErrorResponse;
+import com.pcalouche.spat.exception.ApiForbiddenException;
+import com.pcalouche.spat.exception.ApiNotFoundException;
 import com.pcalouche.spat.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,14 +43,14 @@ public class TeamController {
             @ApiResponse(
                     responseCode = "403",
                     description = "team already exists",
-                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public TeamDto create(@RequestBody @Validated TeamEditRequest teamEditRequest) {
         if (teamService.findByName(teamEditRequest.getName()).isPresent()) {
-            throw new RestResourceForbiddenException(String.format(EndpointMessages.TEAM_ALREADY_EXISTS, teamEditRequest.getName()));
+            throw new ApiForbiddenException(String.format(EndpointMessages.TEAM_ALREADY_EXISTS, teamEditRequest.getName()));
         }
         return teamService.create(teamEditRequest);
     }
@@ -61,14 +61,14 @@ public class TeamController {
             @ApiResponse(
                     responseCode = "404",
                     description = "team not found",
-                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PutMapping(value = "/{id}")
     public TeamDto update(@PathVariable Integer id, @RequestBody @Validated TeamEditRequest teamEditRequest) {
         return teamService.update(id, teamEditRequest)
-                .orElseThrow(() -> new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id)));
+                .orElseThrow(() -> new ApiNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id)));
     }
 
     @Operation(description = "Delete an existing team")
@@ -77,7 +77,7 @@ public class TeamController {
             @ApiResponse(
                     responseCode = "404",
                     description = "team not found",
-                    content = @Content(schema = @Schema(implementation = JsonExceptionResponse.class))
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
     @PreAuthorize("hasAuthority('Admin')")
@@ -86,7 +86,7 @@ public class TeamController {
         if (teamService.findById(id).isPresent()) {
             teamService.delete(id);
         } else {
-            throw new RestResourceNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id));
+            throw new ApiNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id));
         }
     }
 }
