@@ -40,7 +40,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         try {
             claims = securityUtils.getClaimsFromToken(token);
         } catch (JwtException e) {
-            throw new BadCredentialsException("JSON web token was invalid");
+            throw new BadCredentialsException("JSON web token was invalid.");
         }
         String subject = claims.getSubject();
 
@@ -52,7 +52,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             if (optionalUser.isPresent()) {
                 SecurityUtils.validateUserAccountStatus(optionalUser.get());
             } else {
-                throw new BadCredentialsException(String.format("Bad credentials for username: %s", subject));
+                throw new BadCredentialsException(String.format("Bad credentials for username: %s.", subject));
             }
 
             simpleGrantedAuthorities = optionalUser.get().getAuthorities();
