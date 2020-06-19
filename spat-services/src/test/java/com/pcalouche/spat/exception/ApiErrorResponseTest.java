@@ -3,7 +3,6 @@ package com.pcalouche.spat.exception;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcalouche.spat.api.Endpoints;
-import com.pcalouche.spat.api.dto.TeamDto;
 import com.pcalouche.spat.api.dto.TeamEditRequest;
 import com.pcalouche.spat.security.util.SecurityUtils;
 import io.jsonwebtoken.JwtException;
@@ -30,12 +29,11 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ApiErrorResponseTest {
-    private MockHttpServletRequest request = MockMvcRequestBuilders.post(Endpoints.USERS)
+    private final MockHttpServletRequest request = MockMvcRequestBuilders.post(Endpoints.USERS)
             .queryParam("dummyParam", "dummyValue")
             .header(HttpHeaders.AUTHORIZATION, SecurityUtils.AUTH_HEADER_BEARER_PREFIX + "goodToken")
             .contentType(MediaType.APPLICATION_JSON)
             .buildRequest(new MockServletContext());
-    private MockHttpServletResponse response = new MockHttpServletResponse();
 
     @Test
     public void testApiErrorResponse() {
@@ -69,18 +67,18 @@ public class ApiErrorResponseTest {
         apiErrorResponse = new ApiErrorResponse(new HttpMessageConversionException("blah"), request);
         assertThat(apiErrorResponse.getHttpStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
 
-        //MethodArgumentNotValidException case
-        MethodArgumentNotValidException methodArgumentNotValidException = new MethodArgumentNotValidException(
-                new MethodParameter(getClass().getDeclaredMethod("testApiErrorResponseHttpStatus"), -1),
-                new BindException(new TeamDto(), "bad team argument")
-        );
-
         TeamEditRequest teamEditRequest = new TeamEditRequest();
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(teamEditRequest, "teamEditRequest");
         errors.rejectValue(
                 "name",
                 "name",
                 "Required"
+        );
+
+        //MethodArgumentNotValidException case
+        MethodArgumentNotValidException methodArgumentNotValidException = new MethodArgumentNotValidException(
+                new MethodParameter(getClass().getDeclaredMethod("testApiErrorResponseHttpStatus"), -1),
+                errors
         );
 
         apiErrorResponse = new ApiErrorResponse(methodArgumentNotValidException, request);
@@ -107,8 +105,7 @@ public class ApiErrorResponseTest {
         apiErrorResponse = new ApiErrorResponse(new ApiException("blah", HttpStatus.CONFLICT), request);
         assertThat(apiErrorResponse.getHttpStatus()).isEqualTo(HttpStatus.CONFLICT);
 
-        // Else catch anything else case
-
+        // All other exceptions case
         apiErrorResponse = new ApiErrorResponse(new RuntimeException("blah"), request);
         assertThat(apiErrorResponse.getHttpStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
