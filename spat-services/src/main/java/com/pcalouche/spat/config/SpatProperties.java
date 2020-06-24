@@ -18,6 +18,11 @@ import java.time.Duration;
 @Validated
 public class SpatProperties {
     /**
+     * The current version. This is set use Spring Boot's automatic
+     * property expansion.
+     */
+    private String version;
+    /**
      * What origins to allow access from
      */
     private String[] corsAllowedOrigins;

@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.github.pcalouche</groupId>
         <artifactId>spring-boot-project-pom</artifactId>
-        <version>2.0</version>
+        <version>2.1</version>
     </parent>
 
     <groupId>com.pcalouche.spat</groupId>
     <artifactId>spat-services</artifactId>
-    <version>5.0</version>
+    <version>5.1</version>
     <name>SPAT REST Services</name>
 
     <repositories>
