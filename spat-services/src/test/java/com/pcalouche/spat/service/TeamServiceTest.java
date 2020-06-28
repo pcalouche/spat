@@ -22,7 +22,7 @@ public class TeamServiceTest extends AbstractServiceTest {
 
     @BeforeEach
     public void before() {
-        teamService = new TeamServiceImpl(modelMapper, teamRepository);
+        teamService = new TeamServiceImpl(teamRepository);
 
         team1 = teamRepository.save(Team.builder()
                 .name("Team1")

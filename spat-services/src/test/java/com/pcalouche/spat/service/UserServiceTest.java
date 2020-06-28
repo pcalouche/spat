@@ -31,7 +31,7 @@ public class UserServiceTest extends AbstractServiceTest {
 
     @BeforeEach
     public void before() {
-        userService = new UserServiceImpl(modelMapper, userRepository, roleRepository);
+        userService = new UserServiceImpl(userRepository, roleRepository);
 
         adminRole = roleRepository.save(Role.builder()
                 .name("Admin")
@@ -92,7 +92,7 @@ public class UserServiceTest extends AbstractServiceTest {
                         .username(user2.getUsername())
                         .roleDtos(
                                 Stream.of(
-                                        modelMapper.map(adminRole, RoleDto.class)
+                                        RoleDto.map(adminRole)
                                 ).collect(Collectors.toSet())
                         )
                         .build()
@@ -179,7 +179,7 @@ public class UserServiceTest extends AbstractServiceTest {
                         .username(user2.getUsername())
                         .roleDtos(
                                 Stream.of(
-                                        modelMapper.map(adminRole, RoleDto.class)
+                                        RoleDto.map(adminRole)
                                 ).collect(Collectors.toSet())
                         )
                         .build()

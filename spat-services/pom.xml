@@ -55,11 +55,6 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
         </dependency>
-        <!--ModelMapper-->
-        <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-        </dependency>
         <!--SpringDoc-->
         <dependency>
             <groupId>org.springdoc</groupId>

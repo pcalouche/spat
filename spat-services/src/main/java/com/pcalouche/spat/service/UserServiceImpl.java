@@ -7,7 +7,6 @@ import com.pcalouche.spat.entity.User;
 import com.pcalouche.spat.repository.RoleRepository;
 import com.pcalouche.spat.repository.UserRepository;
 import com.pcalouche.spat.security.util.SecurityUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +17,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepository, RoleRepository roleRepository) {
-        this.modelMapper = modelMapper;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
@@ -32,21 +29,21 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Optional<UserDto> findById(Integer id) {
         return userRepository.findById(id)
-                .map(user -> modelMapper.map(user, UserDto.class));
+                .map(UserDto::map);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<UserDto> findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .map(user -> modelMapper.map(user, UserDto.class));
+                .map(UserDto::map);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userRepository.findAll(Sort.by("username")).stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
+                .map(UserDto::map)
                 .collect(Collectors.toList());
     }
 
@@ -68,33 +65,29 @@ public class UserServiceImpl implements UserService {
                     .ifPresent(role -> user.getRoles().add(role));
         }
 
-        return modelMapper.map(userRepository.save(user), UserDto.class);
+        return UserDto.map(userRepository.save(user));
     }
 
     @Override
     @Transactional
     public Optional<UserDto> update(Integer id, UserEditRequest userEditRequest) {
-        Optional<UserDto> userDtoOptional = Optional.empty();
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setUsername(userEditRequest.getUsername());
-            user.setAccountNonExpired(userEditRequest.isAccountNonExpired());
-            user.setAccountNonLocked(userEditRequest.isAccountNonLocked());
-            user.setCredentialsNonExpired(userEditRequest.isCredentialsNonExpired());
-            user.setEnabled(userEditRequest.isEnabled());
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setUsername(userEditRequest.getUsername());
+                    user.setAccountNonExpired(userEditRequest.isAccountNonExpired());
+                    user.setAccountNonLocked(userEditRequest.isAccountNonLocked());
+                    user.setCredentialsNonExpired(userEditRequest.isCredentialsNonExpired());
+                    user.setEnabled(userEditRequest.isEnabled());
 
-            user.getRoles().clear();
+                    user.getRoles().clear();
 
-            for (RoleDto roleDto : userEditRequest.getRoleDtos()) {
-                roleRepository.findByName(roleDto.getName())
-                        .ifPresent(role -> user.getRoles().add(role));
-            }
+                    for (RoleDto roleDto : userEditRequest.getRoleDtos()) {
+                        roleRepository.findByName(roleDto.getName())
+                                .ifPresent(role -> user.getRoles().add(role));
+                    }
 
-            userDtoOptional = Optional.of(modelMapper.map(userRepository.save(user), UserDto.class));
-        }
-
-        return userDtoOptional;
+                    return UserDto.map(userRepository.save(user));
+                });
     }
 
     @Override
