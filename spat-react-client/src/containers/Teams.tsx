@@ -4,27 +4,31 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {useAppContext} from '../hooks';
 import {teamApi} from '../api';
+import {Team} from '../types';
 import {ConfirmationModal, TeamModal} from '../components';
 
-const Teams = () => {
+const Teams: React.FC = () => {
   const {isAdmin} = useAppContext();
   const [loadError, setLoadError] = useState(false);
-  const [teams, setTeams] = useState(undefined);
-  const [selectedTeam, setSelectedTeam] = useState(undefined);
-  const [teamModalState, setTeamModalState] = useState({isOpen: false, mode: undefined});
+  const [teams, setTeams] = useState<Team[] | undefined>(undefined);
+  const [selectedTeam, setSelectedTeam] = useState<Team>({id: -1, name: ''});
+  const [teamModalState, setTeamModalState] = useState<{isOpen: boolean, mode: 'Add' | 'Edit'}>({
+    isOpen: false,
+    mode: 'Add'
+  });
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
   const addTeamHandler = () => {
-    setSelectedTeam({name: ''});
+    setSelectedTeam({id: -1, name: ''});
     setTeamModalState({isOpen: true, mode: 'Add'});
   };
 
-  const editTeamHandler = team => {
+  const editTeamHandler = (team: Team) => {
     setSelectedTeam(team);
     setTeamModalState({isOpen: true, mode: 'Edit'});
   };
 
-  const deleteTeamHandler = team => {
+  const deleteTeamHandler = (team: Team) => {
     setSelectedTeam(team);
     setDeleteModalIsOpen(true);
   };
@@ -32,13 +36,13 @@ const Teams = () => {
   const deleteSelectedTeam = async () => {
     try {
       await teamApi.deleteTeam(selectedTeam.id);
-      setTeams(prevUsers => prevUsers.filter(team => team.id !== selectedTeam.id));
+      setTeams(prevTeams => prevTeams ? prevTeams.filter(team => team.id !== selectedTeam.id) : []);
       setDeleteModalIsOpen(false);
     } catch (error) {
       // Handle cases where it may have been deleted on another tab or someone else and
       // the current screen is stale
       if (error.status === 404) {
-        setTeams(prevUsers => prevUsers.filter(user => user.id !== selectedTeam.id));
+        setTeams(prevTeams => prevTeams ? prevTeams.filter(team => team.id !== selectedTeam.id) : []);
         setDeleteModalIsOpen(false);
       } else {
         console.error(error);
@@ -61,7 +65,7 @@ const Teams = () => {
   }, [teams]);
 
   return (
-    <Container fluid className="Users mt-5">
+    <Container fluid className="Teams mt-5">
       <Card>
         <CardHeader tag="h5">Teams</CardHeader>
         {loadError ?
@@ -116,9 +120,9 @@ const Teams = () => {
                        team={selectedTeam}
                        submitCallback={async () => {
                          setTeams(await teamApi.teams());
-                         setTeamModalState({isOpen: false, mode: undefined});
+                         setTeamModalState({isOpen: false, mode: 'Add'});
                        }}
-                       cancelCallback={() => setTeamModalState({isOpen: false, mode: undefined})}>
+                       cancelCallback={() => setTeamModalState({isOpen: false, mode: 'Add'})}>
             </TeamModal>
             }
             {deleteModalIsOpen &&
@@ -126,7 +130,7 @@ const Teams = () => {
                                confirmCallback={deleteSelectedTeam}
                                cancelCallback={() => setDeleteModalIsOpen(false)}
                                confirmButtonColor="danger">
-              Are you sure you want to delete <span className="text-danger font-weight-bold">{selectedTeam.name}</span>?
+              Are you sure you want to delete <span className="text-danger font-weight-bold">{selectedTeam?.name}</span>?
             </ConfirmationModal>
             }
           </>

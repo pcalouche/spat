@@ -4,17 +4,29 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {useAppContext} from '../hooks';
 import {userApi} from '../api';
+import {User} from '../types';
 import {ConfirmationModal, UserModal} from '../components';
 
 const Users = () => {
   const {isAdmin} = useAppContext();
   const [loadError, setLoadError] = useState(false);
-  const [users, setUsers] = useState(undefined);
-  const [selectedUser, setSelectedUser] = useState(undefined);
-  const [userModalState, setUserModalState] = useState({isOpen: false, mode: undefined});
+  const [users, setUsers] = useState<User[] | undefined>(undefined);
+  const [selectedUser, setSelectedUser] = useState<User>({
+    id: -1,
+    username: '',
+    roles: [],
+    accountNonExpired: false,
+    accountNonLocked: false,
+    credentialsNonExpired: false,
+    enabled: false
+  });
+  const [userModalState, setUserModalState] = useState<{isOpen: boolean, mode: 'Add' | 'Edit'}>({
+    isOpen: false,
+    mode: 'Add'
+  });
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const getAccountStatusDisplay = user => {
+  const getAccountStatusDisplay = (user: User) => {
     const accountStatus = [];
     if (user.enabled) {
       accountStatus.push('Enabled');
@@ -35,6 +47,7 @@ const Users = () => {
 
   const addUserHandler = () => {
     setSelectedUser({
+      id: -1,
       username: '',
       roles: [],
       enabled: true,
@@ -45,12 +58,12 @@ const Users = () => {
     setUserModalState({isOpen: true, mode: 'Add'});
   };
 
-  const editUserHandler = user => {
+  const editUserHandler = (user: User) => {
     setSelectedUser(user);
     setUserModalState({isOpen: true, mode: 'Edit'});
   };
 
-  const deleteUserHandler = user => {
+  const deleteUserHandler = (user: User) => {
     setSelectedUser(user);
     setDeleteModalIsOpen(true);
   };
@@ -58,13 +71,13 @@ const Users = () => {
   const deleteSelectedUser = async () => {
     try {
       await userApi.deleteUser(selectedUser.id);
-      setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
+      setUsers(prevUsers => prevUsers ? prevUsers.filter(user => user.id !== selectedUser.id) : []);
       setDeleteModalIsOpen(false);
     } catch (error) {
       // Handle cases where it may have been deleted on another tab or someone else and
       // the current screen is stale
       if (error.status === 404) {
-        setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
+        setUsers(prevUsers => prevUsers ? prevUsers.filter(user => user.id !== selectedUser.id) : []);
         setDeleteModalIsOpen(false);
       } else {
         console.error(error);
@@ -146,9 +159,9 @@ const Users = () => {
                        user={selectedUser}
                        submitCallback={async () => {
                          setUsers(await userApi.users());
-                         setUserModalState({isOpen: false, mode: undefined});
+                         setUserModalState({isOpen: false, mode: 'Add'});
                        }}
-                       cancelCallback={() => setUserModalState({isOpen: false, mode: undefined})}>
+                       cancelCallback={() => setUserModalState({isOpen: false, mode: 'Add'})}>
             </UserModal>
             }
             {deleteModalIsOpen &&

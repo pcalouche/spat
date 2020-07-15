@@ -1,7 +1,7 @@
 import config from '../config';
 import * as apiUtils from './apiUtils';
 
-export const login = async ({username, password}) => {
+export const login = async (username: string, password: string) => {
   const response = await fetch(`${config.apiUrl}/auth/token`, {
     credentials: 'include',
     method: 'POST',
@@ -22,7 +22,7 @@ export const requestNewToken = async () => {
   localStorage.setItem('token', jwt);
 };
 
-export const logout = async (message) => {
+export const logout = async (message?: string) => {
   try {
     await fetch(`${config.apiUrl}/auth/token`, {
       credentials: 'include',
@@ -33,7 +33,7 @@ export const logout = async (message) => {
   } finally {
     localStorage.clear();
     if (window.location.pathname !== '/login') {
-      window.location = '/login?signOut=true';
+      window.location.href = '/login?signOut=true';
     }
     if (message) {
       alert(message);
@@ -46,9 +46,10 @@ export const monitorSession = () => {
   const tokenDuration = 15 * 60 * 1000;
   const checkSession = async () => {
     if (localStorage.getItem('token')) {
-      const lastActivity = new Date(localStorage.getItem('lastActivity'));
+      const lastActivityFromLocalStorage = localStorage.getItem('lastActivity');
+      const lastActivity = typeof lastActivityFromLocalStorage === 'string' ? new Date(lastActivityFromLocalStorage) : new Date();
       console.debug('lastActivity', lastActivity);
-      const timeElapsed = new Date() - lastActivity;
+      const timeElapsed = new Date().getTime() - lastActivity.getTime();
       console.debug('timeElapsed', timeElapsed);
       const timeLeft = tokenDuration - timeElapsed;
       console.debug('timeLeft', timeLeft);

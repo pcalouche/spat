@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Form,
@@ -12,23 +11,43 @@ import {
   ModalFooter,
   ModalHeader
 } from 'reactstrap';
-import {Field, Formik} from 'formik';
+import {Field, FieldProps, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 
 import {teamApi} from '../api';
+import {Team} from '../types';
 
-const TeamModal = ({isOpen, mode, team, submitCallback, cancelCallback}) => {
+type Props = {
+  isOpen: boolean
+  mode: 'Add' | 'Edit'
+  team: Team
+  submitCallback: () => Promise<void>
+  cancelCallback: (e: React.MouseEvent<HTMLButtonElement>) => void
+}
+
+type TeamFormFields = {
+  name?: string
+}
+
+const TeamModal: React.FC<Props> = ({
+                                      isOpen,
+                                      mode = 'Add',
+                                      team,
+                                      submitCallback,
+                                      cancelCallback
+                                    }) => {
   const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const initialValues = {
-    name: team.name
+  const form: {initialValues: TeamFormFields, validationSchema: Yup.ObjectSchema} = {
+    initialValues: {
+      name: team?.name || ''
+    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required('Required')
+    })
   };
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Required')
-  });
-
-  const handleSubmit = async (formikValues, formikActions) => {
+  const handleSubmit = async (formikValues: TeamFormFields, formikHelpers: FormikHelpers<TeamFormFields>) => {
     const teamRequest = {...formikValues};
 
     try {
@@ -37,17 +56,17 @@ const TeamModal = ({isOpen, mode, team, submitCallback, cancelCallback}) => {
       } else {
         await teamApi.updateTeam(team.id, teamRequest);
       }
-      formikActions.setSubmitting(false);
-      submitCallback(formikValues);
+      formikHelpers.setSubmitting(false);
+      await submitCallback();
     } catch (error) {
-      formikActions.setSubmitting(false);
+      formikHelpers.setSubmitting(false);
       setErrorMessage(error.message);
     }
   };
 
   return (
-    <Formik initialValues={initialValues}
-            validationSchema={validationSchema}
+    <Formik initialValues={form.initialValues}
+            validationSchema={form.validationSchema}
             onSubmit={handleSubmit}>
       {(formikProps) => (
         <Modal isOpen={isOpen}
@@ -61,13 +80,13 @@ const TeamModal = ({isOpen, mode, team, submitCallback, cancelCallback}) => {
               <FormGroup>
                 <Label>Username</Label>
                 <Field name="name">
-                  {({field, meta}) => (
+                  {({field, meta}: FieldProps) => (
                     <Input {...field}
                            placeholder="Name"
                            invalid={!!(meta.touched && meta.error)}/>
                   )}
                 </Field>
-                <FormFeedback>{formikProps.errors.username}</FormFeedback>
+                <FormFeedback>{formikProps.errors.name}</FormFeedback>
               </FormGroup>
             </ModalBody>
             <ModalFooter>
@@ -85,18 +104,6 @@ const TeamModal = ({isOpen, mode, team, submitCallback, cancelCallback}) => {
       )}
     </Formik>
   );
-};
-
-TeamModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  mode: PropTypes.oneOf(['Add', 'Edit']).isRequired,
-  team: PropTypes.object.isRequired,
-  submitCallback: PropTypes.func.isRequired,
-  cancelCallback: PropTypes.func.isRequired
-};
-
-TeamModal.defaultProps = {
-  mode: 'Add'
 };
 
 export default TeamModal;

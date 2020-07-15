@@ -11,6 +11,7 @@ import {Login, Teams, Users} from './containers';
 // Add Font Awesome icons
 library.add(faPencilAlt, faTrashAlt, faStroopwafel);
 
+
 const App = () => {
   const history = useHistory();
   const {currentUser, setCurrentUser} = useAppContext();
@@ -50,7 +51,8 @@ const App = () => {
   }, [setCurrentUser, history]);
 
   const renderRoutes = () => {
-    return loading ? null
+    return loading ?
+      null
       :
       currentUser ?
         (

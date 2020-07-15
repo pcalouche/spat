@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -75,6 +76,7 @@ public class ApiErrorResponse {
             throws IOException {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(e, request);
         response.setStatus(apiErrorResponse.getStatus());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getWriter(), apiErrorResponse);
     }
 

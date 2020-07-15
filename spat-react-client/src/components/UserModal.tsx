@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   CustomInput,
@@ -13,33 +12,58 @@ import {
   ModalFooter,
   ModalHeader
 } from 'reactstrap';
-import {Field, Formik} from 'formik';
+import {Field, FieldProps, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 
 import {userApi} from '../api';
+import {User} from '../types';
 
-const UserModal = ({isOpen, mode, user, submitCallback, cancelCallback}) => {
+type Props = {
+  isOpen: boolean,
+  mode: 'Add' | 'Edit',
+  user: User
+  submitCallback: () => Promise<void>,
+  cancelCallback: (e: React.MouseEvent<HTMLButtonElement>) => void
+}
+
+type UserFormFields = {
+  username: string
+  isAdmin: boolean
+  enabled: boolean
+  accountLocked: boolean
+  credentialsExpired: boolean
+  accountExpired: boolean
+}
+
+const UserModal: React.FC<Props> = ({
+                                      isOpen,
+                                      mode = 'Add',
+                                      user,
+                                      submitCallback,
+                                      cancelCallback
+                                    }) => {
   const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const initialValues = {
-    username: user.username,
-    isAdmin: user.roles.filter(role => role.name === 'Admin').length === 1,
-    enabled: user.enabled,
-    accountLocked: !user.accountNonLocked,
-    credentialsExpired: !user.credentialsNonExpired,
-    accountExpired: !user.accountNonExpired
+  const form: {initialValues: UserFormFields, validationSchema: Yup.ObjectSchema} = {
+    initialValues: {
+      username: user.username,
+      isAdmin: user.roles.filter(role => role.name === 'Admin').length === 1,
+      enabled: user.enabled,
+      accountLocked: !user.accountNonLocked,
+      credentialsExpired: !user.credentialsNonExpired,
+      accountExpired: !user.accountNonExpired
+    },
+    validationSchema: Yup.object().shape({
+      username: Yup.string().required('Required'),
+      isAdmin: Yup.bool(),
+      enabled: Yup.bool(),
+      accountLocked: Yup.bool(),
+      credentialsExpired: Yup.bool(),
+      accountExpired: Yup.bool()
+    })
   };
 
-  const validationSchema = Yup.object().shape({
-    username: Yup.string().required('Required'),
-    isAdmin: Yup.bool(),
-    enabled: Yup.bool(),
-    accountLocked: Yup.bool(),
-    credentialsExpired: Yup.bool(),
-    accountExpired: Yup.bool()
-  });
-
-  const handleSubmit = async (formikValues, formikActions) => {
+  const handleSubmit = async (formikValues: UserFormFields, formikActions: FormikHelpers<UserFormFields>) => {
     const userRequest = {
       username: formikValues.username,
       roles: formikValues.isAdmin ? [{name: 'Admin'}] : [],
@@ -56,7 +80,7 @@ const UserModal = ({isOpen, mode, user, submitCallback, cancelCallback}) => {
         await userApi.updateUser(user.id, userRequest);
       }
       formikActions.setSubmitting(false);
-      submitCallback(formikValues);
+      await submitCallback();
     } catch (error) {
       formikActions.setSubmitting(false);
       setErrorMessage(error.message);
@@ -64,8 +88,8 @@ const UserModal = ({isOpen, mode, user, submitCallback, cancelCallback}) => {
   };
 
   return (
-    <Formik initialValues={initialValues}
-            validationSchema={validationSchema}
+    <Formik initialValues={form.initialValues}
+            validationSchema={form.validationSchema}
             onSubmit={handleSubmit}>
       {(formikProps) => (
         <Modal isOpen={isOpen}
@@ -79,7 +103,7 @@ const UserModal = ({isOpen, mode, user, submitCallback, cancelCallback}) => {
               <FormGroup>
                 <Label>Username</Label>
                 <Field name="username">
-                  {({field, meta}) => (
+                  {({field, meta}: FieldProps) => (
                     <Input {...field}
                            placeholder="Username"
                            invalid={!!(meta.touched && meta.error)}/>
@@ -90,7 +114,7 @@ const UserModal = ({isOpen, mode, user, submitCallback, cancelCallback}) => {
               <FormGroup>
                 <Label>Roles</Label>
                 <Field name="isAdmin">
-                  {({field}) => (
+                  {({field}: FieldProps) => (
                     <CustomInput  {...field} type="switch" id="isAdminSwitch" label="Admin" checked={field.value}/>
                   )}
                 </Field>
@@ -98,22 +122,22 @@ const UserModal = ({isOpen, mode, user, submitCallback, cancelCallback}) => {
               <FormGroup>
                 <Label>User Status</Label>
                 <Field name="enabled">
-                  {({field}) => (
+                  {({field}: FieldProps) => (
                     <CustomInput  {...field} type="switch" id="enabledSwitch" label="Enabled" checked={field.value}/>
                   )}
                 </Field>
                 <Field name="accountLocked">
-                  {({field}) => (
+                  {({field}: FieldProps) => (
                     <CustomInput  {...field} type="switch" id="accountLockedSwitch" label="Locked" checked={field.value}/>
                   )}
                 </Field>
                 <Field name="credentialsExpired">
-                  {({field}) => (
+                  {({field}: FieldProps) => (
                     <CustomInput  {...field} type="switch" id="credentialsExpiredSwitch" label="Credentials Expired" checked={field.value}/>
                   )}
                 </Field>
                 <Field name="accountExpired">
-                  {({field}) => (
+                  {({field}: FieldProps) => (
                     <CustomInput  {...field} type="switch" id="accountExpiredSwitch" label="Expired" checked={field.value}/>
                   )}
                 </Field>
@@ -134,18 +158,6 @@ const UserModal = ({isOpen, mode, user, submitCallback, cancelCallback}) => {
       )}
     </Formik>
   );
-};
-
-UserModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  mode: PropTypes.oneOf(['Add', 'Edit']).isRequired,
-  user: PropTypes.object.isRequired,
-  submitCallback: PropTypes.func.isRequired,
-  cancelCallback: PropTypes.func.isRequired
-};
-
-UserModal.defaultProps = {
-  mode: 'Add'
 };
 
 export default UserModal;
