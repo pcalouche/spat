@@ -12,7 +12,7 @@
 
     <groupId>com.pcalouche.spat</groupId>
     <artifactId>spat-services</artifactId>
-    <version>5.1</version>
+    <version>5.2.0</version>
     <name>SPAT REST Services</name>
 
     <repositories>
