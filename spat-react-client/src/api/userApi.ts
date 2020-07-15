@@ -1,7 +1,8 @@
 import config from '../config';
 import * as apiUtils from './apiUtils';
+import {User} from '../types';
 
-export const currentUser = async () => {
+export const currentUser = async (): Promise<User> => {
   const response = await fetch(`${config.apiUrl}/users/current-user`, {
     method: 'GET',
     headers: {
@@ -9,10 +10,10 @@ export const currentUser = async () => {
       ...apiUtils.buildJwtHeader()
     }
   });
-  return apiUtils.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse<User>(response);
 };
 
-export const users = async () => {
+export const users = async (): Promise<User[]> => {
   const response = await fetch(`${config.apiUrl}/users`, {
     method: 'GET',
     headers: {
@@ -20,10 +21,10 @@ export const users = async () => {
       ...apiUtils.buildJwtHeader()
     }
   });
-  return apiUtils.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse<User[]>(response);
 };
 
-export const createUser = async (userRequest) => {
+export const createUser = async (userRequest: object): Promise<User> => {
   const response = await fetch(`${config.apiUrl}/users`, {
     method: 'POST',
     headers: {
@@ -32,10 +33,10 @@ export const createUser = async (userRequest) => {
     },
     body: JSON.stringify(userRequest)
   });
-  return apiUtils.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse<User>(response);
 };
 
-export const updateUser = async (id, userRequest) => {
+export const updateUser = async (id: number, userRequest: object): Promise<User> => {
   const response = await fetch(`${config.apiUrl}/users/${id}`, {
     method: 'PUT',
     headers: {
@@ -44,10 +45,10 @@ export const updateUser = async (id, userRequest) => {
     },
     body: JSON.stringify(userRequest)
   });
-  return apiUtils.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse<User>(response);
 };
 
-export const deleteUser = async (id) => {
+export const deleteUser = async (id: number) => {
   const response = await fetch(`${config.apiUrl}/users/${id}`, {
     method: 'DELETE',
     headers: {

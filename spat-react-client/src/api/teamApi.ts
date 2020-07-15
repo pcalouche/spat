@@ -1,7 +1,8 @@
 import config from '../config';
 import * as apiUtils from './apiUtils';
+import {Team} from '../types';
 
-export const teams = async () => {
+export const teams = async (): Promise<Team[]> => {
   const response = await fetch(`${config.apiUrl}/teams`, {
     method: 'GET',
     headers: {
@@ -9,10 +10,10 @@ export const teams = async () => {
       ...apiUtils.buildJwtHeader()
     }
   });
-  return apiUtils.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse<Team[]>(response);
 };
 
-export const createTeam = async (teamRequest) => {
+export const createTeam = async (teamRequest: object): Promise<Team> => {
   const response = await fetch(`${config.apiUrl}/teams`, {
     method: 'POST',
     headers: {
@@ -21,10 +22,10 @@ export const createTeam = async (teamRequest) => {
     },
     body: JSON.stringify(teamRequest)
   });
-  return apiUtils.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse<Team>(response);
 };
 
-export const updateTeam = async (id, teamRequest) => {
+export const updateTeam = async (id: number, teamRequest: object): Promise<Team> => {
   const response = await fetch(`${config.apiUrl}/teams/${id}`, {
     method: 'PUT',
     headers: {
@@ -33,10 +34,10 @@ export const updateTeam = async (id, teamRequest) => {
     },
     body: JSON.stringify(teamRequest)
   });
-  return apiUtils.handleJsonResponse(response);
+  return apiUtils.handleJsonResponse<Team>(response);
 };
 
-export const deleteTeam = async (id) => {
+export const deleteTeam = async (id: number) => {
   const response = await fetch(`${config.apiUrl}/teams/${id}`, {
     method: 'DELETE',
     headers: {

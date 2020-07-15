@@ -4,7 +4,7 @@ export const jsonHeader = {
   'Content-Type': 'application/json;'
 };
 
-export const buildBasicAuthHeader = (username, password) => {
+export const buildBasicAuthHeader = (username: string, password: string) => {
   return {
     'Authorization': 'Basic ' + btoa(username + ':' + password)
   };
@@ -16,11 +16,11 @@ export const buildJwtHeader = () => {
   };
 };
 
-const updateLastActivity = () => {
+const updateLastActivity = (): void => {
   localStorage.setItem('lastActivity', new Date().toISOString());
 };
 
-const handleError = async (response) => {
+const handleError = async (response: Response) => {
   const contentType = response.headers.get('content-type');
   if (contentType && contentType.indexOf('application/json') !== -1) {
     // throw the json response as an error to get status, code, message, etc.
@@ -31,28 +31,28 @@ const handleError = async (response) => {
       !response.url.includes('/auth/refresh-token') &&
       jsonError.status === 401) {
       await authApi.logout('Authorization error. You are being signed out.');
-      window.location = '/login';
+      window.location.href = '/login';
     } else {
-      throw jsonError;
+      return jsonError;
     }
   } else {
     // throw the response as an error to get status code, message, etc.
     console.error(response);
-    throw response;
+    return response;
   }
 };
 
-export const handleJsonResponse = async (response) => {
+export const handleJsonResponse = async <T>(response: Response): Promise<T> => {
   if (response.ok) {
     // Update last activity on successful server responses
     updateLastActivity();
     return response.json();
   } else {
-    await handleError(response);
+    throw await handleError(response);
   }
 };
 
-export const handleTextResponse = async response => {
+export const handleTextResponse = async (response: Response): Promise<string> => {
   if (response.ok) {
     // Update last activity on successful server responses, unless it was a refresh token request.
     // This request is considered a background request and not a user initiated one.
@@ -61,15 +61,15 @@ export const handleTextResponse = async response => {
     }
     return response.text();
   } else {
-    await handleError(response);
+    throw await handleError(response);
   }
 };
 
-export const handleEmptyResponse = async response => {
+export const handleEmptyResponse = async (response: Response): Promise<void> => {
   if (response.ok) {
     // Update last activity on successful server responses
     updateLastActivity();
   } else {
-    await handleError(response);
+    throw await handleError(response);
   }
 };

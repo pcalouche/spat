@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import {Link, NavLink as RRNavLink} from 'react-router-dom';
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavLink} from 'reactstrap';
 
-import {useAppContext} from '../hooks';
 import {authApi} from '../api';
+import {useAppContext} from '../hooks';
 
-const AppBar = () => {
+const AppBar: React.FC = () => {
   const {currentUser, setCurrentUser} = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
