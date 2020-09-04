@@ -65,10 +65,11 @@ export const handleTextResponse = async (response: Response): Promise<string> =>
   }
 };
 
-export const handleEmptyResponse = async (response: Response): Promise<void> => {
+export const handleEmptyResponse = async (response: Response): Promise<Response> => {
   if (response.ok) {
     // Update last activity on successful server responses
     updateLastActivity();
+    return response;
   } else {
     throw await handleError(response);
   }

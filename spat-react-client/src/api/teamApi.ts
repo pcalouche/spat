@@ -37,7 +37,7 @@ export const updateTeam = async (id: number, teamRequest: object): Promise<Team>
   return apiUtils.handleJsonResponse<Team>(response);
 };
 
-export const deleteTeam = async (id: number) => {
+export const deleteTeam = async (id: number): Promise<Response> => {
   const response = await fetch(`${config.apiUrl}/teams/${id}`, {
     method: 'DELETE',
     headers: {

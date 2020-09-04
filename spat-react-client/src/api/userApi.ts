@@ -48,7 +48,7 @@ export const updateUser = async (id: number, userRequest: object): Promise<User>
   return apiUtils.handleJsonResponse<User>(response);
 };
 
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (id: number): Promise<Response> => {
   const response = await fetch(`${config.apiUrl}/users/${id}`, {
     method: 'DELETE',
     headers: {
