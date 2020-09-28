@@ -12,7 +12,7 @@
 
     <groupId>com.pcalouche.spat</groupId>
     <artifactId>spat-services</artifactId>
-    <version>5.2.1</version>
+    <version>5.3.0</version>
     <name>SPAT REST Services</name>
 
     <repositories>
@@ -21,6 +21,12 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
+    <properties>
+        <!--This application is compatible with Java 8 and Java 11-->
+        <!--<java.version>8</java.version>-->
+        <java.version>11</java.version>
+    </properties>
 
     <dependencies>
         <!--Application Dependencies Below-->

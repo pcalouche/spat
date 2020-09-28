@@ -49,13 +49,13 @@ when it will expire less than two minutes. In addition, if the user has been ina
  
 ## Required Software
 
-* Java 8
+* Java 8 or Java 11
 * Node.js
 
 ## Technologies, Languages, and Frameworks
 
 ### Backend
-* Java 8 (on my list to upgrade to Java 11)
+* Java 8 (min) or 11 (Untested with other versions.)
 * Maven 3.6.3
 * Spring Boot 2
 * Spring Security that utilizes JSON Web Tokens
