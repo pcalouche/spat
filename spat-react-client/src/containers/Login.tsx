@@ -1,19 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Form,
-  FormFeedback,
-  FormGroup,
-  Input,
-  Label,
-  Row
-} from 'reactstrap';
+import {Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
 import {Field, FieldProps, Formik, FormikHelpers, FormikProps} from 'formik';
 import * as Yup from 'yup';
 
@@ -72,53 +59,55 @@ const Login: React.FC = () => {
       <Row>
         <Col>
           <Card className="m-auto">
-            <CardHeader className="font-weight-bold text-center">Login</CardHeader>
-            <CardBody>
+            <Card.Header className="font-weight-bold text-center">Login</Card.Header>
+            <Card.Body>
               {errorMessage && <p className="text-center text-danger">{errorMessage}</p>}
               <Formik initialValues={form.initialValues}
                       validationSchema={form.validationSchema}
                       onSubmit={handleSubmit}>
                 {(formikProps: FormikProps<LoginFormFields>) =>
                   <Form onSubmit={formikProps.handleSubmit}>
-                    <FormGroup>
-                      <Label for="username">Username</Label>
+                    <Form.Group controlId="username">
+                      <Form.Label>Username</Form.Label>
                       <Field name="username">
                         {({field, meta}: FieldProps) => (
-                          <Input {...field}
-                                 placeholder="Username"
-                                 id="username"
-                                 autoComplete="username"
-                                 invalid={!!(meta.touched && meta.error)}/>
+                          <Form.Control {...field}
+                                        placeholder="Username"
+                                        autoComplete="username"
+                                        isInvalid={!!(meta.touched && meta.error)}/>
                         )}
                       </Field>
-                      <FormFeedback>{formikProps.errors.username}</FormFeedback>
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="password">Password</Label>
+                      <Form.Control.Feedback type="invalid">
+                        {formikProps.errors.username}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="password">
+                      <Form.Label>Password</Form.Label>
                       <Field name="password">
                         {({field, meta}: FieldProps) => (
-                          <Input {...field}
-                                 type="password"
-                                 id="password"
-                                 autoComplete="current-password"
-                                 placeholder="Password"
-                                 invalid={!!(meta.touched && meta.error)}/>
+                          <Form.Control {...field}
+                                        type="password"
+                                        autoComplete="current-password"
+                                        placeholder="Password"
+                                        isInvalid={!!(meta.touched && meta.error)}/>
                         )}
                       </Field>
-                      <FormFeedback>{formikProps.errors.username}</FormFeedback>
-                    </FormGroup>
-                    <FormGroup>
+                      <Form.Control.Feedback type="invalid">
+                        {formikProps.errors.password}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group>
                       <Button type="submit"
-                              color="primary"
+                              variant="primary"
                               block
                               disabled={!formikProps.isValid || formikProps.isSubmitting}>
                         Login
                       </Button>
-                    </FormGroup>
+                    </Form.Group>
                   </Form>
                 }
               </Formik>
-            </CardBody>
+            </Card.Body>
           </Card>
         </Col>
       </Row>

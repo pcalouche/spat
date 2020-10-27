@@ -1,17 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Button,
-  CustomInput,
-  Form,
-  FormFeedback,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader
-} from 'reactstrap';
+import {Button, Form, Modal} from 'react-bootstrap';
 import {Field, FieldProps, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 
@@ -19,7 +7,7 @@ import {userApi} from '../api';
 import {User} from '../types';
 
 type Props = {
-  isOpen: boolean,
+  show: boolean,
   mode: 'Add' | 'Edit',
   user: User
   submitCallback: () => Promise<void>,
@@ -36,7 +24,7 @@ type UserFormFields = {
 }
 
 const UserModal: React.FC<Props> = ({
-                                      isOpen,
+                                      show,
                                       mode = 'Add',
                                       user,
                                       submitCallback,
@@ -90,69 +78,97 @@ const UserModal: React.FC<Props> = ({
   return (
     <Formik initialValues={form.initialValues}
             validationSchema={form.validationSchema}
+            enableReinitialize={true}
             onSubmit={handleSubmit}>
       {(formikProps) => (
-        <Modal isOpen={isOpen}
+        <Modal show={show}
+               onHide={cancelCallback}
                backdrop="static">
-          <ModalHeader>{mode === 'Add' ? 'Add User' : 'Edit User'}</ModalHeader>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {mode === 'Add' ? 'Add User' : 'Edit User'}
+            </Modal.Title>
+          </Modal.Header>
           <Form onSubmit={formikProps.handleSubmit}>
-            <ModalBody>
+            <Modal.Body>
               {errorMessage &&
               <h6 className="text-danger">{errorMessage}</h6>
               }
-              <FormGroup>
-                <Label>Username</Label>
+              <Form.Group controlId="username">
+                <Form.Label>Username</Form.Label>
                 <Field name="username">
                   {({field, meta}: FieldProps) => (
-                    <Input {...field}
-                           placeholder="Username"
-                           invalid={!!(meta.touched && meta.error)}/>
+                    <Form.Control {...field}
+                                  placeholder="Username"
+                                  isInvalid={!!(meta.touched && meta.error)}/>
                   )}
                 </Field>
-                <FormFeedback>{formikProps.errors.username}</FormFeedback>
-              </FormGroup>
-              <FormGroup>
-                <Label>Roles</Label>
+                <Form.Control.Feedback type="invalid">
+                  {formikProps.errors.username}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Roles</Form.Label>
                 <Field name="isAdmin">
                   {({field}: FieldProps) => (
-                    <CustomInput  {...field} type="switch" id="isAdminSwitch" label="Admin" checked={field.value}/>
+                    <Form.Check {...field}
+                                type="switch"
+                                id="isAdminSwitch"
+                                label="Admin"
+                                checked={field.value}/>
                   )}
                 </Field>
-              </FormGroup>
-              <FormGroup>
-                <Label>User Status</Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>User Status</Form.Label>
                 <Field name="enabled">
                   {({field}: FieldProps) => (
-                    <CustomInput  {...field} type="switch" id="enabledSwitch" label="Enabled" checked={field.value}/>
+                    <Form.Check {...field}
+                                type="switch"
+                                id="enabledSwitch"
+                                label="Enabled"
+                                checked={field.value}/>
                   )}
                 </Field>
                 <Field name="accountLocked">
                   {({field}: FieldProps) => (
-                    <CustomInput  {...field} type="switch" id="accountLockedSwitch" label="Locked" checked={field.value}/>
+                    <Form.Check {...field}
+                                type="switch"
+                                id="accountLockedSwitch"
+                                label="Locked"
+                                checked={field.value}/>
                   )}
                 </Field>
                 <Field name="credentialsExpired">
                   {({field}: FieldProps) => (
-                    <CustomInput  {...field} type="switch" id="credentialsExpiredSwitch" label="Credentials Expired" checked={field.value}/>
+                    <Form.Check {...field}
+                                type="switch"
+                                id="credentialsExpiredSwitch"
+                                label="Credentials Expired"
+                                checked={field.value}/>
                   )}
                 </Field>
                 <Field name="accountExpired">
                   {({field}: FieldProps) => (
-                    <CustomInput  {...field} type="switch" id="accountExpiredSwitch" label="Expired" checked={field.value}/>
+                    <Form.Check {...field}
+                                type="switch"
+                                id="accountExpiredSwitch"
+                                label="Expired"
+                                checked={field.value}/>
                   )}
                 </Field>
-              </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary"
-                      onClick={formikProps.handleSubmit}
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="success"
+                      onClick={formikProps.submitForm}
                       disabled={!formikProps.dirty || !formikProps.isValid || formikProps.isSubmitting}>
                 {mode === 'Add' ? 'Add User' : 'Save User'}
               </Button>
-              <Button color="secondary" onClick={cancelCallback}>
+              <Button variant="secondary" onClick={cancelCallback}>
                 Cancel
               </Button>
-            </ModalFooter>
+            </Modal.Footer>
           </Form>
         </Modal>
       )}

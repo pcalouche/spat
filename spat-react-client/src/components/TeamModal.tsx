@@ -1,16 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Button,
-  Form,
-  FormFeedback,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader
-} from 'reactstrap';
+import {Button, Form, Modal} from 'react-bootstrap';
 import {Field, FieldProps, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 
@@ -18,7 +7,7 @@ import {teamApi} from '../api';
 import {Team} from '../types';
 
 type Props = {
-  isOpen: boolean
+  show: boolean
   mode: 'Add' | 'Edit'
   team: Team
   submitCallback: () => Promise<void>
@@ -30,7 +19,7 @@ type TeamFormFields = {
 }
 
 const TeamModal: React.FC<Props> = ({
-                                      isOpen,
+                                      show,
                                       mode = 'Add',
                                       team,
                                       submitCallback,
@@ -67,38 +56,46 @@ const TeamModal: React.FC<Props> = ({
   return (
     <Formik initialValues={form.initialValues}
             validationSchema={form.validationSchema}
+            enableReinitialize={true}
             onSubmit={handleSubmit}>
       {(formikProps) => (
-        <Modal isOpen={isOpen}
+        <Modal show={show}
+               onHide={cancelCallback}
                backdrop="static">
-          <ModalHeader>{mode === 'Add' ? 'Add Team' : 'Edit Team'}</ModalHeader>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {mode === 'Add' ? 'Add Team' : 'Edit Team'}
+            </Modal.Title>
+          </Modal.Header>
           <Form onSubmit={formikProps.handleSubmit}>
-            <ModalBody>
+            <Modal.Body>
               {errorMessage &&
               <h6 className="text-danger">{errorMessage}</h6>
               }
-              <FormGroup>
-                <Label>Username</Label>
+              <Form.Group controlId="name">
+                <Form.Label>Name</Form.Label>
                 <Field name="name">
                   {({field, meta}: FieldProps) => (
-                    <Input {...field}
-                           placeholder="Name"
-                           invalid={!!(meta.touched && meta.error)}/>
+                    <Form.Control {...field}
+                                  placeholder="Name"
+                                  isInvalid={!!(meta.touched && meta.error)}/>
                   )}
                 </Field>
-                <FormFeedback>{formikProps.errors.name}</FormFeedback>
-              </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary"
-                      onClick={formikProps.handleSubmit}
+                <Form.Control.Feedback type="invalid">
+                  {formikProps.errors.name}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="success"
+                      onClick={formikProps.submitForm}
                       disabled={!formikProps.dirty || !formikProps.isValid || formikProps.isSubmitting}>
                 {mode === 'Add' ? 'Add Team' : 'Save Team'}
               </Button>
-              <Button color="secondary" onClick={cancelCallback}>
+              <Button variant="secondary" onClick={cancelCallback}>
                 Cancel
               </Button>
-            </ModalFooter>
+            </Modal.Footer>
           </Form>
         </Modal>
       )}

@@ -1,8 +1,8 @@
 import React from 'react';
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import {Button, Modal} from 'react-bootstrap';
 
 type Props = {
-  isOpen: boolean
+  show: boolean
   title?: string
   confirmButtonText?: string
   confirmButtonColor?: string
@@ -14,7 +14,7 @@ type Props = {
 }
 
 const ConfirmationModal: React.FC<Props> = ({
-                                              isOpen,
+                                              show,
                                               title,
                                               confirmButtonText = 'Ok',
                                               confirmButtonColor = 'success',
@@ -23,19 +23,28 @@ const ConfirmationModal: React.FC<Props> = ({
                                               cancelButtonColor = 'secondary',
                                               cancelCallback,
                                               children
-                                            }) =>
-  (
-    <Modal isOpen={isOpen}
+                                            }) => {
+  return (
+    <Modal show={show}
+           onHide={cancelCallback}
            backdrop="static">
-      <ModalHeader>{title}</ModalHeader>
-      <ModalBody>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
         {children}
-      </ModalBody>
-      <ModalFooter>
-        <Button color={confirmButtonColor} className="mr-1" onClick={confirmCallback}>{confirmButtonText}</Button>
-        <Button color={cancelButtonColor} onClick={cancelCallback}>{cancelButtonText}</Button>
-      </ModalFooter>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant={confirmButtonColor}
+                className="mr-1"
+                onClick={confirmCallback}>{confirmButtonText}
+        </Button>
+        <Button variant={cancelButtonColor}
+                onClick={cancelCallback}>{cancelButtonText}
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
+};
 
-export default React.memo(ConfirmationModal);
+export default ConfirmationModal;

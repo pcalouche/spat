@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, CardBody, CardHeader, Container, Table} from 'reactstrap';
+import {Button, Card, Container, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {useAppContext} from '../hooks';
@@ -102,17 +102,17 @@ const Users = () => {
   return (
     <Container fluid className="Users mt-5">
       <Card>
-        <CardHeader tag="h5">Users</CardHeader>
+        <Card.Header as="h5">Users</Card.Header>
         {loadError ?
-          <CardBody>
+          <Card.Body>
             <h1>Unable to Load Users.</h1>
-          </CardBody>
+          </Card.Body>
           :
           <>
             {isAdmin &&
-            <CardBody className="d-flex align-items-center justify-content-end">
-              <Button color="primary" onClick={addUserHandler}> Add User </Button>
-            </CardBody>
+            <Card.Body className="d-flex align-items-center justify-content-end">
+              <Button variant="primary" onClick={addUserHandler}> Add User </Button>
+            </Card.Body>
             }
             <Table bordered striped hover responsive className="m-0">
               <thead>
@@ -131,16 +131,18 @@ const Users = () => {
                       <td>{user.username}</td>
                       <td>{getAccountStatusDisplay(user)}</td>
                       <td>{user.roles.map(item => item.name).join(', ')}</td>
-                      {isAdmin && <td className="text-center">
-                        <Button color="link"
+                      {isAdmin &&
+                      <td className="text-center">
+                        <Button variant="link"
                                 title="Edit User"
                                 onClick={() => editUserHandler(user)}>
                           <FontAwesomeIcon icon="pencil-alt"/>
                         </Button>
                       </td>
                       }
-                      {isAdmin && <td className="text-center">
-                        <Button color="link"
+                      {isAdmin &&
+                      <td className="text-center">
+                        <Button variant="link"
                                 className="text-danger"
                                 title="Delete User"
                                 onClick={() => deleteUserHandler(user)}>
@@ -153,8 +155,7 @@ const Users = () => {
                 })}
               </tbody>
             </Table>
-            {userModalState.isOpen &&
-            <UserModal isOpen={userModalState.isOpen}
+            <UserModal show={userModalState.isOpen}
                        mode={userModalState.mode}
                        user={selectedUser}
                        submitCallback={async () => {
@@ -163,15 +164,12 @@ const Users = () => {
                        }}
                        cancelCallback={() => setUserModalState({isOpen: false, mode: 'Add'})}>
             </UserModal>
-            }
-            {deleteModalIsOpen &&
-            <ConfirmationModal isOpen={deleteModalIsOpen}
+            <ConfirmationModal show={deleteModalIsOpen}
+                               title="Delete User"
                                confirmCallback={deleteSelectedUser}
-                               cancelCallback={() => setDeleteModalIsOpen(false)}
-                               confirmButtonColor="danger">
+                               cancelCallback={() => setDeleteModalIsOpen(false)}>
               Are you sure you want to delete <span className="text-danger font-weight-bold">{selectedUser.username}</span>?
             </ConfirmationModal>
-            }
           </>
         }
       </Card>
