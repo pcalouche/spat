@@ -145,7 +145,7 @@ const UserModal: React.FC<Props> = ({
             </ModalBody>
             <ModalFooter>
               <Button color="primary"
-                      onClick={formikProps.handleSubmit}
+                      onClick={formikProps.submitForm}
                       disabled={!formikProps.dirty || !formikProps.isValid || formikProps.isSubmitting}>
                 {mode === 'Add' ? 'Add User' : 'Save User'}
               </Button>
