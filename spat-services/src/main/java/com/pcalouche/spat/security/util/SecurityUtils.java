@@ -135,7 +135,6 @@ public class SecurityUtils {
                 .httpOnly(true)
                 .secure(spatProperties.isHttpsEnvironment())
                 .maxAge(spatProperties.getRefreshTokenDuration())
-                .sameSite("None")
                 .build();
     }
 
