@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +28,7 @@ public class AuthController {
     @Operation(description = "Get JWT from username and password")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "token and refresh token created")})
     @PostMapping(value = Endpoints.TOKEN)
-    public ResponseEntity<String> token(@AuthenticationPrincipal UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken,
-                                        @AuthenticationPrincipal Authentication authentication) {
+    public ResponseEntity<String> token(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, securityUtils.createRefreshTokenCookie(usernamePasswordAuthenticationToken.getName()).toString())
                 .body(securityUtils.createToken(usernamePasswordAuthenticationToken));
@@ -49,7 +46,7 @@ public class AuthController {
     @Operation(description = "Get JWT from refresh token")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "token and refresh token created")})
     @PostMapping(value = Endpoints.REFRESH_TOKEN)
-    public ResponseEntity<String> refreshToken(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
+    public ResponseEntity<String> refreshToken(JwtAuthenticationToken jwtAuthenticationToken) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, securityUtils.createRefreshTokenCookie(jwtAuthenticationToken.getName()).toString())
                 .body(securityUtils.createToken(jwtAuthenticationToken));
