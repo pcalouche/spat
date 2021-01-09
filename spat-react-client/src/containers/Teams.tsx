@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, CardBody, CardHeader, Container, Table} from 'reactstrap';
+import {Button, Card, Container, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {useAppContext} from '../hooks';
@@ -67,17 +67,17 @@ const Teams: React.FC = () => {
   return (
     <Container fluid className="Teams mt-5">
       <Card>
-        <CardHeader tag="h5">Teams</CardHeader>
+        <Card.Header as="h5">Teams</Card.Header>
         {loadError ?
-          <CardBody>
+          <Card.Body>
             <h1>Unable to Load Teams.</h1>
-          </CardBody>
+          </Card.Body>
           :
           <>
             {isAdmin &&
-            <CardBody className="d-flex align-items-center justify-content-end">
-              <Button color="primary" onClick={addTeamHandler}>Add Team</Button>
-            </CardBody>
+            <Card.Body className="d-flex align-items-center justify-content-end">
+              <Button variant="primary" onClick={addTeamHandler}>Add Team</Button>
+            </Card.Body>
             }
             <Table bordered striped hover responsive className="m-0">
               <thead>
@@ -92,16 +92,18 @@ const Teams: React.FC = () => {
                   return (
                     <tr key={team.id}>
                       <td>{team.name}</td>
-                      {isAdmin && <td className="text-center">
-                        <Button color="link"
+                      {isAdmin &&
+                      <td className="text-center">
+                        <Button variant="link"
                                 title="Edit Team"
                                 onClick={() => editTeamHandler(team)}>
                           <FontAwesomeIcon icon="pencil-alt"/>
                         </Button>
                       </td>
                       }
-                      {isAdmin && <td className="text-center">
-                        <Button color="link"
+                      {isAdmin &&
+                      <td className="text-center">
+                        <Button variant="link"
                                 className="text-danger"
                                 title="Delete Team"
                                 onClick={() => deleteTeamHandler(team)}>
@@ -114,8 +116,7 @@ const Teams: React.FC = () => {
                 })}
               </tbody>
             </Table>
-            {teamModalState.isOpen &&
-            <TeamModal isOpen={teamModalState.isOpen}
+            <TeamModal show={teamModalState.isOpen}
                        mode={teamModalState.mode}
                        team={selectedTeam}
                        submitCallback={async () => {
@@ -124,15 +125,12 @@ const Teams: React.FC = () => {
                        }}
                        cancelCallback={() => setTeamModalState({isOpen: false, mode: 'Add'})}>
             </TeamModal>
-            }
-            {deleteModalIsOpen &&
-            <ConfirmationModal isOpen={deleteModalIsOpen}
+            <ConfirmationModal show={deleteModalIsOpen}
+                               title="Delete Team"
                                confirmCallback={deleteSelectedTeam}
-                               cancelCallback={() => setDeleteModalIsOpen(false)}
-                               confirmButtonColor="danger">
+                               cancelCallback={() => setDeleteModalIsOpen(false)}>
               Are you sure you want to delete <span className="text-danger font-weight-bold">{selectedTeam?.name}</span>?
             </ConfirmationModal>
-            }
           </>
         }
       </Card>
