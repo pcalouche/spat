@@ -38,7 +38,7 @@ const TeamModal: React.FC<Props> = ({
                                     }) => {
   const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const form: {initialValues: TeamFormFields, validationSchema: Yup.ObjectSchema} = {
+  const form: {initialValues: TeamFormFields, validationSchema: Yup.AnyObjectSchema} = {
     initialValues: {
       name: team?.name || ''
     },

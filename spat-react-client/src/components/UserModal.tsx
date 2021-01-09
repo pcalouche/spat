@@ -44,7 +44,7 @@ const UserModal: React.FC<Props> = ({
                                     }) => {
   const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const form: {initialValues: UserFormFields, validationSchema: Yup.ObjectSchema} = {
+  const form: {initialValues: UserFormFields, validationSchema: Yup.AnyObjectSchema} = {
     initialValues: {
       username: user.username,
       isAdmin: user.roles.filter(role => role.name === 'Admin').length === 1,
