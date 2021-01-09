@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,8 @@ public class AuthController {
     @Operation(description = "Get JWT from username and password")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "token and refresh token created")})
     @PostMapping(value = Endpoints.TOKEN)
-    public ResponseEntity<String> token(@AuthenticationPrincipal UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
+    public ResponseEntity<String> token(@AuthenticationPrincipal UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken,
+                                        @AuthenticationPrincipal Authentication authentication) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, securityUtils.createRefreshTokenCookie(usernamePasswordAuthenticationToken.getName()).toString())
                 .body(securityUtils.createToken(usernamePasswordAuthenticationToken));
