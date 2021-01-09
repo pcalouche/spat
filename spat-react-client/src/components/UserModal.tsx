@@ -44,7 +44,7 @@ const UserModal: React.FC<Props> = ({
                                     }) => {
   const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const form: {initialValues: UserFormFields, validationSchema: Yup.ObjectSchema} = {
+  const form: {initialValues: UserFormFields, validationSchema: Yup.AnyObjectSchema} = {
     initialValues: {
       username: user.username,
       isAdmin: user.roles.filter(role => role.name === 'Admin').length === 1,
@@ -145,7 +145,7 @@ const UserModal: React.FC<Props> = ({
             </ModalBody>
             <ModalFooter>
               <Button color="primary"
-                      onClick={formikProps.handleSubmit}
+                      onClick={formikProps.submitForm}
                       disabled={!formikProps.dirty || !formikProps.isValid || formikProps.isSubmitting}>
                 {mode === 'Add' ? 'Add User' : 'Save User'}
               </Button>

@@ -16,10 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Tag(name = "User endpoints")
@@ -41,7 +41,8 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
             )
     })
-    public UserDto currentUser(@AuthenticationPrincipal JwtAuthenticationToken jwtAuthenticationToken) {
+    public UserDto currentUser(JwtAuthenticationToken jwtAuthenticationToken,
+                               Principal p) {
         return userService.findByUsername(jwtAuthenticationToken.getPrincipal())
                 .orElseThrow(() -> new ApiNotFoundException(EndpointMessages.CURRENT_USER_NOT_FOUND));
     }

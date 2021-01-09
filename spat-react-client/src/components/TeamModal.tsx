@@ -38,7 +38,7 @@ const TeamModal: React.FC<Props> = ({
                                     }) => {
   const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const form: {initialValues: TeamFormFields, validationSchema: Yup.ObjectSchema} = {
+  const form: {initialValues: TeamFormFields, validationSchema: Yup.AnyObjectSchema} = {
     initialValues: {
       name: team?.name || ''
     },
@@ -91,7 +91,7 @@ const TeamModal: React.FC<Props> = ({
             </ModalBody>
             <ModalFooter>
               <Button color="primary"
-                      onClick={formikProps.handleSubmit}
+                      onClick={formikProps.submitForm}
                       disabled={!formikProps.dirty || !formikProps.isValid || formikProps.isSubmitting}>
                 {mode === 'Add' ? 'Add Team' : 'Save Team'}
               </Button>
