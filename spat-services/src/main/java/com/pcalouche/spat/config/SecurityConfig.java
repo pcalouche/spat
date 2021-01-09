@@ -25,13 +25,11 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final LoginAuthenticationProvider loginAuthenticationProvider;
-    private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final AuthenticationManager authenticationManager;
 
     public SecurityConfig(SecurityUtils securityUtils, UserRepository userRepository) {
-        loginAuthenticationProvider = new LoginAuthenticationProvider(userRepository);
-        jwtAuthenticationProvider = new JwtAuthenticationProvider(securityUtils, userRepository);
+        LoginAuthenticationProvider loginAuthenticationProvider = new LoginAuthenticationProvider(userRepository);
+        JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(securityUtils, userRepository);
         authenticationManager = new ProviderManager(Arrays.asList(loginAuthenticationProvider, jwtAuthenticationProvider));
     }
 
@@ -72,8 +70,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(SecurityUtils.AUTHENTICATED_PATH).authenticated()
                 // Setup filters for the endpoints
                 .and()
-                .authenticationProvider(loginAuthenticationProvider)
-                .authenticationProvider(jwtAuthenticationProvider)
                 .addFilterBefore(loginProcessingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtProcessingFilter, UsernamePasswordAuthenticationFilter.class);
     }

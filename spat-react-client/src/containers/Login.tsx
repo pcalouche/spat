@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const {currentUser, setCurrentUser} = useAppContext();
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const form: {initialValues: LoginFormFields, validationSchema: Yup.ObjectSchema} = {
+  const form: {initialValues: LoginFormFields, validationSchema: Yup.AnyObjectSchema} = {
     initialValues: {
       username: '',
       password: ''
