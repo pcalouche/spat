@@ -9,7 +9,7 @@ type Props = {
   confirmCallback: (e: React.MouseEvent<HTMLButtonElement>) => void
   cancelButtonText?: string
   cancelButtonColor?: string
-  cancelCallback: (e: React.MouseEvent<HTMLButtonElement>) => void
+  cancelCallback: () => void
   children: React.ReactNode
 }
 

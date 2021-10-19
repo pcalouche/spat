@@ -60,10 +60,10 @@ public class UserServiceImpl implements UserService {
                 .enabled(userEditRequest.isEnabled())
                 .build();
 
-        for (RoleDto roleDto : userEditRequest.getRoleDtos()) {
-            roleRepository.findByName(roleDto.getName())
-                    .ifPresent(role -> user.getRoles().add(role));
-        }
+        userEditRequest.getRoleDtos().forEach(roleDto ->
+                roleRepository.findByName(roleDto.getName())
+                        .ifPresent(role -> user.getRoles().add(role))
+        );
 
         return UserDto.map(userRepository.save(user));
     }

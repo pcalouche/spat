@@ -65,11 +65,11 @@ public class UserController {
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public UserDto create(@RequestBody @Validated UserEditRequest userEditRequest) {
-        if (userService.findByUsername(userEditRequest.getUsername()).isPresent()) {
-            throw new ApiForbiddenException(String.format(EndpointMessages.USER_ALREADY_EXISTS, userEditRequest.getUsername()));
-        } else {
-            return userService.create(userEditRequest);
-        }
+        userService.findByUsername(userEditRequest.getUsername())
+                .ifPresent(userDto -> {
+                    throw new ApiForbiddenException(String.format(EndpointMessages.USER_ALREADY_EXISTS, userDto.getUsername()));
+                });
+        return userService.create(userEditRequest);
     }
 
     @Operation(description = "Update an existing user")
@@ -100,10 +100,10 @@ public class UserController {
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Integer id) {
-        if (userService.findById(id).isPresent()) {
-            userService.delete(id);
-        } else {
-            throw new ApiNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id));
-        }
+        userService.findById(id).ifPresentOrElse(
+                userDto -> userService.delete(userDto.getId()),
+                () -> {
+                    throw new ApiNotFoundException(String.format(EndpointMessages.NO_USER_FOUND, id));
+                });
     }
 }

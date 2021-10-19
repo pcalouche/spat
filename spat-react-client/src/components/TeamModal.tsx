@@ -11,7 +11,7 @@ type Props = {
   mode: 'Add' | 'Edit'
   team: Team
   submitCallback: () => Promise<void>
-  cancelCallback: (e: React.MouseEvent<HTMLButtonElement>) => void
+  cancelCallback: () => void
 }
 
 type TeamFormFields = {

@@ -49,9 +49,10 @@ public class TeamController {
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public TeamDto create(@RequestBody @Validated TeamEditRequest teamEditRequest) {
-        if (teamService.findByName(teamEditRequest.getName()).isPresent()) {
-            throw new ApiForbiddenException(String.format(EndpointMessages.TEAM_ALREADY_EXISTS, teamEditRequest.getName()));
-        }
+        teamService.findByName(teamEditRequest.getName())
+                .ifPresent(teamDto -> {
+                    throw new ApiForbiddenException(String.format(EndpointMessages.TEAM_ALREADY_EXISTS, teamDto.getName()));
+                });
         return teamService.create(teamEditRequest);
     }
 
@@ -83,10 +84,11 @@ public class TeamController {
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Integer id) {
-        if (teamService.findById(id).isPresent()) {
-            teamService.delete(id);
-        } else {
-            throw new ApiNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id));
-        }
+        teamService.findById(id).ifPresentOrElse(
+                teamDto -> teamService.delete(teamDto.getId()),
+                () -> {
+                    throw new ApiNotFoundException(String.format(EndpointMessages.NO_TEAM_FOUND, id));
+                }
+        );
     }
 }
