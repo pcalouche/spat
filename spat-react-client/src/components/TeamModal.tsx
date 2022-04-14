@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
+import React, {ReactNode, useState} from 'react';
 import {Button, Form, Modal} from 'react-bootstrap';
 import {Field, FieldProps, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 
 import {teamApi} from '../api';
-import {Team} from '../types';
+import {ResponseError, Team} from '../types';
 
 type Props = {
   show: boolean
   mode: 'Add' | 'Edit'
   team: Team
   submitCallback: () => Promise<void>
-  cancelCallback: () => void
+  cancelCallback: () => void,
+  children: ReactNode
 }
 
 type TeamFormFields = {
@@ -25,7 +26,7 @@ const TeamModal: React.FC<Props> = ({
                                       submitCallback,
                                       cancelCallback
                                     }) => {
-  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const form: {initialValues: TeamFormFields, validationSchema: Yup.AnyObjectSchema} = {
     initialValues: {
@@ -49,7 +50,7 @@ const TeamModal: React.FC<Props> = ({
       await submitCallback();
     } catch (error) {
       formikHelpers.setSubmitting(false);
-      setErrorMessage(error.message);
+      setErrorMessage((error as ResponseError).message);
     }
   };
 
@@ -59,18 +60,18 @@ const TeamModal: React.FC<Props> = ({
             enableReinitialize={true}
             onSubmit={handleSubmit}>
       {(formikProps) => (
-        <Modal show={show}
-               onHide={cancelCallback}
-               backdrop="static">
-          <Modal.Header closeButton>
-            <Modal.Title>
-              {mode === 'Add' ? 'Add Team' : 'Edit Team'}
-            </Modal.Title>
-          </Modal.Header>
-          <Form onSubmit={formikProps.handleSubmit}>
+        <Form onSubmit={formikProps.handleSubmit}>
+          <Modal show={show}
+                 onHide={cancelCallback}
+                 backdrop="static">
+            <Modal.Header closeButton>
+              <Modal.Title>
+                {mode === 'Add' ? 'Add Team' : 'Edit Team'}
+              </Modal.Title>
+            </Modal.Header>
             <Modal.Body>
               {errorMessage &&
-              <h6 className="text-danger">{errorMessage}</h6>
+                <h6 className="text-danger">{errorMessage}</h6>
               }
               <Form.Group controlId="name">
                 <Form.Label>Name</Form.Label>
@@ -96,8 +97,8 @@ const TeamModal: React.FC<Props> = ({
                 Cancel
               </Button>
             </Modal.Footer>
-          </Form>
-        </Modal>
+          </Modal>
+        </Form>
       )}
     </Formik>
   );

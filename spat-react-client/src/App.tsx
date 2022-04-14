@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Redirect, Route, Switch, useHistory} from 'react-router-dom';
+import {Navigate, Route, Routes} from 'react-router-dom';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faPencilAlt, faStroopwafel, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
@@ -13,7 +13,6 @@ library.add(faPencilAlt, faTrashAlt, faStroopwafel);
 
 
 const App = () => {
-  const history = useHistory();
   const {currentUser, setCurrentUser} = useAppContext();
   const [loading, setLoading] = useState(true);
 
@@ -48,7 +47,7 @@ const App = () => {
       }
     };
     fetchData().then();
-  }, [setCurrentUser, history]);
+  }, [setCurrentUser]);
 
   const renderRoutes = () => {
     return loading ?
@@ -56,21 +55,21 @@ const App = () => {
       :
       currentUser ?
         (
-          <Switch>
-            <Redirect exact from="/" to="/users"/>
-            <Redirect exact from="/login" to="/users"/>
-            <Route exact path="/users" component={Users}/>
-            <Route exact path="/teams" component={Teams}/>
-            <Route render={PageNotFound}/>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Navigate replace to="/users"/>}/>
+            <Route path="/login" element={<Navigate replace to="/users"/>}/>
+            <Route path="/users" element={<Users/>}/>
+            <Route path="/teams" element={<Teams/>}/>
+            <Route path="*" element={<PageNotFound/>}/>
+          </Routes>
         )
         :
         (
-          <Switch>
-            <Redirect exact from="/" to="/login"/>
-            <Route exact path="/login" component={Login}/>
-            <Route render={PageNotFound}/>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Navigate replace to="/login"/>}/>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="*" element={<PageNotFound/>}/>
+          </Routes>
         );
   };
 

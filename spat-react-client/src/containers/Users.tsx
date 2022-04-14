@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {useAppContext} from '../hooks';
 import {userApi} from '../api';
-import {User} from '../types';
+import {ResponseError, User} from '../types';
 import {ConfirmationModal, UserModal} from '../components';
 
 const Users = () => {
@@ -76,7 +76,7 @@ const Users = () => {
     } catch (error) {
       // Handle cases where it may have been deleted on another tab or someone else and
       // the current screen is stale
-      if (error.status === 404) {
+      if (404 === (error as ResponseError).status) {
         setUsers(prevUsers => prevUsers ? prevUsers.filter(user => user.id !== selectedUser.id) : []);
         setDeleteModalIsOpen(false);
       } else {
@@ -110,9 +110,9 @@ const Users = () => {
           :
           <>
             {isAdmin &&
-            <Card.Body className="d-flex align-items-center justify-content-end">
-              <Button variant="primary" onClick={addUserHandler}> Add User </Button>
-            </Card.Body>
+              <Card.Body className="d-flex align-items-center justify-content-end">
+                <Button variant="primary" onClick={addUserHandler}> Add User </Button>
+              </Card.Body>
             }
             <Table bordered striped hover responsive className="m-0">
               <thead>
@@ -132,23 +132,23 @@ const Users = () => {
                       <td>{getAccountStatusDisplay(user)}</td>
                       <td>{user.roles.map(item => item.name).join(', ')}</td>
                       {isAdmin &&
-                      <td className="text-center">
-                        <Button variant="link"
-                                title="Edit User"
-                                onClick={() => editUserHandler(user)}>
-                          <FontAwesomeIcon icon="pencil-alt"/>
-                        </Button>
-                      </td>
+                        <td className="text-center">
+                          <Button variant="link"
+                                  title="Edit User"
+                                  onClick={() => editUserHandler(user)}>
+                            <FontAwesomeIcon icon="pencil-alt"/>
+                          </Button>
+                        </td>
                       }
                       {isAdmin &&
-                      <td className="text-center">
-                        <Button variant="link"
-                                className="text-danger"
-                                title="Delete User"
-                                onClick={() => deleteUserHandler(user)}>
-                          <FontAwesomeIcon icon="trash-alt"/>
-                        </Button>
-                      </td>
+                        <td className="text-center">
+                          <Button variant="link"
+                                  className="text-danger"
+                                  title="Delete User"
+                                  onClick={() => deleteUserHandler(user)}>
+                            <FontAwesomeIcon icon="trash-alt"/>
+                          </Button>
+                        </td>
                       }
                     </tr>
                   );

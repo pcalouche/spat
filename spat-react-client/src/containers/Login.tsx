@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
 import {Field, FieldProps, Formik, FormikHelpers, FormikProps} from 'formik';
 import * as Yup from 'yup';
 
 import {authApi, userApi} from '../api';
 import {useAppContext} from '../hooks';
+import {ResponseError} from '../types';
 
 type LoginFormFields = {
   username: string
@@ -13,7 +14,7 @@ type LoginFormFields = {
 }
 
 const Login: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const {currentUser, setCurrentUser} = useAppContext();
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -43,16 +44,16 @@ const Login: React.FC = () => {
       if (error instanceof TypeError) {
         setErrorMessage('Unable to connect to service.');
       } else {
-        setErrorMessage(error.message);
+        setErrorMessage((error as ResponseError).message);
       }
     }
   };
 
   useEffect(() => {
     if (currentUser) {
-      history.push('/users');
+      navigate('/users');
     }
-  }, [currentUser, history]);
+  }, [currentUser, navigate]);
 
   return (
     <Container fluid className="Login mt-5">
@@ -96,10 +97,9 @@ const Login: React.FC = () => {
                         {formikProps.errors.password}
                       </Form.Control.Feedback>
                     </Form.Group>
-                    <Form.Group>
+                    <Form.Group className="d-grid gap-2">
                       <Button type="submit"
                               variant="primary"
-                              block
                               disabled={!formikProps.isValid || formikProps.isSubmitting}>
                         Login
                       </Button>

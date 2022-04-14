@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {useAppContext} from '../hooks';
 import {teamApi} from '../api';
-import {Team} from '../types';
+import {ResponseError, Team} from '../types';
 import {ConfirmationModal, TeamModal} from '../components';
 
 const Teams: React.FC = () => {
@@ -41,7 +41,7 @@ const Teams: React.FC = () => {
     } catch (error) {
       // Handle cases where it may have been deleted on another tab or someone else and
       // the current screen is stale
-      if (error.status === 404) {
+      if (404 === (error as ResponseError).status) {
         setTeams(prevTeams => prevTeams ? prevTeams.filter(team => team.id !== selectedTeam.id) : []);
         setDeleteModalIsOpen(false);
       } else {
@@ -75,9 +75,9 @@ const Teams: React.FC = () => {
           :
           <>
             {isAdmin &&
-            <Card.Body className="d-flex align-items-center justify-content-end">
-              <Button variant="primary" onClick={addTeamHandler}>Add Team</Button>
-            </Card.Body>
+              <Card.Body className="d-flex align-items-center justify-content-end">
+                <Button variant="primary" onClick={addTeamHandler}>Add Team</Button>
+              </Card.Body>
             }
             <Table bordered striped hover responsive className="m-0">
               <thead>
@@ -93,23 +93,23 @@ const Teams: React.FC = () => {
                     <tr key={team.id}>
                       <td>{team.name}</td>
                       {isAdmin &&
-                      <td className="text-center">
-                        <Button variant="link"
-                                title="Edit Team"
-                                onClick={() => editTeamHandler(team)}>
-                          <FontAwesomeIcon icon="pencil-alt"/>
-                        </Button>
-                      </td>
+                        <td className="text-center">
+                          <Button variant="link"
+                                  title="Edit Team"
+                                  onClick={() => editTeamHandler(team)}>
+                            <FontAwesomeIcon icon="pencil-alt"/>
+                          </Button>
+                        </td>
                       }
                       {isAdmin &&
-                      <td className="text-center">
-                        <Button variant="link"
-                                className="text-danger"
-                                title="Delete Team"
-                                onClick={() => deleteTeamHandler(team)}>
-                          <FontAwesomeIcon icon="trash-alt"/>
-                        </Button>
-                      </td>
+                        <td className="text-center">
+                          <Button variant="link"
+                                  className="text-danger"
+                                  title="Delete Team"
+                                  onClick={() => deleteTeamHandler(team)}>
+                            <FontAwesomeIcon icon="trash-alt"/>
+                          </Button>
+                        </td>
                       }
                     </tr>
                   );

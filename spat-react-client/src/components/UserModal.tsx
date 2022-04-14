@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ReactNode, useState} from 'react';
 import {Button, Form, Modal} from 'react-bootstrap';
 import {Field, FieldProps, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
@@ -11,7 +11,8 @@ type Props = {
   mode: 'Add' | 'Edit',
   user: User
   submitCallback: () => Promise<void>,
-  cancelCallback: () => void
+  cancelCallback: () => void,
+  children: ReactNode
 }
 
 type UserFormFields = {
@@ -30,7 +31,7 @@ const UserModal: React.FC<Props> = ({
                                       submitCallback,
                                       cancelCallback
                                     }) => {
-  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const form: {initialValues: UserFormFields, validationSchema: Yup.AnyObjectSchema} = {
     initialValues: {
@@ -71,7 +72,9 @@ const UserModal: React.FC<Props> = ({
       await submitCallback();
     } catch (error) {
       formikActions.setSubmitting(false);
-      setErrorMessage(error.message);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      }
     }
   };
 
@@ -81,18 +84,18 @@ const UserModal: React.FC<Props> = ({
             enableReinitialize={true}
             onSubmit={handleSubmit}>
       {(formikProps) => (
-        <Modal show={show}
-               onHide={cancelCallback}
-               backdrop="static">
-          <Modal.Header closeButton>
-            <Modal.Title>
-              {mode === 'Add' ? 'Add User' : 'Edit User'}
-            </Modal.Title>
-          </Modal.Header>
-          <Form onSubmit={formikProps.handleSubmit}>
+        <Form onSubmit={formikProps.handleSubmit}>
+          <Modal show={show}
+                 onHide={cancelCallback}
+                 backdrop="static">
+            <Modal.Header closeButton>
+              <Modal.Title>
+                {mode === 'Add' ? 'Add User' : 'Edit User'}
+              </Modal.Title>
+            </Modal.Header>
             <Modal.Body>
               {errorMessage &&
-              <h6 className="text-danger">{errorMessage}</h6>
+                <h6 className="text-danger">{errorMessage}</h6>
               }
               <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
@@ -169,8 +172,8 @@ const UserModal: React.FC<Props> = ({
                 Cancel
               </Button>
             </Modal.Footer>
-          </Form>
-        </Modal>
+          </Modal>
+        </Form>
       )}
     </Formik>
   );
